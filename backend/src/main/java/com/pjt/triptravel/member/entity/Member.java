@@ -1,6 +1,8 @@
 package com.pjt.triptravel.member.entity;
 
 import com.pjt.triptravel.common.entity.BaseEntity;
+import com.pjt.triptravel.member.dto.Address;
+import com.pjt.triptravel.member.dto.Gender;
 import lombok.Builder;
 import lombok.Getter;
 
