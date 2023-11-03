@@ -1,5 +1,7 @@
 package com.pjt.triptravel.member.entity;
 
+import com.pjt.triptravel.board.entity.Comment;
+import com.pjt.triptravel.board.entity.Post;
 import com.pjt.triptravel.common.entity.BaseEntity;
 import com.pjt.triptravel.member.dto.Address;
 import com.pjt.triptravel.member.dto.Gender;
@@ -7,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +32,12 @@ public class Member extends BaseEntity {
     private Address address;
 
     private String profileImageUrl;
+
+    @OneToMany(mappedBy = "writer")
+    private List<Post> posts;
+
+    @OneToMany(mappedBy = "commenter")
+    private List<Comment> comments;
 
     protected Member() {
 
