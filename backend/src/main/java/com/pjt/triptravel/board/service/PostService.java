@@ -10,7 +10,6 @@ import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +23,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
 
-    public Long posting(Long writerId, Long boardId, PostCreateParam param) {
+    @Transactional
+    public Long posting(Long writerId, PostCreateParam param) {
+        log.info("게시글 작성 writer={}, boardId={}", writerId, param.getBoardId());
         Member member = memberRepository.findById(writerId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원번호입니다."));
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findById(param.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 번호입니다."));
 
         Post post = Post.builder()
@@ -36,21 +37,22 @@ public class PostService {
                 .board(board)
                 .writer(member)
                 .build();
+        postRepository.save(post);
         return post.getId();
     }
 
-    public void update(Long postId, PostUpdateParam param) {
-        Post post = postRepository.findById(postId)
+    @Transactional
+    public void update(Long postId, Long writerId, PostUpdateParam param) {
+        Post post = postRepository.findByIdAndWriterId(postId, writerId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 번호입니다."));
         post.changeTitle(param.getTitle());
         post.changeContent(param.getContent());
     }
 
-    public void delete(Long postId) {
-        try {
-            postRepository.deleteById(postId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("존재하지 않는 게시글 번호입니다.");
-        }
+    @Transactional
+    public void delete(Long postId, Long writerId) {
+        Post post = postRepository.findByIdAndWriterId(postId, writerId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 번호입니다."));
+        postRepository.delete(post);
     }
 }
