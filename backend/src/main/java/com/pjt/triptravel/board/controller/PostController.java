@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.pjt.triptravel.board.dto.comment.CommentDto;
 import com.pjt.triptravel.board.dto.post.PostCreateParam;
+import com.pjt.triptravel.board.dto.post.PostDetailDto;
 import com.pjt.triptravel.board.dto.post.PostSearchCondition;
 import com.pjt.triptravel.board.dto.post.PostSearchResult;
 import com.pjt.triptravel.board.dto.post.PostUpdateParam;
@@ -34,9 +36,14 @@ public class PostController {
 
 	private final PostService postService;
 
+	@GetMapping("/{postId}")
+	public ApiResponse<?> detail(@PathVariable Long postId) {
+		log.info("게시글 Detail, id={}", postId);
+		return ApiResponse.ofSuccess(postService.findOne(postId));
+	}
+
 	@GetMapping
-	public ApiResponse<?> search(PostSearchCondition condition,
-								 Pageable pageable) {
+	public ApiResponse<?> search(PostSearchCondition condition, Pageable pageable) {
 		log.info("검색 조건: {}", condition);
 		Page<PostSearchResult> result = postService.search(condition, pageable);
 		return ApiResponse.ofSuccess(result);
