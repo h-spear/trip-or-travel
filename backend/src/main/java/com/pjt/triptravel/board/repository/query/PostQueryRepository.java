@@ -50,7 +50,7 @@ public class PostQueryRepository {
 				post.lastModifiedDate))
 			.from(post)
 			.join(post.writer, member)
-			.leftJoin(post.comments, comment)
+			.leftJoin(post.comments, comment1)
 			.where(stringContains(post.title, condition.getTitle()),
 				stringContains(post.writer.name, condition.getWriter()),
 				dateAfter(condition.getStartDate()),
@@ -66,7 +66,7 @@ public class PostQueryRepository {
 			.select(post)
 			.from(post)
 			.join(post.writer, member)
-			.leftJoin(post.comments, comment)
+			.leftJoin(post.comments, comment1)
 			.where(stringContains(post.title, condition.getTitle()),
 				stringContains(post.writer.name, condition.getWriter()),
 				dateAfter(condition.getStartDate()),
@@ -93,7 +93,7 @@ public class PostQueryRepository {
 
 	private OrderSpecifier<?> getOrderSpecifier(PostSearchOrder order) {
 		if (order == PostSearchOrder.COMMENT_DESC) {
-			return comment.count().desc();
+			return comment1.count().desc();
 		} else if (order == PostSearchOrder.VIEWS_DESC) {
 			return post.views.desc();
 		} else if (order == PostSearchOrder.LIKES_DESC) {
