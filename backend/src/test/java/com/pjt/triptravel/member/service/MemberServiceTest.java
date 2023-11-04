@@ -76,6 +76,7 @@ class MemberServiceTest {
         MemberRegisterParam param = new MemberRegisterParam();
         param.setEmail(EMAIL);
         param.setPassword(PASSWORD);
+        param.setPasswordConfirm(PASSWORD);
         param.setName(NAME);
         param.setAge(AGE);
         param.setAddress(ADDRESS);
