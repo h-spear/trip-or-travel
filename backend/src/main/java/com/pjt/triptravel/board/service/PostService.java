@@ -1,14 +1,19 @@
 package com.pjt.triptravel.board.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.pjt.triptravel.board.dto.comment.CommentDto;
 import com.pjt.triptravel.board.dto.post.PostCreateParam;
+import com.pjt.triptravel.board.dto.post.PostDetailDto;
 import com.pjt.triptravel.board.dto.post.PostSearchCondition;
 import com.pjt.triptravel.board.dto.post.PostSearchResult;
 import com.pjt.triptravel.board.dto.post.PostUpdateParam;
 import com.pjt.triptravel.board.entity.Board;
+import com.pjt.triptravel.board.entity.Comment;
 import com.pjt.triptravel.board.entity.Post;
 import com.pjt.triptravel.board.repository.BoardRepository;
+import com.pjt.triptravel.board.repository.CommentRepository;
 import com.pjt.triptravel.board.repository.PostRepository;
 import com.pjt.triptravel.board.repository.query.PostQueryRepository;
 import com.pjt.triptravel.common.exception.UserNotFoundException;
@@ -32,6 +37,15 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
     private final PostQueryRepository postQueryRepository;
+    private final CommentRepository commentRepository;
+
+    public PostDetailDto findOne(Long postId) {
+        log.info("게시글 검색 id={}", postId);
+        Post post = postRepository.findByIdWithWriter(postId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 번호입니다."));
+        List<Comment> comments = commentRepository.findByPostIdWithCommenter(postId);
+        return PostDetailDto.of(post, comments);
+    }
 
     public Page<PostSearchResult> search(PostSearchCondition condition, Pageable pageable) {
         return postQueryRepository.query(condition, pageable);
