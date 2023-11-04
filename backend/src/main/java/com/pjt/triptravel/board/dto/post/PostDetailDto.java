@@ -34,7 +34,7 @@ public class PostDetailDto {
 			.filter(comment -> comment.getParent() == null)
 			.map(CommentDto::of)
 			.collect(Collectors.toList());
-		int commentCount = commentDtos.stream().mapToInt(CommentDto::getCount).sum();
+		int commentCount = commentDtos.size() + commentDtos.stream().mapToInt(CommentDto::getChildrenCount).sum();
 
 		return PostDetailDto.builder()
 			.postId(post.getId())
