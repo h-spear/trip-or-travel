@@ -29,7 +29,7 @@ public class CommentDto {
 			.build();
 	}
 
-	public int getCount() {
-		return 1 + children.size();
+	public int getChildrenCount() {
+		return children.size();
 	}
 }
