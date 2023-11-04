@@ -41,10 +41,10 @@ public class PostQueryRepository {
 		List<PostSearchResult> result = query.select(new QPostSearchResult(
 				post.id,
 				post.title,
-				post.content,
-				post.id.intValue(),
+				comment1.count().intValue(),
 				post.views,
 				post.likes,
+				post.writer.id,
 				post.writer.name,
 				post.registrationDate,
 				post.lastModifiedDate))
