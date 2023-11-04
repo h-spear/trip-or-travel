@@ -1,15 +1,23 @@
 package com.pjt.triptravel.board.service;
 
+import java.util.List;
+
 import com.pjt.triptravel.board.dto.post.PostCreateParam;
+import com.pjt.triptravel.board.dto.post.PostSearchCondition;
+import com.pjt.triptravel.board.dto.post.PostSearchResult;
 import com.pjt.triptravel.board.dto.post.PostUpdateParam;
 import com.pjt.triptravel.board.entity.Board;
 import com.pjt.triptravel.board.entity.Post;
 import com.pjt.triptravel.board.repository.BoardRepository;
 import com.pjt.triptravel.board.repository.PostRepository;
+import com.pjt.triptravel.board.repository.query.PostQueryRepository;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +30,11 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
+    private final PostQueryRepository postQueryRepository;
+
+    public Page<PostSearchResult> search(PostSearchCondition condition, Pageable pageable) {
+        return postQueryRepository.query(condition, pageable);
+    }
 
     @Transactional
     public Long posting(Long writerId, PostCreateParam param) {
