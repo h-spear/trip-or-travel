@@ -9,6 +9,7 @@ import com.pjt.triptravel.board.entity.Comment;
 import com.pjt.triptravel.board.entity.Post;
 import com.pjt.triptravel.board.repository.CommentRepository;
 import com.pjt.triptravel.board.repository.PostRepository;
+import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
 
@@ -29,7 +30,7 @@ public class CommentService {
 	public Long write(Long commenterId, Long postId, CommentCreateParam param) {
 		log.info("댓글 작성 commenterId={}, comment={}", commenterId, param.getComment());
 		Member member = memberRepository.findById(commenterId)
-			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원번호입니다."));
+			.orElseThrow(UserNotFoundException::new);
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 번호입니다."));
 		Comment parent = param.getParentCommentId() != null ?

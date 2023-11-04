@@ -1,6 +1,7 @@
 package com.pjt.triptravel.member.service;
 
 import com.pjt.triptravel.common.exception.DuplicateException;
+import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.member.dto.MemberRegisterParam;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
@@ -49,7 +50,7 @@ public class MemberService {
 
     public Member login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+                .orElseThrow(UserNotFoundException::new);
 
         if (!member.getPassword().equals(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");

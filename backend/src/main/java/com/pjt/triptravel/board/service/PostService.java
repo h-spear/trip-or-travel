@@ -11,6 +11,7 @@ import com.pjt.triptravel.board.entity.Post;
 import com.pjt.triptravel.board.repository.BoardRepository;
 import com.pjt.triptravel.board.repository.PostRepository;
 import com.pjt.triptravel.board.repository.query.PostQueryRepository;
+import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class PostService {
     public Long posting(Long writerId, PostCreateParam param) {
         log.info("게시글 작성 writer={}, boardId={}", writerId, param.getBoardId());
         Member member = memberRepository.findById(writerId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원번호입니다."));
+                .orElseThrow(UserNotFoundException::new);
         Board board = boardRepository.findById(param.getBoardId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 번호입니다."));
 

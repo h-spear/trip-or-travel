@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,10 +36,10 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
 
     @OneToMany(mappedBy = "writer")
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "commenter")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     protected Member() {
 
