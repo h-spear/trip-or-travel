@@ -25,6 +25,9 @@ public class Post extends BaseEntity {
     @Column(length = 10000)
     private String content;
 
+    private int likes;
+    private int views;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
