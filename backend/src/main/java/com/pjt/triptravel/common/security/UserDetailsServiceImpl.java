@@ -1,10 +1,10 @@
 package com.pjt.triptravel.common.security;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
 
@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
 		Member member = memberRepository.findByEmail(username)
-			.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+			.orElseThrow(UserNotFoundException::new);
 
 		return User.builder()
 			.id(member.getId())

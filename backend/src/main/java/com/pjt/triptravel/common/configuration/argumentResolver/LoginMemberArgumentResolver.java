@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -38,7 +39,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 		String accessToken = JwtTokenUtils.resolveAccessToken(request);
 
 		if (accessToken == null) {
-			return null;
+			throw new UserNotFoundException();
 		}
 		return JwtTokenUtils.extractMemberId(accessToken);
 	}
