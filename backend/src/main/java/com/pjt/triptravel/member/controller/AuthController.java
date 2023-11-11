@@ -42,11 +42,4 @@ public class AuthController {
         securityContextUtils.setAuthentication(token.getAccessToken());
         return ApiResponse.ofSuccess(token);
     }
-
-    @Operation(summary = "로그아웃", description = "로그아웃을 수행합니다.")
-    @PostMapping("/logout")
-    public ApiResponse<?> logout(HttpSession session) {
-        session.removeAttribute(SessionConst.LOGIN_MEMBER);
-        return ApiResponse.ofSuccess();
-    }
 }
