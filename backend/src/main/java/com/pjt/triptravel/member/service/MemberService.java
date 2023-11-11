@@ -1,16 +1,16 @@
 package com.pjt.triptravel.member.service;
 
-import com.pjt.triptravel.common.exception.DuplicateException;
-import com.pjt.triptravel.common.exception.UserNotFoundException;
-import com.pjt.triptravel.member.dto.MemberRegisterParam;
-import com.pjt.triptravel.member.entity.Member;
-import com.pjt.triptravel.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.pjt.triptravel.common.exception.DuplicateException;
+import com.pjt.triptravel.member.dto.MemberRegisterParam;
+import com.pjt.triptravel.member.entity.Member;
+import com.pjt.triptravel.member.repository.MemberRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service

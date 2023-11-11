@@ -1,10 +1,8 @@
 package com.pjt.triptravel.common.configuration.argumentResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.core.MethodParameter;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,8 +11,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import com.pjt.triptravel.common.configuration.annotation.Login;
 import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.common.jwt.JwtTokenUtils;
-import com.pjt.triptravel.common.session.SessionConst;
-import com.pjt.triptravel.member.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

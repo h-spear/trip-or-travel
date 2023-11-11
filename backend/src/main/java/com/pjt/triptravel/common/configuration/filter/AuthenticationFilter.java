@@ -1,32 +1,26 @@
 package com.pjt.triptravel.common.configuration.filter;
 
 import java.io.IOException;
-import java.sql.Ref;
 import java.util.Date;
 
 import javax.security.auth.RefreshFailedException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.PatternMatchUtils;
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.common.jwt.JwtTokenProvider;
 import com.pjt.triptravel.common.jwt.JwtTokenUtils;
 import com.pjt.triptravel.common.response.ApiResponse;
 import com.pjt.triptravel.common.security.SecurityContextUtils;
 import com.pjt.triptravel.member.entity.Auth;
 import com.pjt.triptravel.member.repository.AuthRepository;
-import com.pjt.triptravel.member.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

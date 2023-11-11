@@ -1,18 +1,26 @@
 package com.pjt.triptravel.member.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 import com.pjt.triptravel.board.entity.Comment;
 import com.pjt.triptravel.board.entity.Post;
 import com.pjt.triptravel.common.entity.BaseEntity;
 import com.pjt.triptravel.common.security.UserRole;
 import com.pjt.triptravel.member.dto.Address;
 import com.pjt.triptravel.member.dto.Gender;
+
 import lombok.Builder;
 import lombok.Getter;
-
-import javax.persistence.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
