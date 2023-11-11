@@ -21,12 +21,12 @@ public class SecurityContextUtils {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
-	private String getUsername(String accessToken) {
-		return Jwts.parser().setSigningKey(TokenConst.ACCESS_SECRET_KEY).parseClaimsJws(accessToken).getBody().getSubject();
-	}
-
 	private Authentication getAuthentication(String token) {
 		User user = userDetailsService.loadUserByUsername(this.getUsername(token));
 		return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
+	}
+
+	private String getUsername(String accessToken) {
+		return Jwts.parser().setSigningKey(TokenConst.ACCESS_SECRET_KEY).parseClaimsJws(accessToken).getBody().getSubject();
 	}
 }

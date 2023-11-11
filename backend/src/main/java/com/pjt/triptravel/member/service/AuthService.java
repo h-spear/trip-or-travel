@@ -32,7 +32,7 @@ public class AuthService {
 		Member member = memberRepository.findByEmail(param.getEmail())
 			.orElseThrow(UserNotFoundException::new);
 
-		if (!member.getPassword().equals(param.getPassword())) {
+		if (!passwordEncoder.matches(param.getPassword(), member.getPassword())) {
 			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 		}
 
