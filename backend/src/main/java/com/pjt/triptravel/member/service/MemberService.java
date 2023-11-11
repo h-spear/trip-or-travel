@@ -47,14 +47,4 @@ public class MemberService {
                     throw new DuplicateException("이미 등록된 이메일입니다.");
                 });
     }
-
-    public Member login(String email, String password) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
-
-        if (!member.getPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        return member;
-    }
 }
