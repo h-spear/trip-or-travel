@@ -1,4 +1,4 @@
-package com.pjt.triptravel.member.dto;
+package com.pjt.triptravel.member.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

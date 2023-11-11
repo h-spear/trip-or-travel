@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pjt.triptravel.common.jwt.JwtTokenUtils;
 import com.pjt.triptravel.common.response.ApiResponse;
 import com.pjt.triptravel.common.security.SecurityContextUtils;
-import com.pjt.triptravel.member.dto.LoginParam;
-import com.pjt.triptravel.member.dto.Token;
+import com.pjt.triptravel.member.dto.auth.LoginParam;
+import com.pjt.triptravel.member.dto.auth.Token;
 import com.pjt.triptravel.member.service.AuthService;
 
 import io.swagger.annotations.Api;

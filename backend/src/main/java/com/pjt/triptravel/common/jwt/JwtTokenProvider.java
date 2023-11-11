@@ -4,7 +4,7 @@ import static com.pjt.triptravel.common.jwt.TokenConst.*;
 
 import java.util.Date;
 
-import com.pjt.triptravel.member.dto.Token;
+import com.pjt.triptravel.member.dto.auth.Token;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

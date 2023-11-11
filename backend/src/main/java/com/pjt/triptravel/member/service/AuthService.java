@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.common.jwt.JwtTokenProvider;
-import com.pjt.triptravel.member.dto.LoginParam;
-import com.pjt.triptravel.member.dto.Token;
+import com.pjt.triptravel.member.dto.auth.LoginParam;
+import com.pjt.triptravel.member.dto.auth.Token;
 import com.pjt.triptravel.member.entity.Auth;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.AuthRepository;
