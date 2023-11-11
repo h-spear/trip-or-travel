@@ -33,7 +33,11 @@ public class ApiResponse<T> {
         return new ApiResponse<>(SUCCESS_STATUS, null, null);
     }
 
-    public static ApiResponse<?> ofFail(BindingResult bindingResult) {
+    public static ApiResponse<?> ofFail(String message) {
+        return new ApiResponse<>(FAIL_STATUS, null, message);
+    }
+
+    public static ApiResponse<?> ofError(BindingResult bindingResult) {
         Map<String, String> errors = new HashMap<>();
 
         List<ObjectError> allErrors = bindingResult.getAllErrors();
@@ -44,10 +48,6 @@ public class ApiResponse<T> {
                 errors.put( error.getObjectName(), error.getDefaultMessage());
             }
         }
-        return new ApiResponse<>(FAIL_STATUS, errors, null);
-    }
-
-    public static ApiResponse<?> ofError(String message) {
-        return new ApiResponse<>(ERROR_STATUS, null, message);
+        return new ApiResponse<>(ERROR_STATUS, errors, null);
     }
 }
