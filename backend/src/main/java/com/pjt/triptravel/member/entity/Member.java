@@ -3,6 +3,7 @@ package com.pjt.triptravel.member.entity;
 import com.pjt.triptravel.board.entity.Comment;
 import com.pjt.triptravel.board.entity.Post;
 import com.pjt.triptravel.common.entity.BaseEntity;
+import com.pjt.triptravel.common.security.UserRole;
 import com.pjt.triptravel.member.dto.Address;
 import com.pjt.triptravel.member.dto.Gender;
 import lombok.Builder;
@@ -40,6 +41,8 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "commenter")
     private List<Comment> comments = new ArrayList<>();
+
+    private UserRole role = UserRole.USER;
 
     protected Member() {
 
