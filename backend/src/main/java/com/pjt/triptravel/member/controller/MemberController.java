@@ -22,7 +22,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "회원가입", description = "사용자 계정을 생성합니다.")
-    @PostMapping
+    @PostMapping("/join")
     public ApiResponse<?> join(@RequestBody MemberRegisterParam param) {
         Long savedId = memberService.join(param);
         return ApiResponse.ofSuccess(savedId);
