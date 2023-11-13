@@ -23,7 +23,8 @@ public class PostDetailDto {
 	private int views;
 	private int likes;
 	private Long writerId;
-	private String writerName;
+	private String writerNickname;
+	private String writerProfileImageUrl;
 	private LocalDateTime registrationDate;
 	private LocalDateTime lastModifiedDate;
 
@@ -35,7 +36,8 @@ public class PostDetailDto {
 			.views(post.getViews())
 			.likes(post.getLikes())
 			.writerId(post.getWriter().getId())
-			.writerName(post.getWriter().getName())
+			.writerNickname(post.getWriter().getName())
+			.writerProfileImageUrl(post.getWriter().getProfileImageUrl())
 			.registrationDate(post.getRegistrationDate())
 			.lastModifiedDate(post.getLastModifiedDate())
 			.build();

@@ -9,6 +9,7 @@ public class MemberRegisterParam {
     private String password;
     private String passwordConfirm;
     private String name;
+    private String nickname;
     private int age;
 
     private Gender gender;

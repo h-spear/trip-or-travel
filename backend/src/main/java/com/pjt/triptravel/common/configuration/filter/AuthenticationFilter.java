@@ -29,7 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthenticationFilter extends OncePerRequestFilter {
 
-	private static final String[] whiteList = {"/", "/home", "/member/join", "/login", "/logout", "/refresh"};
+	private static final String[] whiteList = {"/", "/home", "/member/join", "/member/email", "/member/nickname",
+												"/login", "/logout", "/refresh"};
 
 	private final SecurityContextUtils securityContextUtils;
 	private final AuthRepository authRepository;
