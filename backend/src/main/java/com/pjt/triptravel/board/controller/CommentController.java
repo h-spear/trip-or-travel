@@ -1,23 +1,15 @@
 package com.pjt.triptravel.board.controller;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.pjt.triptravel.board.dto.comment.CommentCreateParam;
 import com.pjt.triptravel.board.dto.comment.CommentUpdateParam;
 import com.pjt.triptravel.board.service.CommentService;
 import com.pjt.triptravel.common.configuration.annotation.Login;
 import com.pjt.triptravel.common.response.ApiResponse;
-
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -27,6 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 public class CommentController {
 
 	private final CommentService commentService;
+
+	@Operation(summary = "댓글 조회", description = "postId에 해당하는 게시글에 댓글을 조회합니다.")
+	@GetMapping("{postId}/comment")
+	public ApiResponse<?> getComments(@PathVariable Long postId) {
+		return ApiResponse.ofSuccess(commentService.getComments(postId));
+	}
 
 	@Operation(summary = "댓글 작성", description = "postId에 해당하는 게시글에 댓글을 작성합니다.")
 	@PostMapping("{postId}/comment")

@@ -1,14 +1,6 @@
 package com.pjt.triptravel.board.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.pjt.triptravel.board.dto.comment.CommentDto;
-import com.pjt.triptravel.board.dto.post.PostCreateParam;
-import com.pjt.triptravel.board.dto.post.PostDetailDto;
-import com.pjt.triptravel.board.dto.post.PostSearchCondition;
-import com.pjt.triptravel.board.dto.post.PostSearchResult;
-import com.pjt.triptravel.board.dto.post.PostUpdateParam;
+import com.pjt.triptravel.board.dto.post.*;
 import com.pjt.triptravel.board.entity.Board;
 import com.pjt.triptravel.board.entity.Comment;
 import com.pjt.triptravel.board.entity.Post;
@@ -21,11 +13,12 @@ import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -43,8 +36,7 @@ public class PostService {
         log.info("게시글 검색 id={}", postId);
         Post post = postRepository.findByIdWithWriter(postId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 번호입니다."));
-        List<Comment> comments = commentRepository.findByPostIdWithCommenter(postId);
-        return PostDetailDto.of(post, comments);
+        return PostDetailDto.of(post);
     }
 
     public Page<PostSearchResult> search(PostSearchCondition condition, Pageable pageable) {

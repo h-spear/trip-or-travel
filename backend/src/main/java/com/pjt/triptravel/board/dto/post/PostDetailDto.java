@@ -20,22 +20,14 @@ public class PostDetailDto {
 	private Long postId;
 	private String title;
 	private String content;
-	private int commentCount;
 	private int views;
 	private int likes;
 	private Long writerId;
 	private String writerName;
 	private LocalDateTime registrationDate;
 	private LocalDateTime lastModifiedDate;
-	private List<CommentDto> comments;
 
-	public static PostDetailDto of(Post post, List<Comment> comments) {
-		List<CommentDto> commentDtos = comments.stream()
-			.filter(comment -> comment.getParent() == null)
-			.map(CommentDto::of)
-			.collect(Collectors.toList());
-		int commentCount = commentDtos.size() + commentDtos.stream().mapToInt(CommentDto::getChildrenCount).sum();
-
+	public static PostDetailDto of(Post post) {
 		return PostDetailDto.builder()
 			.postId(post.getId())
 			.title(post.getTitle())
@@ -46,8 +38,6 @@ public class PostDetailDto {
 			.writerName(post.getWriter().getName())
 			.registrationDate(post.getRegistrationDate())
 			.lastModifiedDate(post.getLastModifiedDate())
-			.comments(commentDtos)
-			.commentCount(commentCount)
 			.build();
 	}
 }

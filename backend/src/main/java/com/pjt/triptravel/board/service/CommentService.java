@@ -1,5 +1,6 @@
 package com.pjt.triptravel.board.service;
 
+import com.pjt.triptravel.board.dto.comment.CommentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,9 @@ import com.pjt.triptravel.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,12 @@ public class CommentService {
 	private final MemberRepository memberRepository;
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
+
+	public List<CommentDto> getComments(Long postId) {
+		return commentRepository.findByPostIdWithCommenter(postId)
+				.stream().map(CommentDto::of)
+				.collect(Collectors.toList());
+	}
 
 	@Transactional
 	public Long write(Long commenterId, Long postId, CommentCreateParam param) {
