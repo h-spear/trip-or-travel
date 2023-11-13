@@ -59,6 +59,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		web
 			.ignoring()
 			.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-			.antMatchers("/error");
+			.antMatchers("/error")
+			.antMatchers(SWAGGER);
 	}
+
+	private final String[] SWAGGER = {
+			"/v3/api-docs", "/v2/api-docs",
+			"/swagger-resources/**", "/configuration/security", "/webjars/**",
+			"/swagger-ui.html", "/swagger/**", "/swagger-ui/**"};
 }
