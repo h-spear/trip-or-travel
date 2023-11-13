@@ -106,7 +106,7 @@ class PostQueryRepositoryTest {
 		// given
 		PostSearchCondition condition = new PostSearchCondition();
 		condition.setBoardId(boardId);
-		condition.setWriter("1");
+		condition.setWriterNickname("1");
 		condition.setTitle("의");
 		Pageable pageable = PageRequest.of(0, 4);
 
@@ -134,7 +134,7 @@ class PostQueryRepositoryTest {
 		// given
 		PostSearchCondition condition = new PostSearchCondition();
 		condition.setBoardId(boardId);
-		condition.setWriter("ter2"); // writer2
+		condition.setWriterNickname("ter2"); // writer2
 		condition.setOrder(PostSearchOrder.VIEWS_DESC);
 		Pageable pageable = PageRequest.of(0, 10);
 
@@ -215,7 +215,7 @@ class PostQueryRepositoryTest {
 				Member.builder()
 					.email("test" + i + "@test.com")
 					.password("password")
-					.name("writer" + i)
+					.nickname("writer" + i)
 					.build()
 			));
 		}

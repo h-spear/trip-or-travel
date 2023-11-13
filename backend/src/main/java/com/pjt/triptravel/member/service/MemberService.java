@@ -35,6 +35,7 @@ public class MemberService {
                 .email(param.getEmail())
                 .password(passwordEncoder.encode(param.getPassword()))
                 .name(param.getName())
+                .nickname(param.getNickname())
                 .age(param.getAge())
                 .gender(param.getGender())
                 .address(param.getAddress())

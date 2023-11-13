@@ -14,7 +14,7 @@ public class CommentDto {
 	private Long commentId;
 	private String comment;
 	private Long commenterId;
-	private String commenterName;
+	private String commenterNickname;
 	private String commenterProfileImageUrl;
 	private List<CommentDto> children;
 
@@ -23,7 +23,7 @@ public class CommentDto {
 			.commentId(comment.getId())
 			.comment(comment.getComment())
 			.commenterId(comment.getCommenter().getId())
-			.commenterName(comment.getCommenter().getName())
+			.commenterNickname(comment.getCommenter().getNickname())
 			.commenterProfileImageUrl(comment.getCommenter().getProfileImageUrl())
 			.children(comment.getChildren().stream().map(CommentDto::of).collect(Collectors.toList()))
 			.build();
