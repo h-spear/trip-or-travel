@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class PostSearchCondition {
 
+	private Long boardId;
+	
 	private String title;
 	private String writer;
 

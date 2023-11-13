@@ -1,5 +1,6 @@
 package com.pjt.triptravel.board.repository.query;
 
+import static com.pjt.triptravel.board.entity.QBoard.*;
 import static com.pjt.triptravel.board.entity.QComment.*;
 import static com.pjt.triptravel.board.entity.QPost.*;
 import static com.pjt.triptravel.member.entity.QMember.*;
@@ -11,6 +12,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import com.pjt.triptravel.board.entity.QBoard;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.NumberPath;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -39,6 +43,7 @@ public class PostQueryRepository {
 
 	public Page<PostSearchResult> query(PostSearchCondition condition, Pageable pageable) {
 		List<PostSearchResult> result = query.select(new QPostSearchResult(
+				board.id,
 				post.id,
 				post.title,
 				comment1.count().intValue(),
@@ -49,6 +54,7 @@ public class PostQueryRepository {
 				post.registrationDate,
 				post.lastModifiedDate))
 			.from(post)
+			.join(board).on(boardMatch(board.id, condition.getBoardId()))
 			.join(post.writer, member)
 			.leftJoin(post.comments, comment1)
 			.where(stringContains(post.title, condition.getTitle()),
@@ -74,6 +80,10 @@ public class PostQueryRepository {
 			.groupBy(post);
 
 		return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchCount);
+	}
+
+	private BooleanExpression boardMatch(NumberPath<Long> boardId, Long boardIdCondition) {
+		return boardIdCondition != null ? boardId.eq(boardIdCondition) : null;
 	}
 
 	private BooleanExpression dateAfter(LocalDate date) {

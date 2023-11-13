@@ -9,6 +9,7 @@ import com.querydsl.core.annotations.QueryProjection;
 @Data
 public class PostSearchResult {
 
+    private Long boardId;
     private Long postId;
     private String title;
     private int commentCount;
@@ -20,9 +21,8 @@ public class PostSearchResult {
     private LocalDateTime lastModifiedDate;
 
     @QueryProjection
-
-    public PostSearchResult(Long postId, String title, int commentCount, int views, int likes, Long writerId,
-        String writerName, LocalDateTime registrationDate, LocalDateTime lastModifiedDate) {
+    public PostSearchResult(Long boardId, Long postId, String title, int commentCount, int views, int likes, Long writerId, String writerName, LocalDateTime registrationDate, LocalDateTime lastModifiedDate) {
+        this.boardId = boardId;
         this.postId = postId;
         this.title = title;
         this.commentCount = commentCount;

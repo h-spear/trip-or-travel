@@ -1,5 +1,6 @@
 package com.pjt.triptravel.board.service;
 
+import com.pjt.triptravel.board.dto.comment.CommentDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,9 @@ import com.pjt.triptravel.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,12 @@ public class CommentService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
 
+	public List<CommentDto> getComments(Long postId) {
+		return commentRepository.findByPostIdWithCommenter(postId)
+				.stream().map(CommentDto::of)
+				.collect(Collectors.toList());
+	}
+
 	@Transactional
 	public Long write(Long commenterId, Long postId, CommentCreateParam param) {
 		log.info("댓글 작성 commenterId={}, comment={}", commenterId, param.getComment());
@@ -33,8 +43,16 @@ public class CommentService {
 			.orElseThrow(UserNotFoundException::new);
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 번호입니다."));
-		Comment parent = param.getParentCommentId() != null ?
-			commentRepository.findByIdAndPostId(param.getParentCommentId(), postId).orElse(null) : null;
+
+		Comment parent = null;
+		if (param.getParentCommentId() != null) {
+			parent = commentRepository.findByIdAndPostId(param.getParentCommentId(), postId)
+					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상위 댓글 번호입니다."));
+			commentRepository.findParent(parent.getId())
+					.ifPresent((c) -> {
+                        throw new IllegalArgumentException("상위 댓글은 1개만 존재할 수 있습니다.");
+                    });
+		}
 
 		Comment comment = commentRepository.save(Comment.builder()
 			.comment(param.getComment())
