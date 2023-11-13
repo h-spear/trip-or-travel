@@ -1,10 +1,31 @@
 <script setup>
 import { ref } from 'vue'
+import { loginUser } from '@/api/user.js'
 
-const userId = ref('')
+const userEmail = ref('')
 const password = ref('')
+
+userEmail.value = 'test@test.com'
+password.value = 'pass'
+
 function login() {
-  console.log('login....')
+  if (!userEmail.value) {
+    alert('이메일을 입력해주세요')
+  } else if (!password.value) {
+    alert('비밀번호를 입력해주세요')
+  } else {
+    console.log('login....')
+    loginUser(
+      userEmail.value,
+      password.value,
+      (data) => {
+        console.log('login success', data)
+      },
+      (error) => {
+        console.log('error : ', error)
+      }
+    )
+  }
   //여기에서 아이디랑 비번 서버에 날려보내기
   // 성공 시 jwt 토큰 반환될 에정
   // id는 같이 가지고 있짜
@@ -18,17 +39,24 @@ function login() {
         <img src="@/assets/logo.png" class="login-logo" />
       </div>
       <div class="form">
-        <form name="login-form" class="login-form" action="${root }/member" method="post">
+        <form name="login-form" class="login-form" method="post" @submit.prevent="login">
           <input type="hidden" name="action" value="login" />
-          <input id="userId" name="userId" type="text" placeholder="ID" required :key="userId" />
+          <input
+            id="userEmail"
+            name="userEmail"
+            type="Email"
+            placeholder="이메일을 입력해주세요"
+            required
+            :key="userEmail"
+          />
           <input
             id="password"
             name="password"
             type="password"
-            placeholder="password"
+            placeholder="비밀번호를 입력해주세요"
             :key="password"
           />
-          <button class="login-btn" type="submit" @click="login">login</button>
+          <button class="login-btn" type="submit">login</button>
           <!-- <div><button class="login-btn" type="submit">login</button></div> -->
           <!-- <button onclick="location.href='register.html'" type="button">회원가입</button> -->
           <div class="go">

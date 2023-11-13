@@ -1,25 +1,25 @@
-const memberRouter = [
+const userRouter = [
   {
     //
-    path: '/login',
+    path: 'login',
     name: 'login',
     component: () => import('@/views/TheLoginView.vue')
   },
   {
     //
-    path: '/regist',
+    path: 'regist',
     name: 'regist',
     component: () => import('@/views/TheTestView.vue')
   },
   {
     //
-    path: '/mypage',
+    path: 'mypage',
     name: 'mypage',
     component: () => import('@/views/TheTestView.vue')
   },
   {
     //
-    path: '/member',
+    path: 'member',
     name: 'member',
     component: () => import('@/views/TheTestView.vue'),
     children: []
@@ -33,4 +33,4 @@ const memberRouter = [
 // 회원 관리 페이지
 // 회원 리스트 페이지
 
-export default memberRouter
+export default userRouter
