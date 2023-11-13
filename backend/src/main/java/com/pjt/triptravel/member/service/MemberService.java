@@ -43,8 +43,9 @@ public class MemberService {
         if (!param.getPassword().equals(param.getPasswordConfirm())) {
             throw new IllegalArgumentException("입력한 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         }
-        
+
         validateDuplicateEmail(param.getEmail());
+        validateDuplicateNickname(param.getNickname());
 
         Member member = Member.builder()
                 .email(param.getEmail())
@@ -60,10 +61,17 @@ public class MemberService {
         return savedMember.getId();
     }
 
-    private void validateDuplicateEmail(String email) {
+    public void validateDuplicateEmail(String email) {
         memberRepository.findByEmail(email)
                 .ifPresent(m -> {
                     throw new DuplicateException("이미 등록된 이메일입니다.");
+                });
+    }
+
+    public void validateDuplicateNickname(String nickname) {
+        memberRepository.findByNickname(nickname)
+                .ifPresent(m -> {
+                    throw new DuplicateException("이미 등록된 닉네임입니다.");
                 });
     }
 }
