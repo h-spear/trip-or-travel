@@ -26,5 +26,21 @@ public class MemberController {
         return ApiResponse.ofSuccess(savedId);
     }
 
-    // 회원정보 수정, 삭제, 마이페이지...
+    @Operation
+    @GetMapping("/{memberId}")
+    public ApiResponse<?> detail(@PathVariable Long memberId, @Login Long id) {
+        if (memberId.equals(id)) {
+            return ApiResponse.ofSuccess(memberService.findOne(id));
+        } else {
+            return ApiResponse.ofFail("준비중입니다.");
+        }
+    }
+
+    @Operation
+    @GetMapping("/simple")
+    public ApiResponse<?> simple(@Login Long id) {
+        return ApiResponse.ofSuccess(memberService.findSimple(id));
+    }
+
+    // 회원정보 수정, 삭제
 }

@@ -1,5 +1,8 @@
 package com.pjt.triptravel.member.service;
 
+import com.pjt.triptravel.common.exception.UserNotFoundException;
+import com.pjt.triptravel.member.dto.MemberDto;
+import com.pjt.triptravel.member.dto.MemberSimpleDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,18 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public MemberDto findOne(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return MemberDto.of(member);
+    }
+
+    public MemberSimpleDto findSimple(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return MemberSimpleDto.of(member);
+    }
 
     @Transactional
     public Long join(MemberRegisterParam param) {
