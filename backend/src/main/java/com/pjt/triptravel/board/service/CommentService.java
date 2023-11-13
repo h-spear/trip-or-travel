@@ -43,8 +43,16 @@ public class CommentService {
 			.orElseThrow(UserNotFoundException::new);
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 번호입니다."));
-		Comment parent = param.getParentCommentId() != null ?
-			commentRepository.findByIdAndPostId(param.getParentCommentId(), postId).orElse(null) : null;
+
+		Comment parent = null;
+		if (param.getParentCommentId() != null) {
+			parent = commentRepository.findByIdAndPostId(param.getParentCommentId(), postId)
+					.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상위 댓글 번호입니다."));
+			commentRepository.findParent(parent.getId())
+					.ifPresent((c) -> {
+                        throw new IllegalArgumentException("상위 댓글은 1개만 존재할 수 있습니다.");
+                    });
+		}
 
 		Comment comment = commentRepository.save(Comment.builder()
 			.comment(param.getComment())
