@@ -50,7 +50,8 @@ public class PostQueryRepository {
 				post.views,
 				post.likes,
 				post.writer.id,
-				post.writer.name,
+				post.writer.nickname,
+				post.writer.profileImageUrl,
 				post.registrationDate,
 				post.lastModifiedDate))
 			.from(post)
@@ -58,7 +59,7 @@ public class PostQueryRepository {
 			.join(post.writer, member)
 			.leftJoin(post.comments, comment1)
 			.where(stringContains(post.title, condition.getTitle()),
-				stringContains(post.writer.name, condition.getWriter()),
+				stringContains(post.writer.nickname, condition.getWriterNickname()),
 				dateAfter(condition.getStartDate()),
 				dateBefore(condition.getEndDate()))
 			.groupBy(post)
@@ -74,7 +75,7 @@ public class PostQueryRepository {
 			.join(post.writer, member)
 			.leftJoin(post.comments, comment1)
 			.where(stringContains(post.title, condition.getTitle()),
-				stringContains(post.writer.name, condition.getWriter()),
+				stringContains(post.writer.nickname, condition.getWriterNickname()),
 				dateAfter(condition.getStartDate()),
 				dateBefore(condition.getEndDate()))
 			.groupBy(post);

@@ -34,6 +34,7 @@ public class Member extends BaseEntity {
     private String email;
     private String password;
     private String name;
+    private String nickname;
     private int age;
 
     @Enumerated(EnumType.STRING)
@@ -57,10 +58,11 @@ public class Member extends BaseEntity {
     }
 
     @Builder
-    public Member(String email, String password, String name, int age, Gender gender, Address address, String profileImageUrl) {
+    public Member(String email, String password, String name, String nickname, int age, Gender gender, Address address, String profileImageUrl) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.nickname = nickname;
         this.age = age;
         this.gender = gender;
         this.address = address;
