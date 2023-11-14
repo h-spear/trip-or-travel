@@ -2,7 +2,10 @@ package com.pjt.triptravel.attraction.entity;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+
 @Entity
+@Getter
 public class Gugun {
 
     @Id
