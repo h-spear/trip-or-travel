@@ -1,103 +1,91 @@
 <script setup>
 import { ref } from 'vue'
-import { loginUser } from '@/api/user.js'
+import { emailDupCheck } from '@/api/user.js'
 
-const userEmail = ref('')
-const password = ref('')
+const email = ref('test@test.com')
+const password = ref('1234')
+const passwordConfirm = ref('1234')
+const name = ref('test')
+const nickname = ref('test')
+const age = ref(10)
+const gender = ref('MALE')
+// 아래 둘은 합쳐서 address로 만들어야함
+const sido = ref('Seoul')
+const gugun = ref('Gangnam')
+const profileImageUrl = ref('imageURL')
 
-userEmail.value = 'test@test.com'
-password.value = 'pass'
+const isValid = ref(false)
 
-function login() {
-  if (!userEmail.value) {
+function checkDuplicateEmail() {
+  if (!email.value) {
     alert('이메일을 입력해주세요')
-  } else if (!password.value) {
-    alert('비밀번호를 입력해주세요')
   } else {
-    console.log('login....')
-    loginUser(
-      userEmail.value,
-      password.value,
+    emailDupCheck(
+      email.value,
       (data) => {
-        console.log('login success', data)
+        console.log('request success', data)
+        if (data) {
+          alert('가능')
+        } else {
+          alert('불가능')
+        }
       },
       (error) => {
-        console.log('error : ', error)
+        console.log('dup check failed', error)
       }
     )
   }
-  //여기에서 아이디랑 비번 서버에 날려보내기
-  // 성공 시 jwt 토큰 반환될 에정
-  // id는 같이 가지고 있짜
+}
+
+function onRegister() {
+  console.log('go register')
 }
 </script>
 
 <template>
-  <!-- <main class="container box">
-    <div class="login-page" style="margin-top: 100px">
-      <div class="title">
-        <img src="@/assets/logo.png" class="login-logo" />
-      </div>
-      <div class="form">
-        <form name="login-form" class="login-form" method="post" @submit.prevent="login">
-          <input type="hidden" name="action" value="login" />
-          <input
-            id="userEmail"
-            name="userEmail"
-            type="Email"
-            placeholder="이메일을 입력해주세요"
-            required
-            :key="userEmail"
-          />
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            :key="password"
-          />
-          <button class="login-btn" type="submit">login</button>
-          <div class="go">
-            <a href="${root }/member/resgister.jsp" class="last">회원가입&nbsp;</a>|
-            <a href="#" class="last">&nbsp;아이디 찾기&nbsp;</a>|
-            <a href="#" class="last">&nbsp;비밀번호 찾기</a>
-          </div>
-        </form> -->
-
-  <!-- "email": "test@test.com",
-    "password": "1234",
-    "passwordConfirm": "1234",
-    "name": "test",
-    "nickname": "test",
-    "age": 10,
-    "gender": "MALE",
-    "address": {
-        "sido": "Seoul",
-        "gugun": "Gangnam"
-    },
-    "profileImageUrl": "imageURL" -->
-
   <main class="container box">
     <div class="register-page" style="margin-top: 100px">
       <div class="title">
         <img src="@/assets/logo.png" class="login-logo" />
       </div>
       <div class="form">
-        <form name="register-form" class="register-form">
-          <input id="email" name="email" type="email" placeholder="이메일" required />
+        <form name="register-form" class="register-form" @submit.prevent="onRegister">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="이메일"
+            required
+            v-model="email"
+          />
           <button class="dupcheck" @click="checkDuplicateEmail">중복 체크</button>
-          <input id="nickname" name="nickname" type="text" placeholder="닉네임" required />
+          <input
+            id="nickname"
+            name="nickname"
+            type="text"
+            placeholder="닉네임"
+            required
+            v-model="nickname"
+          />
           <button class="dupcheck" @click="checkDuplicateNickname">중복 체크</button>
-          <input id="password" name="password" type="password" placeholder="비밀번호" required />
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="비밀번호"
+            required
+            v-model="password"
+          />
           <input
             id="passwordConfirm"
             name="passwordConfirm"
             type="password"
             placeholder="비밀번호 확인"
             required
+            v-model="passwordConfirm"
           />
-          <input id="name" name="name" type="text" placeholder="이름" required />
-          <input id="age" name="age" type="number" placeholder="나이" />
+          <input id="name" name="name" type="text" placeholder="이름" required v-model="name" />
+          <input id="age" name="age" type="number" placeholder="나이" v-model="age" />
           <div class="form-check form-check-inline">
             <input class="" id="male" name="gender" type="radio" value="MALE" />
             <label class="form-check-label" for="male">남성</label>

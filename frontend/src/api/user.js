@@ -17,6 +17,9 @@ function getSimpleInfo(success, fail) {
 function logoutUser(success, fail) {
   local.post('logout').then(success).catch(fail)
 }
+function emailDupCheck(email, success, fail) {
+  local.get(`member/email/${email}`).then(success).catch(fail)
+}
 // function listBoard(success, fail) {
 //   local.get('board').then(success).catch(fail)
 // }
@@ -33,5 +36,5 @@ function logoutUser(success, fail) {
 //   local.delete(`board/${articleNo}`).then(success).catch(fail)
 // }
 
-export { loginUser, getSimpleInfo, logoutUser }
+export { loginUser, getSimpleInfo, logoutUser, emailDupCheck }
 // export { listBoard, detailBoard, registBoard, updateBoard, removeBoard }
