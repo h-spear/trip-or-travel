@@ -2,6 +2,7 @@ package com.pjt.triptravel.attraction.entity;
 
 import lombok.Getter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,7 +13,9 @@ public class Sido {
 
     @Id
     @GeneratedValue
-    private Long id;
+    @Column(name = "sido_code")
     private Long code;
-    private String sidoName;
+
+    @Column(name = "sido_name")
+    private String name;
 }
