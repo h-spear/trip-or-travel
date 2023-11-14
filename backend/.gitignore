@@ -38,3 +38,4 @@ out/
 
 application-prod.yml
 InitDb.java
+/src/main/resources/sql/
