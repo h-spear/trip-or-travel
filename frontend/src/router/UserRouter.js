@@ -1,29 +1,28 @@
 const userRouter = [
   {
     //
-    path: 'login',
+    path: '/login',
     name: 'login',
     component: () => import('@/views/TheLoginView.vue')
   },
   {
-    //
-    path: 'regist',
+    path: '/regist',
     name: 'regist',
-    component: () => import('@/views/TheTestView.vue')
-  },
-  {
-    //
-    path: 'mypage',
-    name: 'mypage',
-    component: () => import('@/views/TheTestView.vue')
-  },
-  {
-    //
-    path: 'member',
-    name: 'member',
-    component: () => import('@/views/TheTestView.vue'),
-    children: []
+    component: () => import('@/views/TheRegisterView.vue')
   }
+  // {
+  //   //
+  //   path: 'mypage',
+  //   name: 'mypage',
+  //   component: () => import('@/views/TheTestView.vue')
+  // },
+  // {
+  //   //
+  //   path: 'member',
+  //   name: 'member',
+  //   component: () => import('@/views/TheTestView.vue'),
+  //   children: []
+  // }
 ]
 // 로그인 페이지
 // 회원가입 페이지

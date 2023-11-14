@@ -10,14 +10,14 @@ const router = createRouter({
   // history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/trip-or-travel', //처음 실행시 보여줄 main
+      path: '/', //처음 실행시 보여줄 main
       name: 'main',
-      component: App,
-      children: [
-        ...userRouter
-        // ...boardRouter, ...commentRouter
-      ]
-    }
+      component: TheHomeView,
+      children: []
+    },
+    ...userRouter,
+    ...boardRouter,
+    ...commentRouter
   ]
 })
 

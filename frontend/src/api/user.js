@@ -9,7 +9,8 @@ function loginUser(email, password, success, fail) {
     email: email,
     password: password
   }
-  console.log('to json :', JSON.stringify(loginInfo))
+  console.log('local', local)
+  // json으로 변환해서 보낼 생각하고 있자
   local.post('login', loginInfo).then(success).catch(fail)
 }
 // function listBoard(success, fail) {
