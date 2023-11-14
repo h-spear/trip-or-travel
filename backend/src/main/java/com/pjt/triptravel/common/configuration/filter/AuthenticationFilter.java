@@ -27,7 +27,7 @@ import java.util.Date;
 public class AuthenticationFilter extends OncePerRequestFilter {
 
 	private static final String[] whiteList = {"/", "/home", "/member/join", "/member/email", "/member/nickname",
-												"/login", "/logout", "/refresh"};
+												"/login", "/logout", "/refresh", "/region/**"};
 
 	private final SecurityContextUtils securityContextUtils;
 	private final AuthRepository authRepository;
