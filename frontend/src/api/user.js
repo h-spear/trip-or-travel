@@ -5,10 +5,7 @@ import { localAxios } from '../utils/http-commons'
 const local = localAxios()
 
 function loginUser(email, password, success, fail) {
-  const loginInfo = {
-    email: email,
-    password: password
-  }
+  const loginInfo = {email, password}
   local.post('login', loginInfo).then(success).catch(fail)
 }
 function getSimpleInfo(success, fail) {
@@ -18,7 +15,7 @@ function logoutUser(success, fail) {
   local.post('logout').then(success).catch(fail)
 }
 function emailDupCheck(email, success, fail) {
-  local.get(`member/email/${email}`).then(success).catch(fail)
+  local.get(`member/email`, {params:{email}}).then(success).catch(fail)
 }
 // function listBoard(success, fail) {
 //   local.get('board').then(success).catch(fail)
