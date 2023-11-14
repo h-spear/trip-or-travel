@@ -1,14 +1,17 @@
 <script setup>
 import { ref } from 'vue'
-import { loginUser } from '@/api/user.js'
+import { loginUser, getSimpleInfo } from '@/api/user.js'
+import { loginStore } from '@/stores/login.js'
+import { storeToRefs } from 'pinia'
 
 const userEmail = ref('')
 const password = ref('')
 
-userEmail.value = 'test@test.com'
-password.value = 'pass'
+// userEmail.value = 'test@test.com'
+// password.value = 'pass'
 
-function login() {
+function login($event) {
+  console.log($event.target)
   if (!userEmail.value) {
     alert('이메일을 입력해주세요')
   } else if (!password.value) {
@@ -20,9 +23,20 @@ function login() {
       password.value,
       (data) => {
         console.log('login success', data)
+        const loginstore = loginStore()
+        // const { userId, userProfile, userNickname } = storeToRefs(loginstore)
+        getSimpleInfo(
+          (data) => {
+            console.log('get info success', data)
+          },
+          (error) => {
+            console.log('get simple info error', error)
+          }
+        )
+        // userId.value = userEmail.value
       },
       (error) => {
-        console.log('error : ', error)
+        console.log('login error : ', error)
       }
     )
   }
@@ -47,14 +61,14 @@ function login() {
             type="Email"
             placeholder="이메일을 입력해주세요"
             required
-            :key="userEmail"
+            v-model="userEmail"
           />
           <input
             id="password"
             name="password"
             type="password"
             placeholder="비밀번호를 입력해주세요"
-            :key="password"
+            v-model="password"
           />
           <button class="login-btn" type="submit">login</button>
           <!-- <div><button class="login-btn" type="submit">login</button></div> -->

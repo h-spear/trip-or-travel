@@ -9,9 +9,10 @@ function loginUser(email, password, success, fail) {
     email: email,
     password: password
   }
-  console.log('local', local)
-  // json으로 변환해서 보낼 생각하고 있자
   local.post('login', loginInfo).then(success).catch(fail)
+}
+function getSimpleInfo(success, fail) {
+  local.get('member/simple').then(success).catch(fail)
 }
 // function listBoard(success, fail) {
 //   local.get('board').then(success).catch(fail)
@@ -29,5 +30,5 @@ function loginUser(email, password, success, fail) {
 //   local.delete(`board/${articleNo}`).then(success).catch(fail)
 // }
 
-export { loginUser }
+export { loginUser, getSimpleInfo }
 // export { listBoard, detailBoard, registBoard, updateBoard, removeBoard }

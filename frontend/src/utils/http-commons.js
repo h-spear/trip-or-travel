@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+axios.defaults.withCredentials = true
 const { VITE_API_BASE_URL } = import.meta.env
 
 function localAxios() {

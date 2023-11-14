@@ -1,3 +1,5 @@
+import { requireLogin } from './NavigationGuard.js'
+
 const userRouter = [
   {
     //
@@ -9,6 +11,7 @@ const userRouter = [
     path: '/regist',
     name: 'regist',
     component: () => import('@/views/TheRegisterView.vue')
+    // beforeEnter: requireLogin()
   }
   // {
   //   //
