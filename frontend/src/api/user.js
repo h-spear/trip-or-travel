@@ -14,14 +14,17 @@ function loginUser(email, password, success, fail) {
 function getSimpleInfo(success, fail) {
   local.get('member/simple').then(success).catch(fail)
 }
+function logoutUser(success, fail) {
+  local.post('logout').then(success).catch(fail)
+}
 // function listBoard(success, fail) {
 //   local.get('board').then(success).catch(fail)
 // }
-// function detailBoard(articleNo, success, fail) {
-//   local.get(`board/${articleNo}`).then(success).catch(fail)
-// }
 // function registBoard(board, success, fail) {
 //   local.post('board', JSON.stringify(board)).then(success).catch(fail)
+// }
+// function detailBoard(articleNo, success, fail) {
+//   local.get(`board/${articleNo}`).then(success).catch(fail)
 // }
 // function updateBoard(board, success, fail) {
 //   local.put('board', JSON.stringify(board)).then(success).catch(fail)
@@ -30,5 +33,5 @@ function getSimpleInfo(success, fail) {
 //   local.delete(`board/${articleNo}`).then(success).catch(fail)
 // }
 
-export { loginUser, getSimpleInfo }
+export { loginUser, getSimpleInfo, logoutUser }
 // export { listBoard, detailBoard, registBoard, updateBoard, removeBoard }

@@ -1,14 +1,26 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { loginStore } from '@/stores/LoginStore.js'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
-
-const userId = ref('')
+const loginstore = loginStore()
+const { userId, userProfile, userNickname } = storeToRefs(loginstore)
+const { Funclogout } = loginstore
+console.log(loginstore.userId)
 
 //로그인을 시킨다고 치면
 // userId.value = '김김'
 // userId.value = 'admin'
+
+watch(
+  () => userId.value,
+  (a, b) => {
+    console.log('what', a, b)
+  },
+  { deep: true }
+)
 
 function moveLogin() {
   router.push({ name: 'login' })
@@ -19,6 +31,13 @@ function moveHome() {
 function moveBoard() {
   router.push({ name: 'board' })
 }
+function moveRegist() {
+  router.push({ name: 'regist' })
+}
+
+function test() {
+  console.log('userid', userId.value)
+}
 </script>
 
 <template>
@@ -27,14 +46,6 @@ function moveBoard() {
       <a class="navbar-brand text-black fw-bold" id="logo" @click="moveHome">
         <img src="@/assets/logo.png" alt="" width="60" /> Enjoy Trip
       </a>
-      <!-- <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#collapsibleNavbar"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button> -->
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
@@ -44,17 +55,16 @@ function moveBoard() {
             <a class="nav-link" href="${root}/trip?action=findForm">핫플찾기🚗</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">여행계획🎈</a>
+            <a class="nav-link" @click="test">여행계획🎈</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="moveBoard">게시판✨</a>
           </li>
         </ul>
         <!-- 로그인 전 -->
-        <!--not empty sessionScope.userId  -->
         <ul v-if="userId == ''" class="navbar-nav mb-2 me-2 mb-lg-0 beforeLogin">
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/regist">회원가입 ✍🏻</a>
+            <a class="nav-link" aria-current="page" @click="moveRegist">회원가입 ✍🏻</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" aria-current="page" @click="moveLogin">로그인</a>
@@ -62,7 +72,7 @@ function moveBoard() {
         </ul>
         <ul v-else class="navbar-nav mb-2 me-2 mb-lg-0 afterLogin">
           <li class="nav-item after">
-            <a class="nav-link" aria-current="page" href="${root}/member?action=logout">로그아웃</a>
+            <a class="nav-link" aria-current="page" @click="Funclogout">로그아웃</a>
           </li>
           <li class="nav-item after">
             <a class="nav-link" aria-current="page" href="${root}/member?action=mypage"

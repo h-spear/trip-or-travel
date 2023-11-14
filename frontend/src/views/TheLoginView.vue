@@ -1,17 +1,17 @@
 <script setup>
 import { ref } from 'vue'
 import { loginUser, getSimpleInfo } from '@/api/user.js'
-import { loginStore } from '@/stores/login.js'
+import { loginStore } from '@/stores/LoginStore.js'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 
 const userEmail = ref('')
 const password = ref('')
-
+const router = useRouter()
 // userEmail.value = 'test@test.com'
 // password.value = 'pass'
 
-function login($event) {
-  console.log($event.target)
+function login() {
   if (!userEmail.value) {
     alert('이메일을 입력해주세요')
   } else if (!password.value) {
@@ -24,16 +24,20 @@ function login($event) {
       (data) => {
         console.log('login success', data)
         const loginstore = loginStore()
-        // const { userId, userProfile, userNickname } = storeToRefs(loginstore)
+        const { userId, userProfile, userNickname } = storeToRefs(loginstore)
         getSimpleInfo(
-          (data) => {
+          ({ data }) => {
             console.log('get info success', data)
+            userId.value = data.data.id
+            userProfile.value = data.data.profileImageUrl
+            userNickname.value = data.data.nickname
+            console.log(userId.value, userProfile.value, userNickname.value)
+            router.push({ name: 'main' })
           },
           (error) => {
             console.log('get simple info error', error)
           }
         )
-        // userId.value = userEmail.value
       },
       (error) => {
         console.log('login error : ', error)

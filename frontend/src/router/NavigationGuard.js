@@ -1,5 +1,5 @@
 import { useRouter } from 'vue-router'
-import { loginStore } from '@/stores/login.js'
+import { loginStore } from '@/stores/LoginStore.js'
 
 const requireLogin = () => (to, from, next) => {
   if (!loginStore.userId) {
