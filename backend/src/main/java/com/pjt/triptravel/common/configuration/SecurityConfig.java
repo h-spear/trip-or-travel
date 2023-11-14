@@ -36,6 +36,11 @@ import java.io.PrintWriter;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private final String[] SWAGGER = {
+			"/v3/api-docs", "/v2/api-docs",
+			"/swagger-resources/**", "/configuration/security", "/webjars/**",
+			"/swagger-ui.html", "/swagger/**", "/swagger-ui/**"};
+
 	private final SecurityContextUtils securityContextUtils;
 	private final AuthRepository authRepository;
 
@@ -87,9 +92,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/error")
 			.antMatchers(SWAGGER);
 	}
-
-	private final String[] SWAGGER = {
-			"/v3/api-docs", "/v2/api-docs",
-			"/swagger-resources/**", "/configuration/security", "/webjars/**",
-			"/swagger-ui.html", "/swagger/**", "/swagger-ui/**"};
 }
