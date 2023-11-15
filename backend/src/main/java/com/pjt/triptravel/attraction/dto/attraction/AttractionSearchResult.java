@@ -1,4 +1,4 @@
-package com.pjt.triptravel.attraction.dto;
+package com.pjt.triptravel.attraction.dto.attraction;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

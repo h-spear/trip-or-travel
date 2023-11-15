@@ -16,6 +16,7 @@ public class Gugun {
     @Column(name = "gugun_code")
     private Long code;
 
+    @Column(name = "gugun_name")
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

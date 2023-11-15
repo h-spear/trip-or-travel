@@ -1,13 +1,11 @@
 package com.pjt.triptravel.attraction.repository;
 
-import com.pjt.triptravel.attraction.dto.AttractionSearchCondition;
-import com.pjt.triptravel.attraction.dto.AttractionSearchOrder;
-import com.pjt.triptravel.attraction.dto.AttractionSearchResult;
-import com.pjt.triptravel.attraction.dto.QAttractionSearchResult;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchCondition;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchOrder;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchResult;
+import com.pjt.triptravel.attraction.dto.attraction.QAttractionSearchResult;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -57,8 +55,7 @@ public class AttractionQueryRepository {
                 .where(titleContains(condition.getKeyword()),
                     codeMatch(attractionInfo.sido.code, condition.getSidoCode()),
                     codeMatch(attractionInfo.gugun.code, condition.getGugunCode()),
-                    likeCountGe(condition.getLikeCountGe()),
-                    withinCircularRange(condition.getLatitude(), condition.getLongitude(), condition.getRadiusKm()))
+                    likeCountGe(condition.getLikeCountGe()))
                 .orderBy(getOrderSpecifier(condition.getOrder()), attractionInfo.id.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -80,15 +77,12 @@ public class AttractionQueryRepository {
         if (!StringUtils.hasText(keyword)) {
             return null;
         }
+        log.info("title condition={}", keyword.toLowerCase());
         return attractionInfo.title.lower().contains(keyword.toLowerCase());
     }
 
     private BooleanExpression likeCountGe(Integer likeCountGeCond) {
         return likeCountGeCond != null ? attractionInfo.likeCount.goe(likeCountGeCond) : null;
-    }
-
-    private BooleanExpression withinCircularRange(BigDecimal latitude, BigDecimal longitude, Double radiusKm) {
-        return null;
     }
 
     private OrderSpecifier<?> getOrderSpecifier(AttractionSearchOrder order) {

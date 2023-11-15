@@ -1,20 +1,11 @@
 package com.pjt.triptravel.attraction.entity;
 
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-
 import com.pjt.triptravel.attraction.entity.region.Gugun;
 import com.pjt.triptravel.attraction.entity.region.Sido;
-
 import lombok.Getter;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
