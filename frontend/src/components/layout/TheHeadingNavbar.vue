@@ -27,7 +27,7 @@ function moveMypage() {
 }
 
 function test() {
-  console.log('userid', userId.value)
+  router.push({ name: 'test' })
 }
 </script>
 
@@ -43,10 +43,10 @@ function test() {
             <a class="nav-link" href="#">공지사항</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="${root}/trip?action=findForm">핫플찾기🚗</a>
+            <a class="nav-link" @click="test">테스트용🚗</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click="test">여행계획🎈</a>
+            <a class="nav-link">여행계획🎈</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="moveBoard">게시판✨</a>

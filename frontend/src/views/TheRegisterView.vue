@@ -2,7 +2,10 @@
 import { ref } from 'vue'
 import { emailDupCheck, nicknameDupCheck, registUser } from '@/api/user.js'
 import { AddressStore } from '@/stores/AddressStore.js'
+import { useRouter } from 'vue-router'
 import VSelect from '@/components/common/VSelect.vue'
+
+const router = useRouter()
 
 const email = ref('test@test.com')
 const password = ref('1234')
@@ -34,9 +37,10 @@ function checkDuplicateEmail() {
         console.log('request success', data.data)
         if (data.data) {
           alert('중복된 이메일이 존재합니다.')
+          dupChecked1.value = false
         } else {
-          dupChecked1.value = true
           alert('가능한 이메일입니다.')
+          dupChecked1.value = true
         }
       },
       (error) => {
@@ -54,6 +58,7 @@ function checkDuplicateNickname() {
       ({ data }) => {
         console.log('request success', data.data)
         if (data.data) {
+          dupChecked2.value = false
           alert('중복된 닉네임이 존재합니다.')
         } else {
           dupChecked2.value = true
@@ -83,12 +88,11 @@ function onRegister() {
       address: address,
       profileImageUrl: profileImageUrl.value
     }
-    console.log(user)
-    console.log('go register')
     registUser(
       user,
       (data) => {
         console.log('register success :', data)
+        router.push({ name: 'login' })
       },
       (error) => {
         console.log('error : ', error)
