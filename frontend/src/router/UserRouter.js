@@ -19,7 +19,7 @@ const userRouter = [
     path: '/mypage',
     name: 'mypage',
     component: () => import('@/views/TheTestView.vue'),
-    beforeEnter: requireLogin()
+    beforeEnter: requireLogout()
   }
   // {
   //   //

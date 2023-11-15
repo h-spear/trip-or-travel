@@ -1,28 +1,43 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { getSido, getGugun } from '@/api/region.js'
 
 export const AddressStore = defineStore('AddressCode', () => {
   //state
-  // const Sidos = ref([])
-  // const Guguns = ref([])
-  // const SidoGuguns = ref([])
-  
-  // 여기에서 바로 api요청을 통해 모든 시도와 구군을 불러온다. 
-  const sidos = ref([
-    {text: '서울', value: '서울'},
-    {text: '경기', value: '경기'}
-  ])
-  const gugunBySido = ref({
-    '서울':[
-      {text: '강동구', value: '강동구'},
-      {text: '강남구', value: '강남구'}
-    ],
-    '경기':[
-      {text: '용인시', value: '용인시'},
-      {text: '성남시', value: '성남시'}
-    ],
-  })
-
+  const sidos = ref([])
+  const gugunBySido = ref({})
+  let guguns = []
+  getSido(
+    ({ data }) => {
+      data.data.map(({ sidoCode, sidoName }) => {
+        sidos.value.push({
+          text: sidoName,
+          value: sidoCode
+        })
+      })
+      sidos.value.map(({ text, value }) => {
+        getGugun(
+          value,
+          ({ data }) => {
+            guguns = []
+            data.data.map((gugun) => {
+              guguns.push({
+                text: gugun.gugunName,
+                value: gugun.gugunCode
+              })
+            })
+            gugunBySido.value[value] = guguns
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+      })
+    },
+    (error) => {
+      console.log('error', error)
+    }
+  )
 
   // 시도 조회
 
@@ -33,5 +48,5 @@ export const AddressStore = defineStore('AddressCode', () => {
   //   count.value++
   // }
 
-  return {sidos, gugunBySido}
+  return { sidos, gugunBySido }
 })
