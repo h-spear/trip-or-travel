@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.pjt.triptravel.attraction.dto.region.GugunDto;
 import com.pjt.triptravel.attraction.dto.region.SidoDto;
-import com.pjt.triptravel.attraction.repository.GugunRepository;
-import com.pjt.triptravel.attraction.repository.SidoRepository;
+import com.pjt.triptravel.attraction.repository.region.GugunRepository;
+import com.pjt.triptravel.attraction.repository.region.SidoRepository;
 
 import lombok.RequiredArgsConstructor;
 

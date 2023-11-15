@@ -1,6 +1,6 @@
 package com.pjt.triptravel.attraction.dto.region;
 
-import com.pjt.triptravel.attraction.entity.Sido;
+import com.pjt.triptravel.attraction.entity.region.Sido;
 
 import lombok.Builder;
 import lombok.Data;

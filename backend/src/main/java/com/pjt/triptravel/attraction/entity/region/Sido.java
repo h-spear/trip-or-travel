@@ -1,4 +1,4 @@
-package com.pjt.triptravel.attraction.entity;
+package com.pjt.triptravel.attraction.entity.region;
 
 import lombok.Getter;
 
