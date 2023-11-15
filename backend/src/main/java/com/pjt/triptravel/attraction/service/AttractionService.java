@@ -1,22 +1,25 @@
 package com.pjt.triptravel.attraction.service;
 
 import com.pjt.triptravel.attraction.dto.AttractionDto;
-import com.pjt.triptravel.attraction.dto.AttractionSimpleDto;
+import com.pjt.triptravel.attraction.dto.AttractionSearchCondition;
+import com.pjt.triptravel.attraction.dto.AttractionSearchResult;
 import com.pjt.triptravel.attraction.entity.AttractionInfo;
+import com.pjt.triptravel.attraction.repository.AttractionQueryRepository;
 import com.pjt.triptravel.attraction.repository.AttractionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AttractionService {
 
     private final AttractionRepository attractionRepository;
+    private final AttractionQueryRepository attractionQueryRepository;
 
-    public List<AttractionSimpleDto> search() {
-        return null;
+    public Slice<AttractionSearchResult> search(AttractionSearchCondition condition, Pageable pageable) {
+        return attractionQueryRepository.query(condition, pageable);
     }
 
     public AttractionDto findOne(Long id) {
