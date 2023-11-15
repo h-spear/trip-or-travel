@@ -1,5 +1,6 @@
 package com.pjt.triptravel.attraction.controller;
 
+import com.pjt.triptravel.attraction.dto.AttractionAroundCondition;
 import com.pjt.triptravel.attraction.dto.AttractionSearchCondition;
 import com.pjt.triptravel.attraction.service.AttractionService;
 import com.pjt.triptravel.common.response.ApiResponse;
@@ -20,6 +21,11 @@ public class AttractionController {
     @GetMapping
     public ApiResponse<?> search(AttractionSearchCondition condition, Pageable pageable) {
         return ApiResponse.ofSuccess(attractionService.search(condition, pageable));
+    }
+
+    @GetMapping("/around")
+    public ApiResponse<?> around(AttractionAroundCondition condition) {
+        return ApiResponse.ofSuccess(attractionService.findWithinRoundRange(condition));
     }
 
     @GetMapping("/{contentId}")
