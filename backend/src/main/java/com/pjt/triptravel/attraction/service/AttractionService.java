@@ -1,6 +1,6 @@
 package com.pjt.triptravel.attraction.service;
 
-import com.pjt.triptravel.attraction.dto.*;
+import com.pjt.triptravel.attraction.dto.attraction.*;
 import com.pjt.triptravel.attraction.entity.AttractionInfo;
 import com.pjt.triptravel.attraction.repository.AttractionQueryRepository;
 import com.pjt.triptravel.attraction.repository.AttractionRepository;
@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service

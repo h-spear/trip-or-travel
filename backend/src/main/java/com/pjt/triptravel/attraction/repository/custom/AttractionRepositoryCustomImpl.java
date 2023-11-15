@@ -1,10 +1,6 @@
 package com.pjt.triptravel.attraction.repository.custom;
 
-import com.pjt.triptravel.attraction.dto.AttractionAroundResult;
-import com.pjt.triptravel.attraction.dto.AttractionSearchResult;
-import com.pjt.triptravel.attraction.entity.AttractionInfo;
-import com.pjt.triptravel.attraction.entity.region.Gugun;
-import com.pjt.triptravel.attraction.entity.region.Sido;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionAroundResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

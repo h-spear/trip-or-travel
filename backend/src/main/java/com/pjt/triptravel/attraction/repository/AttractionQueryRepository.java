@@ -1,13 +1,11 @@
 package com.pjt.triptravel.attraction.repository;
 
-import com.pjt.triptravel.attraction.dto.AttractionSearchCondition;
-import com.pjt.triptravel.attraction.dto.AttractionSearchOrder;
-import com.pjt.triptravel.attraction.dto.AttractionSearchResult;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchCondition;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchOrder;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchResult;
 import com.pjt.triptravel.attraction.dto.QAttractionSearchResult;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;

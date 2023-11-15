@@ -1,7 +1,7 @@
 package com.pjt.triptravel.attraction.controller;
 
-import com.pjt.triptravel.attraction.dto.AttractionAroundCondition;
-import com.pjt.triptravel.attraction.dto.AttractionSearchCondition;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionAroundCondition;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchCondition;
 import com.pjt.triptravel.attraction.service.AttractionService;
 import com.pjt.triptravel.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;

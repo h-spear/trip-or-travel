@@ -1,4 +1,4 @@
-package com.pjt.triptravel.attraction.dto;
+package com.pjt.triptravel.attraction.dto.attraction;
 
 import lombok.Builder;
 import lombok.Data;
