@@ -3,7 +3,7 @@ package com.pjt.triptravel.attraction.repository;
 import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchCondition;
 import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchOrder;
 import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchResult;
-import com.pjt.triptravel.attraction.dto.QAttractionSearchResult;
+import com.pjt.triptravel.attraction.dto.attraction.QAttractionSearchResult;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
