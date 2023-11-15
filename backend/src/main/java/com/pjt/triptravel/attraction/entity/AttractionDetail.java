@@ -1,10 +1,10 @@
 package com.pjt.triptravel.attraction.entity;
 
+import lombok.Getter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import lombok.Getter;
 
 @Entity
 @Getter
