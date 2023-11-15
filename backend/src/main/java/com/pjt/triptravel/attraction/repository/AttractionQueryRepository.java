@@ -57,8 +57,7 @@ public class AttractionQueryRepository {
                 .where(titleContains(condition.getKeyword()),
                     codeMatch(attractionInfo.sido.code, condition.getSidoCode()),
                     codeMatch(attractionInfo.gugun.code, condition.getGugunCode()),
-                    likeCountGe(condition.getLikeCountGe()),
-                    withinCircularRange(condition.getLatitude(), condition.getLongitude(), condition.getRadiusKm()))
+                    likeCountGe(condition.getLikeCountGe()))
                 .orderBy(getOrderSpecifier(condition.getOrder()), attractionInfo.id.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -80,15 +79,12 @@ public class AttractionQueryRepository {
         if (!StringUtils.hasText(keyword)) {
             return null;
         }
+        log.info("title condition={}", keyword.toLowerCase());
         return attractionInfo.title.lower().contains(keyword.toLowerCase());
     }
 
     private BooleanExpression likeCountGe(Integer likeCountGeCond) {
         return likeCountGeCond != null ? attractionInfo.likeCount.goe(likeCountGeCond) : null;
-    }
-
-    private BooleanExpression withinCircularRange(BigDecimal latitude, BigDecimal longitude, Double radiusKm) {
-        return null;
     }
 
     private OrderSpecifier<?> getOrderSpecifier(AttractionSearchOrder order) {
