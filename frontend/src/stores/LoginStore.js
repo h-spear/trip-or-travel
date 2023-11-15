@@ -8,9 +8,7 @@ export const loginStore = defineStore('loginUser', () => {
   const userId = ref('')
   const userProfile = ref('')
   const userNickname = ref('')
-
-  // const count = ref(0)
-  // const doubleCount = computed(() => count.value * 2)
+  const router = useRouter()
 
   function Funclogout() {
     logoutUser(
@@ -19,7 +17,6 @@ export const loginStore = defineStore('loginUser', () => {
         userId.value = ''
         userProfile.value = ''
         userNickname.value = ''
-        const router = useRouter()
         router.push({ name: 'main' })
       },
       (error) => {

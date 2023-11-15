@@ -1,24 +1,26 @@
-import { requireLogin } from './NavigationGuard.js'
+import { requireLogin, requireLogout } from './NavigationGuard.js'
 
 const userRouter = [
   {
     //
     path: '/login',
     name: 'login',
-    component: () => import('@/views/TheLoginView.vue')
+    component: () => import('@/views/TheLoginView.vue'),
+    beforeEnter: requireLogout()
   },
   {
     path: '/regist',
     name: 'regist',
-    component: () => import('@/views/TheRegisterView.vue')
-    // beforeEnter: requireLogin()
+    component: () => import('@/views/TheRegisterView.vue'),
+    beforeEnter: requireLogout()
+  },
+  {
+    //
+    path: '/mypage',
+    name: 'mypage',
+    component: () => import('@/views/TheTestView.vue'),
+    beforeEnter: requireLogout()
   }
-  // {
-  //   //
-  //   path: 'mypage',
-  //   name: 'mypage',
-  //   component: () => import('@/views/TheTestView.vue')
-  // },
   // {
   //   //
   //   path: 'member',
@@ -27,7 +29,6 @@ const userRouter = [
   //   children: []
   // }
 ]
-// 로그인 페이지
 // 회원가입 페이지
 // 마이 페이지
 

@@ -10,18 +10,6 @@ const { userId, userProfile, userNickname } = storeToRefs(loginstore)
 const { Funclogout } = loginstore
 console.log(loginstore.userId)
 
-//로그인을 시킨다고 치면
-// userId.value = '김김'
-// userId.value = 'admin'
-
-watch(
-  () => userId.value,
-  (a, b) => {
-    console.log('what', a, b)
-  },
-  { deep: true }
-)
-
 function moveLogin() {
   router.push({ name: 'login' })
 }
@@ -33,6 +21,9 @@ function moveBoard() {
 }
 function moveRegist() {
   router.push({ name: 'regist' })
+}
+function moveMypage() {
+  router.push({ name: 'mypage' })
 }
 
 function test() {
@@ -71,13 +62,14 @@ function test() {
           </li>
         </ul>
         <ul v-else class="navbar-nav mb-2 me-2 mb-lg-0 afterLogin">
+          <li class="nav-item btn"><img src="userProfile" alt="프로필" /></li>
+          <li class="nav-item">{{ userNickname }}님 안녕하세요</li>
+
           <li class="nav-item after">
             <a class="nav-link" aria-current="page" @click="Funclogout">로그아웃</a>
           </li>
           <li class="nav-item after">
-            <a class="nav-link" aria-current="page" href="${root}/member?action=mypage"
-              >마이페이지</a
-            >
+            <a class="nav-link" aria-current="page" @click="moveMypage">마이페이지</a>
           </li>
           <li v-if="userId == 'admin'" class="nav-item dropdown admin">
             <a

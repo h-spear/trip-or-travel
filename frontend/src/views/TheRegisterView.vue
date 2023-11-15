@@ -1,113 +1,179 @@
 <script setup>
 import { ref } from 'vue'
-import { loginUser } from '@/api/user.js'
+import { emailDupCheck, nicknameDupCheck, registUser } from '@/api/user.js'
+import { AddressStore } from '@/stores/AddressStore.js'
+import VSelect from '@/components/common/VSelect.vue'
 
-const userEmail = ref('')
-const password = ref('')
+const email = ref('test@test.com')
+const password = ref('1234')
+const passwordConfirm = ref('1234')
+const name = ref('test')
+const nickname = ref('test')
+const age = ref(10)
+const gender = ref('MALE')
+// 아래 둘은 합쳐서 address로 만들어야함
+const sido = ref('Seoul')
+const gugun = ref('Gangnam')
+const profileImageUrl = ref('imageURL')
 
-userEmail.value = 'test@test.com'
-password.value = 'pass'
+const addressStore = AddressStore()
+const { sidos, gugunBySido } = addressStore
+const guguns = ref([{ text: '', value: '' }])
 
-function login() {
-  if (!userEmail.value) {
+const isValid = ref(false)
+const dupChecked1 = ref(false)
+const dupChecked2 = ref(false)
+
+function checkDuplicateEmail() {
+  if (!email.value) {
     alert('이메일을 입력해주세요')
-  } else if (!password.value) {
-    alert('비밀번호를 입력해주세요')
   } else {
-    console.log('login....')
-    loginUser(
-      userEmail.value,
-      password.value,
+    emailDupCheck(
+      email.value,
+      ({ data }) => {
+        console.log('request success', data.data)
+        if (data.data) {
+          alert('중복된 이메일이 존재합니다.')
+        } else {
+          dupChecked1.value = true
+          alert('가능한 이메일입니다.')
+        }
+      },
+      (error) => {
+        console.log('dup check failed', error)
+      }
+    )
+  }
+}
+function checkDuplicateNickname() {
+  if (!nickname.value) {
+    alert('닉네임을 입력해주세요')
+  } else {
+    nicknameDupCheck(
+      nickname.value,
+      ({ data }) => {
+        console.log('request success', data.data)
+        if (data.data) {
+          alert('중복된 닉네임이 존재합니다.')
+        } else {
+          dupChecked2.value = true
+          alert('가능한 닉네임입니다.')
+        }
+      },
+      (error) => {
+        console.log('dup check failed', error)
+      }
+    )
+  }
+}
+
+function onRegister() {
+  if (!(dupChecked1.value && dupChecked2.value)) {
+    alert('중복 체크를 완료해주십시오')
+  } else {
+    const address = { sido: sido.value, gugun: gugun.value }
+    const user = {
+      email: email.value,
+      password: password.value,
+      passwordConfirm: passwordConfirm.value,
+      name: name.value,
+      nickname: nickname.value,
+      age: age.value,
+      gender: gender.value,
+      address: address,
+      profileImageUrl: profileImageUrl.value
+    }
+    console.log(user)
+    console.log('go register')
+    registUser(
+      user,
       (data) => {
-        console.log('login success', data)
+        console.log('register success :', data)
       },
       (error) => {
         console.log('error : ', error)
       }
     )
+    //submit 값을 바로 확인할 방법이 없을까
   }
-  //여기에서 아이디랑 비번 서버에 날려보내기
-  // 성공 시 jwt 토큰 반환될 에정
-  // id는 같이 가지고 있짜
+}
+
+function selectSido(selectedSido) {
+  console.log('selected sido', gugunBySido[selectedSido])
+  guguns.value = gugunBySido[selectedSido]
+  sido.value = selectedSido
+}
+function selectGugun(selectedGugun) {
+  console.log('selected gugun', selectedGugun)
+  gugun.value = selectedGugun
 }
 </script>
 
 <template>
-  <!-- <main class="container box">
-    <div class="login-page" style="margin-top: 100px">
-      <div class="title">
-        <img src="@/assets/logo.png" class="login-logo" />
-      </div>
-      <div class="form">
-        <form name="login-form" class="login-form" method="post" @submit.prevent="login">
-          <input type="hidden" name="action" value="login" />
-          <input
-            id="userEmail"
-            name="userEmail"
-            type="Email"
-            placeholder="이메일을 입력해주세요"
-            required
-            :key="userEmail"
-          />
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="비밀번호를 입력해주세요"
-            :key="password"
-          />
-          <button class="login-btn" type="submit">login</button>
-          <div class="go">
-            <a href="${root }/member/resgister.jsp" class="last">회원가입&nbsp;</a>|
-            <a href="#" class="last">&nbsp;아이디 찾기&nbsp;</a>|
-            <a href="#" class="last">&nbsp;비밀번호 찾기</a>
-          </div>
-        </form> -->
-
-  <!-- "email": "test@test.com",
-    "password": "1234",
-    "passwordConfirm": "1234",
-    "name": "test",
-    "nickname": "test",
-    "age": 10,
-    "gender": "MALE",
-    "address": {
-        "sido": "Seoul",
-        "gugun": "Gangnam"
-    },
-    "profileImageUrl": "imageURL" -->
-
   <main class="container box">
     <div class="register-page" style="margin-top: 100px">
       <div class="title">
         <img src="@/assets/logo.png" class="login-logo" />
       </div>
       <div class="form">
-        <form name="register-form" class="register-form">
-          <input id="email" name="email" type="email" placeholder="이메일" required />
-          <button class="dupcheck" @click="checkDuplicateEmail">중복 체크</button>
-          <input id="nickname" name="nickname" type="text" placeholder="닉네임" required />
-          <button class="dupcheck" @click="checkDuplicateNickname">중복 체크</button>
-          <input id="password" name="password" type="password" placeholder="비밀번호" required />
+        <form name="register-form" class="register-form" @submit.prevent="onRegister">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="이메일"
+            required
+            v-model="email"
+          />
+          <a class="btn dupcheck" @click="checkDuplicateEmail">중복 체크</a>
+          <input
+            id="nickname"
+            name="nickname"
+            type="text"
+            placeholder="닉네임"
+            required
+            v-model="nickname"
+          />
+          <a class="btn dupcheck" @click="checkDuplicateNickname">중복 체크</a>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="비밀번호"
+            required
+            v-model="password"
+          />
           <input
             id="passwordConfirm"
-            name="passwordConfirm"
+            name="passwordConfirm1"
             type="password"
             placeholder="비밀번호 확인"
             required
+            v-model="passwordConfirm"
           />
-          <input id="name" name="name" type="text" placeholder="이름" required />
-          <input id="age" name="age" type="number" placeholder="나이" />
+          <input id="name" name="name" type="text" placeholder="이름" required v-model="name" />
+          <input id="age" name="age" type="number" placeholder="나이" v-model="age" />
           <div class="form-check form-check-inline">
-            <input class="" id="male" name="gender" type="radio" value="MALE" />
+            <input class="" id="male" name="gender" type="radio" value="MALE" v-model="gender" />
             <label class="form-check-label" for="male">남성</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="" id="female" name="gender" type="radio" value="FEMALE" />
+            <input
+              class=""
+              id="female"
+              name="gender"
+              type="radio"
+              value="FEMALE"
+              v-model="gender"
+            />
             <label class="form-check-label" for="female">여성</label>
           </div>
+          <label for="sido">시도</label>
+          <VSelect id="sido" :selectOptions="sidos" @onKeySelect="selectSido"></VSelect>
+          <label for="gugun">구군</label>
+          <VSelect id="gugun" :selectOptions="guguns" @onKeySelect="selectGugun"></VSelect>
 
-          <button onclick="regist()" type="button" class="regi-btn">회원 등록</button>
+          <button type="submit" class="regi-btn" :disabled="isValid">회원 등록</button>
         </form>
       </div>
     </div>

@@ -2,12 +2,8 @@
 
 <template>
   <div class="mt-4 p-5 bg-primary text-white rounded">
-    <h1>Enjoy Trip</h1>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-      labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-      laboris nisi ut aliquip ex ea commodo consequat..
-    </p>
+    <h1>Trip or Travel</h1>
+    <p>여행 계획 사이트에 오신 것을 환영합니다. 사용법</p>
   </div>
 </template>
 
