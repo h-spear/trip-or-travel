@@ -15,10 +15,10 @@ function localAxios() {
 
 function imageAxios() {
   const instance = axios.create({
-    baseURL: VITE_IMGBB_BASE_URL
-    // headers: {
-    //   'Content-Type': 'Application/json'
-    // }
+    baseURL: VITE_IMGBB_BASE_URL,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
   return instance
 }
