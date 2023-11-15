@@ -1,9 +1,6 @@
 package com.pjt.triptravel.member.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.Getter;
 
@@ -12,7 +9,7 @@ import lombok.Getter;
 public class Auth {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "AUTH_ID", nullable = false)
 	private Long id;
 
