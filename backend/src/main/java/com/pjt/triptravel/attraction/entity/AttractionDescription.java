@@ -14,6 +14,9 @@ public class AttractionDescription {
 	@Column(name = "content_id")
 	private Long id;
 
+	@Column(length = 100)
 	private String homepage;
+
+	@Column(length = 10000)
 	private String overview;
 }

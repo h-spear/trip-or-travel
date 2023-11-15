@@ -24,14 +24,24 @@ public class AttractionInfo {
 	@Column(name = "content_id")
 	private Long id;
 
+	@Column(length = 100)
 	private String title;
+
+	@Column(length = 100)
 	private String addr1;
+
+	@Column(length = 50)
 	private String addr2;
+
+	@Column(length = 50)
 	private String zipcode;
+
+	@Column(length = 50)
 	private String tel;
-	@Column(name = "first_image")
+
+	@Column(name = "first_image", length = 200)
 	private String imageUrl;
-	@Column(name = "first_image2")
+	@Column(name = "first_image2", length = 200)
 	private String imageUrl2;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -48,6 +58,7 @@ public class AttractionInfo {
 	@Column(precision = 20, scale = 17)
 	private BigDecimal longitude;
 
+	@Column(length = 2)
 	private String mlevel;
 
 	@Column(name = "readcount")
