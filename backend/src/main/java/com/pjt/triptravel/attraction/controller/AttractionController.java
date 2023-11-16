@@ -20,6 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AttractionController {
 
     private final AttractionService attractionService;
+    
+    @Operation(summary = "관광지 타입 조회", description = "모든 관광지 타입을 조회합니다.")
+    @GetMapping("/content-type")
+    public ApiResponse<?> getContentTypes() {
+        return ApiResponse.ofSuccess(attractionService.getContentTypes());
+    }
 
     @Operation(summary = "관광지 목록 조회", description = "관광지 목록을 조회합니다.")
     @GetMapping
