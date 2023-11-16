@@ -3,6 +3,7 @@ package com.pjt.triptravel.attraction.entity;
 import com.pjt.triptravel.attraction.entity.region.Gugun;
 import com.pjt.triptravel.attraction.entity.region.Sido;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,6 +15,10 @@ public class AttractionInfo {
 	@Id
 	@Column(name = "content_id")
 	private Long id;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "content_type_id")
+	private ContentType contentType;
 
 	@Column(length = 100)
 	private String title;
@@ -54,6 +59,8 @@ public class AttractionInfo {
 
 	@Column(name = "readcount")
 	private int readCount;
+
+	@ColumnDefault("0")
 	private int likeCount;
 
 	@OneToOne(fetch = FetchType.LAZY)
