@@ -2,7 +2,11 @@
 import { ref } from 'vue'
 import { emailDupCheck, nicknameDupCheck, registUser } from '@/api/user.js'
 import { AddressStore } from '@/stores/AddressStore.js'
+import { useRouter } from 'vue-router'
+import { uploadImage } from '@/api/image.js'
 import VSelect from '@/components/common/VSelect.vue'
+
+const router = useRouter()
 
 const email = ref('test@test.com')
 const password = ref('1234')
@@ -12,9 +16,9 @@ const nickname = ref('test')
 const age = ref(10)
 const gender = ref('MALE')
 // 아래 둘은 합쳐서 address로 만들어야함
-const sido = ref('Seoul')
-const gugun = ref('Gangnam')
-const profileImageUrl = ref('imageURL')
+const sido = ref(0)
+const gugun = ref(0)
+const profileImageUrl = ref('https://i.ibb.co/jhrRmpY/anonymous.png')
 
 const addressStore = AddressStore()
 const { sidos, gugunBySido } = addressStore
@@ -34,9 +38,10 @@ function checkDuplicateEmail() {
         console.log('request success', data.data)
         if (data.data) {
           alert('중복된 이메일이 존재합니다.')
+          dupChecked1.value = false
         } else {
-          dupChecked1.value = true
           alert('가능한 이메일입니다.')
+          dupChecked1.value = true
         }
       },
       (error) => {
@@ -54,6 +59,7 @@ function checkDuplicateNickname() {
       ({ data }) => {
         console.log('request success', data.data)
         if (data.data) {
+          dupChecked2.value = false
           alert('중복된 닉네임이 존재합니다.')
         } else {
           dupChecked2.value = true
@@ -66,6 +72,27 @@ function checkDuplicateNickname() {
     )
   }
 }
+
+function getFileName(data) {
+  const fileReader = new FileReader()
+  fileReader.readAsDataURL(data[0])
+  fileReader.onload = () => {
+    console.log('value', fileReader)
+    uploadImage(
+      fileReader.result,
+      ({ data }) => {
+        console.log('success', data)
+        profileImageUrl.value = data.data.url
+      },
+      (error) => {
+        console.log('error ', error)
+      }
+    )
+  }
+}
+
+
+
 
 function onRegister() {
   if (!(dupChecked1.value && dupChecked2.value)) {
@@ -83,18 +110,17 @@ function onRegister() {
       address: address,
       profileImageUrl: profileImageUrl.value
     }
-    console.log(user)
-    console.log('go register')
     registUser(
       user,
       (data) => {
         console.log('register success :', data)
+        alert("회원가입이 완료되었습니다!")
+        router.push({ name: 'login' })
       },
       (error) => {
         console.log('error : ', error)
       }
     )
-    //submit 값을 바로 확인할 방법이 없을까
   }
 }
 
@@ -172,6 +198,19 @@ function selectGugun(selectedGugun) {
           <VSelect id="sido" :selectOptions="sidos" @onKeySelect="selectSido"></VSelect>
           <label for="gugun">구군</label>
           <VSelect id="gugun" :selectOptions="guguns" @onKeySelect="selectGugun"></VSelect>
+
+          <img :src="profileImageUrl" id="profileImg" alt="testing" />
+          <div>
+            <input
+              type="file"
+              id="upload-image"
+              hidden
+              @change="getFileName($event.target.files)"
+            />
+            <label for="upload-image">
+              <a>프로필로 사용할 이미지를 등록하세여(32mb이하)</a>
+            </label>
+          </div>
 
           <button type="submit" class="regi-btn" :disabled="isValid">회원 등록</button>
         </form>
@@ -253,5 +292,11 @@ input {
 #name,
 #age {
   width: 100%;
+}
+
+#profileImg {
+  margin: 10px;
+  width: 50px;
+  height: 50px;
 }
 </style>
