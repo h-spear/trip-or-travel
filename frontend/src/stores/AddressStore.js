@@ -49,12 +49,14 @@ export const AddressStore = defineStore(
     // function increment() {
     //   count.value++
     // }
+    
 
     return { sidos, gugunBySido }
   },
   {
     persist: {
       beforeRestore: (ctx) => console.log(`store 복구 시작: ${ctx.store.$id}`),
+      // 여기에 유저 체크 함수를 넣으면 임의의 로그인하는 척하는 공격을 막을 수 있을 듯
       afterRestore: (ctx) => console.log(`store 복구 완료: ${ctx.store.$id}`)
     }
   }

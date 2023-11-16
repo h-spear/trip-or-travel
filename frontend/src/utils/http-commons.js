@@ -17,7 +17,7 @@ function imageAxios() {
   const instance = axios.create({
     baseURL: VITE_IMGBB_BASE_URL,
     headers: {
-      'Content-Type': 'multipart/form-data'
+      'Content-Type': 'multipart/form-data;'
     }
   })
   return instance

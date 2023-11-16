@@ -20,7 +20,6 @@ function getFileName(data) {
       }
     )
   }
-  fileReader.onload()
 }
 </script>
 
