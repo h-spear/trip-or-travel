@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,7 +33,9 @@ public class CommentService {
 
 	public List<CommentDto> getComments(Long postId) {
 		return commentRepository.findByPostIdWithCommenter(postId)
-				.stream().map(CommentDto::of)
+				.stream()
+				.filter(comment -> comment.getParent() == null)
+				.map(CommentDto::of)
 				.collect(Collectors.toList());
 	}
 
