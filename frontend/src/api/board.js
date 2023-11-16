@@ -3,10 +3,11 @@ import { localAxios } from '../utils/http-commons'
 const local = localAxios()
 
 function listBoard(success, fail) {
-  local.get('board').then(success).catch(fail)
+  // http://localhost:8080/post?boardId=3 get
+  local.get('post?boardId=3').then(success).catch(fail)
 }
-function detailBoard(articleNo, success, fail) {
-  local.get(`board/${articleNo}`).then(success).catch(fail)
+function detailBoard(postId, success, fail) {
+  local.get(`post/${postId}`).then(success).catch(fail)
 }
 function registBoard(board, success, fail) {
   local.post('board', JSON.stringify(board)).then(success).catch(fail)

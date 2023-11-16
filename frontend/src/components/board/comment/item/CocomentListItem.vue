@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import router from '@/router'
-import {CocomentListItem} from "@/components/board/comment/item/CocomentListItem.vue"
 const props = defineProps({ comment: Object })
 const clicked = ref(true)
 

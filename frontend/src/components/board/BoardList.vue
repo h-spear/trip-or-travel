@@ -12,7 +12,7 @@ const selectOption = ref([
   { text: '제목', value: 'subject' },
   { text: '작성자아이디', value: 'user_id' }
 ])
-const articles = ref([])
+const posts = ref([])
 
 const currentPage = ref(7)
 const totalPage = ref(35)
@@ -35,8 +35,8 @@ const changeKey = (val) => {
 const getArticleList = () => {
   listBoard(
     ({ data }) => {
-      console.log('get article list : ', data)
-      articles.value = data
+      console.log('get article list : ', data.data)
+      posts.value = data.data.content
       currentPage.value = 1
       totalPage.value = 5
     },
@@ -46,20 +46,8 @@ const getArticleList = () => {
   )
 }
 
-const onPageChange = (val) => {
-  console.log(val + '번 페이지로 이동 준비 끝!!!')
-  param.value.pgno = val
-  getArticleList()
-}
-
 const moveWrite = () => {
   router.push('write')
-  // router.push({
-  //   name: "write",
-  //   params: {
-  //     board: board,
-  //   },
-  // });
 }
 </script>
 
@@ -97,26 +85,18 @@ const moveWrite = () => {
           <thead>
             <tr class="text-center">
               <th scope="col">글번호</th>
-              <th scope="col">제목</th>
+              <th scope="col">좋아요</th>
+              <th scope="col">제목(댓글)</th>
               <th scope="col">작성자</th>
               <th scope="col">조회수</th>
               <th scope="col">작성일</th>
             </tr>
           </thead>
           <tbody>
-            <BoardListItem
-              v-for="article in articles"
-              :key="article.articleNo"
-              :article="article"
-            ></BoardListItem>
+            <BoardListItem v-for="post in posts" :key="post.postId" :post="post"></BoardListItem>
           </tbody>
         </table>
       </div>
-      <PageNavigation
-        :current-page="currentPage"
-        :total-page="totalPage"
-        @pageChange="onPageChange"
-      ></PageNavigation>
     </div>
   </div>
 </template>

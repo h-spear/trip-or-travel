@@ -8,7 +8,6 @@ const router = useRouter()
 const loginstore = loginStore()
 const { userId, userProfile, userNickname } = storeToRefs(loginstore)
 const { Funclogout } = loginstore
-console.log(loginstore.userId)
 
 function moveLogin() {
   router.push({ name: 'login' })

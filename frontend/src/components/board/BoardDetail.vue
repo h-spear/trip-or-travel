@@ -1,57 +1,65 @@
 <script setup>
-import {useRoute, useRouter} from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted, reactive, onUpdated } from 'vue'
 import { detailBoard, removeBoard } from '../../api/board'
-import CommentList from "./comment/CommentList.vue";
+import CommentList from './comment/CommentList.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const article = ref({
-  articleNo: 0,
-  subject: 0,
-  registerDate: 0,
-  hit: 0,
-  content: 0,
-});
+import { commentStore } from '@/stores/CommentStore.js'
+import { storeToRefs } from 'pinia'
+const commentstore = commentStore()
+const { postId, commentList } = storeToRefs(commentstore)
+postId.value = route.params.postId
 
-onMounted(() => {
-  getArticle()
+const post = ref({
+  postId: 0,
+  title: 0,
+  registrationDate: 0,
+  views: 0,
+  content: 0,
+  commentCount: 0,
+  likes: 0
 })
 
-const getArticle = () => {
+onMounted(() => {
+  getPost()
+})
+
+const getPost = () => {
+  console.log('getPost')
   detailBoard(
-    route.params.articleNo,
+    postId.value,
     ({ data }) => {
-      console.log('get detail data : ', data)
-      article.value = data
+      console.log('get detail data : ', data.data)
+      post.value = data.data
     },
     (error) => {
-      console.log('error : ', error)
+      console.log('get post error : ', error)
     }
   )
 }
 
-function moveList(){
+function moveList() {
   router.push({
-    name:'board-list'
+    name: 'board-list'
   })
 }
 
-
-function moveModify(){
+function moveModify() {
   router.push({
-    name: 'board-modify', 
-    state:{
-      article:{...article.value}
+    name: 'board-modify',
+    state: {
+      post: { ...post.value }
     }
   })
 }
 
 function onDeleteArticle() {
   removeBoard(
-    article.value.articleNo,
-    (data)=>{
+    post.value.postId,
+    (data) => {
       console.log('delete complete', data)
       moveList()
       // 댓글도 전부 지우는 작업이 함께 들어가야만 한다.
@@ -74,27 +82,27 @@ function onDeleteArticle() {
       </div>
       <div class="col-lg-10 text-start">
         <div class="row my-2">
-          <h2 class="text-secondary px-5">{{ article.articleNo }}. {{ article.subject }}</h2>
+          <h2 class="text-secondary px-5">{{ post.postId }}. {{ post.title }}</h2>
         </div>
         <div class="row">
           <div class="col-md-8">
             <div class="clearfix align-content-center">
               <img
                 class="avatar me-2 float-md-start bg-light p-2"
-                src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
+                :src="post.writerProfileImageUrl"
               />
               <p>
-                <span class="fw-bold">{{ article.userId }}</span> <br />
+                <span class="fw-bold">{{ post.writerNickname }}</span> <br />
                 <span class="text-secondary fw-light">
-                  {{ article.registerDate }}조회 : {{ article.hit }}
+                  {{ post.registrationDate }}조회 : {{ post.views }}
                 </span>
               </p>
             </div>
           </div>
-          <div class="col-md-4 align-self-center text-end">댓글 : 17</div>
+          <div class="col-md-4 align-self-center text-end">댓글 : {{ post.commentCount }}</div>
           <div class="divider mb-3"></div>
           <div class="text-secondary">
-            {{ article.content }}
+            {{ post.content }}
           </div>
           <div class="divider mt-3 mb-3"></div>
           <div class="d-flex justify-content-end">
@@ -113,8 +121,7 @@ function onDeleteArticle() {
     </div>
   </div>
   <div class="m-2 bg-white">중간선</div>
-  <CommentList :articleNo="article.articleNo"></CommentList>
+  <CommentList :postId="post.postId"></CommentList>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
