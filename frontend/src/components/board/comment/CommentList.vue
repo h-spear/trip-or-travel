@@ -17,7 +17,6 @@ const comments = ref([])
 const props = defineProps({ postId: Number })
 
 getCommentList(props.postId, comments)
-console.log('good', comments.value)
 
 const comment = ref({
   children: [],
@@ -96,6 +95,7 @@ function onDeleteComment(data) {
 
 <template>
   <div class="container">
+    <div>{{ comments.length }}</div>
     <ol class="list-group list-group-numbered">
       <CommentListItem
         class=""

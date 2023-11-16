@@ -3,7 +3,9 @@ import { ref } from 'vue'
 import router from '@/router'
 const props = defineProps({ comment: Object })
 const clicked = ref(true)
+const comment = ref(props.comment)
 const children = ref(props.comment.children)
+console.log(props.comment)
 const content = ref(props.comment.comment)
 
 const emits = defineEmits(['updatingComment', 'deletingComment', 'writingComment'])
@@ -34,7 +36,7 @@ function deleteComment() {
   <div class="container list-group-item">
     <div class="row">
       <div class="col">
-        <h4><img :src="commenterProfileImageUrl" />{{ comment.commenterNickname }}</h4>
+        <h4><img :src="comment.commenterProfileImageUrl" />{{ comment.commenterNickname }}</h4>
       </div>
       <div class="col">
         {{ comment.registerTime }}
@@ -54,7 +56,7 @@ function deleteComment() {
       <div class="container list-group-item">
         <div class="row">
           <div class="col">
-            <h4><img :src="commenterProfileImageUrl" />{{ child.commenterNickname }}</h4>
+            <h4><img :src="child.commenterProfileImageUrl" />{{ child.commenterNickname }}</h4>
           </div>
           <textarea
             :readonly="clicked"

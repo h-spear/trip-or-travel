@@ -6,7 +6,7 @@ import CommentList from './comment/CommentList.vue'
 
 const route = useRoute()
 const router = useRouter()
-const postId = route.params.postId
+const postId = Number(route.params.postId)
 
 const post = ref({
   postId: 0,
@@ -87,7 +87,7 @@ function onDeleteArticle() {
               <p>
                 <span class="fw-bold">{{ post.writerNickname }}</span> <br />
                 <span class="text-secondary fw-light">
-                  {{ post.registrationDate }}조회 : {{ post.views }}
+                  {{ post.registrationDate }} 조회 : {{ post.views }}
                 </span>
               </p>
             </div>
@@ -114,8 +114,7 @@ function onDeleteArticle() {
     </div>
   </div>
   <div class="m-2 bg-white">중간선</div>
-  {{ post.postId }}
-  <CommentList :post-id="postId"></CommentList>
+  <CommentList :postId="postId"></CommentList>
 </template>
 
 <style scoped></style>
