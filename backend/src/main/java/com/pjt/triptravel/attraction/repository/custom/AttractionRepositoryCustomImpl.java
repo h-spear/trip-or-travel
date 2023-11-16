@@ -27,11 +27,13 @@ public class AttractionRepositoryCustomImpl implements AttractionRepositoryCusto
                     "                   * COS(RADIANS(longitude) - RADIANS(:longitude))    " +
                     "                   + SIN(RADIANS(:latitude)) * SIN(RADIANS(latitude)))) as distance " +
                     "   FROM attraction_info " +
+                    "   JOIN attraction_detail " +
+                    "  USING (content_id)" +
                     "  WHERE (6371 * " +
                     "             ACOS(COS(RADIANS(:latitude)) * COS(RADIANS(latitude)) " +
                     "                * COS(RADIANS(longitude) - RADIANS(:longitude))    " +
                     "                + SIN(RADIANS(:latitude)) * SIN(RADIANS(latitude)))) <= :radiusKm " +
-                    " ORDER BY distance, content_id ";
+                    "  ORDER BY distance, content_id ";
 
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("latitude", latitude)
@@ -60,6 +62,9 @@ public class AttractionRepositoryCustomImpl implements AttractionRepositoryCusto
                 .readCount(rs.getInt("readcount"))
                 .likeCount(rs.getInt("like_count"))
                 .distance(rs.getDouble("distance"))
+                .cat1(rs.getString("cat1"))
+                .cat2(rs.getString("cat2"))
+                .cat3(rs.getString("cat3"))
                 .build();
     }
 }
