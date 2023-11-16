@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import router from '@/router'
-import {CocomentListItem} from "@/components/board/comment/item/CocomentListItem.vue"
 const props = defineProps({ comment: Object })
 const clicked = ref(true)
-
+const children = ref(props.comment.children)
 const content = ref(props.comment.comment)
 
 const emits = defineEmits(['updatingComment', 'deletingComment', 'writingComment'])
@@ -51,6 +50,30 @@ function deleteComment() {
       <button class="col" @click="deleteComment">삭제</button>
       <button class="col" @click="writingComment">답글</button>
     </div>
+    <template v-for="child in children" :key="child.commentId">
+      <div class="container list-group-item">
+        <div class="row">
+          <div class="col">
+            <h4><img :src="commenterProfileImageUrl" />{{ child.commenterNickname }}</h4>
+          </div>
+          <textarea
+            :readonly="clicked"
+            class=""
+            cols="30"
+            rows="5"
+            v-model="child.comment"
+          ></textarea>
+        </div>
+        <div class="row">
+          <button class="col">
+            <div v-if="clicked">수정</div>
+            <div v-else>확인</div>
+          </button>
+          <button class="col">삭제</button>
+          <button class="col">답글</button>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 

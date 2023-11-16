@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 import router from '@/router'
-const props = defineProps({ post: Object })
-console.log(props.post)
 
-function moveDetail() {
-  console.log(props.post.postId)
+const props = defineProps({ post: Object })
+
+async function moveDetail() {
+  // 라우터와 피니아가 헷갈린다. 나중에 리팩토링 필수
+  // postId.value = props.post.postId
+  // await FuncgetCommentList()
   router.push({
     name: 'board-detail',
     params: {

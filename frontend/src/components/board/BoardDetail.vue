@@ -6,12 +6,7 @@ import CommentList from './comment/CommentList.vue'
 
 const route = useRoute()
 const router = useRouter()
-
-import { commentStore } from '@/stores/CommentStore.js'
-import { storeToRefs } from 'pinia'
-const commentstore = commentStore()
-const { postId, commentList } = storeToRefs(commentstore)
-postId.value = route.params.postId
+const postId = route.params.postId
 
 const post = ref({
   postId: 0,
@@ -23,14 +18,10 @@ const post = ref({
   likes: 0
 })
 
-onMounted(() => {
-  getPost()
-})
-
 const getPost = () => {
   console.log('getPost')
   detailBoard(
-    postId.value,
+    route.params.postId,
     ({ data }) => {
       console.log('get detail data : ', data.data)
       post.value = data.data
@@ -40,6 +31,8 @@ const getPost = () => {
     }
   )
 }
+
+getPost()
 
 function moveList() {
   router.push({
@@ -99,7 +92,7 @@ function onDeleteArticle() {
               </p>
             </div>
           </div>
-          <div class="col-md-4 align-self-center text-end">댓글 : {{ post.commentCount }}</div>
+          <!-- <div class="col-md-4 align-self-center text-end">댓글 : {{ post.commentCount }}</div> -->
           <div class="divider mb-3"></div>
           <div class="text-secondary">
             {{ post.content }}
@@ -121,7 +114,8 @@ function onDeleteArticle() {
     </div>
   </div>
   <div class="m-2 bg-white">중간선</div>
-  <CommentList :postId="post.postId"></CommentList>
+  {{ post.postId }}
+  <CommentList :post-id="postId"></CommentList>
 </template>
 
 <style scoped></style>
