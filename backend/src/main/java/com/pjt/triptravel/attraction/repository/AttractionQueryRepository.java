@@ -4,6 +4,7 @@ import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchCondition;
 import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchOrder;
 import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchResult;
 import com.pjt.triptravel.attraction.dto.attraction.QAttractionSearchResult;
+import com.pjt.triptravel.attraction.entity.QContentType;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -19,7 +20,9 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.pjt.triptravel.attraction.entity.QAttractionDetail.attractionDetail;
 import static com.pjt.triptravel.attraction.entity.QAttractionInfo.attractionInfo;
+import static com.pjt.triptravel.attraction.entity.QContentType.*;
 
 @Slf4j
 @Repository
@@ -50,12 +53,17 @@ public class AttractionQueryRepository {
                     attractionInfo.longitude,
                     attractionInfo.mlevel,
                     attractionInfo.readCount,
-                    attractionInfo.likeCount))
+                    attractionInfo.likeCount,
+                    contentType.id,
+                    contentType.name))
                 .from(attractionInfo)
+                .join(contentType)
+                .on(attractionInfo.contentType.id.eq(contentType.id))
                 .where(titleContains(condition.getKeyword()),
                     codeMatch(attractionInfo.sido.code, condition.getSidoCode()),
                     codeMatch(attractionInfo.gugun.code, condition.getGugunCode()),
-                    likeCountGe(condition.getLikeCountGe()))
+                    likeCountGe(condition.getLikeCountGe()),
+                    contentTypeMatch(condition.getContentTypeId()))
                 .orderBy(getOrderSpecifier(condition.getOrder()), attractionInfo.id.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -67,6 +75,10 @@ public class AttractionQueryRepository {
             hasNext = true;
         }
         return new SliceImpl<>(result, pageable, hasNext);
+    }
+
+    private BooleanExpression contentTypeMatch(Long contentTypeId) {
+        return contentTypeId != null ? contentType.id.eq(contentTypeId) : null;
     }
 
     private BooleanExpression codeMatch(NumberExpression<Long> code, Long conditionCode) {

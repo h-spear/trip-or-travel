@@ -25,4 +25,6 @@ public class AttractionAroundResult {
     private int readCount;
     private int likeCount;
     private double distance;
+    private Long contentTypeId;
+    private String contentTypeName;
 }
