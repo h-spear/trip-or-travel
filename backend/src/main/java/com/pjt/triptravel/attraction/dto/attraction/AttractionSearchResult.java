@@ -25,12 +25,11 @@ public class AttractionSearchResult {
     private String mlevel;
     private int readCount;
     private int likeCount;
-    private String cat1;
-    private String cat2;
-    private String cat3;
+    private Long contentTypeId;
+    private String contentType;
 
     @QueryProjection
-    public AttractionSearchResult(Long id, String title, String addr1, String addr2, String zipcode, String tel, String imageUrl, String imageUrl2, Long sidoCode, Long gugunCode, BigDecimal latitude, BigDecimal longitude, String mlevel, int readCount, int likeCount, String cat1, String cat2, String cat3) {
+    public AttractionSearchResult(Long id, String title, String addr1, String addr2, String zipcode, String tel, String imageUrl, String imageUrl2, Long sidoCode, Long gugunCode, BigDecimal latitude, BigDecimal longitude, String mlevel, int readCount, int likeCount, Long contentTypeId, String contentType) {
         this.id = id;
         this.title = title;
         this.addr1 = addr1;
@@ -46,8 +45,7 @@ public class AttractionSearchResult {
         this.mlevel = mlevel;
         this.readCount = readCount;
         this.likeCount = likeCount;
-        this.cat1 = cat1;
-        this.cat2 = cat2;
-        this.cat3 = cat3;
+        this.contentTypeId = contentTypeId;
+        this.contentType = contentType;
     }
 }

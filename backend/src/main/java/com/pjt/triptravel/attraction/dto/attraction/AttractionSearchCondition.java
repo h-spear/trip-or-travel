@@ -7,7 +7,7 @@ public class AttractionSearchCondition {
 
     private Long sidoCode;
     private Long gugunCode;
-    private String cat;
+    private Long contentTypeId;
     private String keyword;
     private Integer likeCountGe;
     private AttractionSearchOrder order;
