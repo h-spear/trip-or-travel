@@ -8,7 +8,6 @@ const router = useRouter()
 const loginstore = loginStore()
 const { userId, userProfile, userNickname } = storeToRefs(loginstore)
 const { Funclogout } = loginstore
-console.log(loginstore.userId)
 
 function moveLogin() {
   router.push({ name: 'login' })
@@ -110,11 +109,5 @@ function test() {
 #logo {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-size: 30px;
-}
-
-#profileImg {
-  margin: 10px;
-  width: 50px;
-  height: 50px;
 }
 </style>

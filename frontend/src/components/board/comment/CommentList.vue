@@ -1,110 +1,129 @@
 <script setup>
-import CommentWrite from "./item/CommentWrite.vue";
-import CommentListItem from "./item/CommentListItem.vue";
-import {ref, onMounted} from 'vue';
-import {listComment, registComment} from '@/api/comment.js'
-import { useRoute } from "vue-router";
-import { updateComment, removeComment } from "../../../api/comment";
+import CommentWrite from './item/CommentWrite.vue'
+import CommentListItem from './item/CommentListItem.vue'
+import { ref, onMounted } from 'vue'
+import { listComment, registComment } from '@/api/comment.js'
+import { useRoute } from 'vue-router'
+import { updateComment, removeComment } from '../../../api/comment'
+
+import { loginStore } from '@/stores/LoginStore.js'
+import { storeToRefs } from 'pinia'
+const loginstore = loginStore()
+const { userId, userProfile, userNickname } = storeToRefs(loginstore)
+
+import { getCurrentInstance } from 'vue'
+const instance = getCurrentInstance()
+const rerender = ref(0)
 
 const route = useRoute()
 const comments = ref([])
 
-onMounted(()=>{
-    getCommentList()
-})
+const props = defineProps({ postId: Number })
+const postId = props.postId
 
-const getCommentList = ()=>{
-    listComment(
-        route.params.articleNo,
-        ({ data }) => {
-            console.log('get comment list : ', data)
-            comments.value = data
-        },
-        (error) => {
-            console.log('error : ', error)
-        }
-        )
-        
-    }    
-
+getCommentList(postId, comments)
 
 const comment = ref({
-    articleNo: 0,
-    content: '',
-    userId: ''
+  children: [],
+  childrenCount: 0,
+  comment: '',
+  commentId: 0,
+  commenterId: 0,
+  commenterNickname: '',
+  commenterProfileImageUrl: ''
 })
 
-const userId = 'ssafy' // 댓글 다는 유저는 잠시 고정
-comment.value.userId = userId
-// 토큰이나 provide로 뿌려야 할 듯
-// comment.value.articleNo = props.articleNo
-comment.value.articleNo = route.params.articleNo
-
-function writeComment (data){
-    console.log(data.content)
-    comment.value = data
-    if (comment.value.content==''){
-        alert('내용을 적어주세요')
-    }else{
-        registComment(
-            comment.value,
-            (data)=>{
-               console.log('registed ', data) 
-            //효율적인 업데이트를 위해 다시 디비 조회..
-                getCommentList()
-            },
-            (error)=>{
-               console.log('error ', error) 
-            }
-        )
+function getCommentList(postId, comments) {
+  console.log('curr', postId)
+  listComment(
+    postId,
+    ({ data }) => {
+      console.log('get comment list : ', data.data)
+      comments.value = data.data
+      instance?.proxy?.$forceUpdate()
+      rerender.value++
+    },
+    (error) => {
+      console.log('error : ', error)
     }
+  )
 }
 
-function onUpdateComment(data){
-    updateComment(
-        data, 
-        ({ data }) => {
-            console.log('updated comment : ', data)
-            getCommentList()
-        },
-        (error) => {
-            console.log('error : ', error)
-        }
+function writeComment(comment) {
+  // 여기에 parentCommentId가 있으면 답글 방식
+  console.log('list:write', comment)
+  if (comment.content == '') {
+    alert('내용을 적어주세요')
+  } else {
+    registComment(
+      postId,
+      comment,
+      (data) => {
+        console.log('registed ', data.data)
+        //효율적인 업데이트를 위해 다시 디비 조회..
+        getCommentList(postId, comments)
+      },
+      (error) => {
+        console.log('error ', error)
+      }
     )
+  }
 }
 
-function onDeleteComment(data){
-    removeComment(
-        data, 
-        ({ data }) => {
-            console.log('deleted comment : ', data)
-            getCommentList()
-        },
-        (error) => {
-            console.log('error : ', error)
-        }
-    )
+function onUpdateComment(data) {
+  data = {
+    ...data,
+    postId:postId
+  }
+  console.log('in comment list', data)
+  updateComment(
+    data,
+    ({ data }) => {
+      console.log('updated comment : ', data)
+      getCommentList(postId, comments)
+    },
+    (error) => {
+      console.log('error : ', error)
+    }
+  )
 }
 
+function onDeleteComment(data) {
+  console.log('comment list', data)
+  data = {
+    ...data,
+    postId:postId
+  }
+  removeComment(
+    data,
+    ({ data }) => {
+      console.log('deleted comment : ', data)
+      getCommentList(postId, comments)
+    },
+    (error) => {
+      console.log('error : ', error)
+    }
+  )
+}
 </script>
 
 <template>
-    <div class="container">
-        <ol class="list-group list-group-numbered">
-                <CommentListItem
-                class=""
-                v-for="comment in comments"
-                :key="comment.commentId"
-                :comment="comment"
-                @updating-comment="onUpdateComment"
-                @deleting-comment="onDeleteComment"
-                >
-            </CommentListItem>
-        </ol>
-        <CommentWrite :comments='comments'  @registing-comment="writeComment"></CommentWrite>
-    </div>
+  <div class="container">
+    <div>{{ comments.length }}</div>
+    <ol class="list-group list-group-numbered" :key="rerender">
+      <CommentListItem
+        class=""
+        v-for="comment in comments"
+        :key="comment.commentId"
+        :comment="comment"
+        :commentId="comment.commentId"
+        @updating-comment="onUpdateComment"
+        @deleting-comment="onDeleteComment"
+        @registing-comment="writeComment"
+      />
+    </ol>
+    <CommentWrite @registing-comment="writeComment"></CommentWrite>
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
