@@ -32,30 +32,40 @@ function writeCocoment(comment) {
 }
 
 function updateComment(data) {
-  console.log('dd', data)
-  console.log(typeof data.commentId)
-  clickUpdate.value = !clickUpdate.value
-  if (clickUpdate.value) {
-    let replyForUpdate = {}
-    if (data.commentId === undefined) {
+  // if문에 들어오면 댓글, 아니면 답글
+  let replyForUpdate = {}
+  if (data.commentId === undefined){
+    clickUpdate.value = !clickUpdate.value
+    if (clickUpdate.value) {
       replyForUpdate = {
-        commentId: comment.value.commentId,
-        comment: content.value
-      }
-      console.log('commentid', replyForUpdate)
-    } else {
-      replyForUpdate = {
-        commentId: data.commentId,
-        comment: data.comment
-      }
+          commentId: comment.value.commentId,
+          comment: content.value
+        }
+      emits('updatingComment', replyForUpdate)
+    }
+  } else{
+    replyForUpdate = {
+      commentId: data.commentId,
+      comment: data.comment
     }
     emits('updatingComment', replyForUpdate)
   }
 }
 
-function deleteComment() {
-  // 모달로 삭제할 것인지 물어보면 좋을 듯
-  emits('deletingComment', props.comment.commentId)
+function deleteComment(data) {
+  // if문에 들어오면 댓글, 아니면 답글
+  let replyForDelete = {}
+  if (data.commentId === undefined){
+      replyForDelete = {
+          commentId: comment.value.commentId,
+      }
+      emits('deletingComment', replyForDelete)
+  } else{
+    replyForDelete = {
+      commentId: data.commentId,
+    }
+    emits('deletingComment', replyForDelete)
+  }
 }
 </script>
 
@@ -95,6 +105,7 @@ function deleteComment() {
       :key="child.commentId"
       :child="child"
       @updating-reply="updateComment"
+      @deleting-reply="deleteComment"
     />
   </div>
 </template>

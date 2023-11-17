@@ -75,6 +75,7 @@ function onUpdateComment(data) {
     ...data,
     postId:postId
   }
+  console.log('in comment list', data)
   updateComment(
     data,
     ({ data }) => {
@@ -88,6 +89,11 @@ function onUpdateComment(data) {
 }
 
 function onDeleteComment(data) {
+  console.log('comment list', data)
+  data = {
+    ...data,
+    postId:postId
+  }
   removeComment(
     data,
     ({ data }) => {

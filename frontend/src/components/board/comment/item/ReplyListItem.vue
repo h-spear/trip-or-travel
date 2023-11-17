@@ -8,12 +8,16 @@ const props = defineProps({
 })
 
 const clickUpdate = ref(true)
+const modal = ref(true)
 const comment = ref(props.child)
 const content = ref(props.child.comment)
 
 import { loginStore } from '@/stores/LoginStore.js'
 const loginstore = loginStore()
 const { userId } = loginstore
+
+
+
 
 const emits = defineEmits(['updatingReply', 'deletingReply'])
 
@@ -22,15 +26,19 @@ function updateReply() {
   if (clickUpdate.value) {
     const replyForUpdate = {
       commentId: comment.value.commentId,
-      comment: content
+      comment: content.value
     }
     emits('updatingReply', replyForUpdate)
   }
 }
 
-function deleteComment() {
+function deleteReply() {
   // 모달로 삭제할 것인지 물어보면 좋을 듯
-  emits('deletingComment', props.comment.commentId)
+  console.log('delete')
+  const replyForDelete = {
+      commentId: comment.value.commentId,
+    }
+  emits('deletingReply', replyForDelete)
 }
 </script>
 
@@ -50,7 +58,7 @@ function deleteComment() {
           <div v-if="clickUpdate">수정</div>
           <div v-else>확인</div>
         </button>
-        <button class="col">삭제</button>
+        <button class="col" @click="deleteReply">삭제</button>
       </div>
     </div>
   </div>

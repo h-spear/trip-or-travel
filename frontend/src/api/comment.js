@@ -11,16 +11,17 @@ function registComment(postId, comment, success, fail) {
 function updateComment(data, success, fail) {
   const postId = data.postId
   const comment = {
-    comment: data.comment.value
+    comment: data.comment
   }
   const commentId = data.commentId
-  console.log('inpaip', postId, commentId, comment)
   local
     .put(`post/${postId}/comment/${commentId}`, JSON.stringify(comment))
     .then(success)
     .catch(fail)
 }
-function removeComment(postId, commentId, success, fail) {
+function removeComment(data, success, fail) {
+  const postId = data.postId
+  const commentId = data.commentId
   local.delete(`post/${postId}/comment/${commentId}`).then(success).catch(fail)
 }
 
