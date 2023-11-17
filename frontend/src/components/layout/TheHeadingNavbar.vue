@@ -110,10 +110,4 @@ function test() {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-size: 30px;
 }
-
-#profileImg {
-  margin: 10px;
-  width: 50px;
-  height: 50px;
-}
 </style>

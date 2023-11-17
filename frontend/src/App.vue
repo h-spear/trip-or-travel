@@ -21,4 +21,10 @@ body {
 a {
   cursor: pointer;
 }
+
+#profileImg {
+  margin: 10px;
+  width: 50px;
+  height: 50px;
+}
 </style>

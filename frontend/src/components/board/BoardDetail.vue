@@ -21,7 +21,7 @@ const post = ref({
 const getPost = () => {
   console.log('getPost')
   detailBoard(
-    route.params.postId,
+    postId,
     ({ data }) => {
       console.log('get detail data : ', data.data)
       post.value = data.data
@@ -51,7 +51,7 @@ function moveModify() {
 
 function onDeleteArticle() {
   removeBoard(
-    post.value.postId,
+    postId,
     (data) => {
       console.log('delete complete', data)
       moveList()
@@ -81,6 +81,7 @@ function onDeleteArticle() {
           <div class="col-md-8">
             <div class="clearfix align-content-center">
               <img
+                id="profileImg"
                 class="avatar me-2 float-md-start bg-light p-2"
                 :src="post.writerProfileImageUrl"
               />
