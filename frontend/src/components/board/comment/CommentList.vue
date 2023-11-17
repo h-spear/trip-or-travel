@@ -6,11 +6,6 @@ import { listComment, registComment } from '@/api/comment.js'
 import { useRoute } from 'vue-router'
 import { updateComment, removeComment } from '../../../api/comment'
 
-import { loginStore } from '@/stores/LoginStore.js'
-import { storeToRefs } from 'pinia'
-const loginstore = loginStore()
-const { userId, userProfile, userNickname } = storeToRefs(loginstore)
-
 import { getCurrentInstance } from 'vue'
 const instance = getCurrentInstance()
 const rerender = ref(0)
@@ -34,13 +29,11 @@ const comment = ref({
 })
 
 function getCommentList(postId, comments) {
-  console.log('curr', postId)
   listComment(
     postId,
     ({ data }) => {
       console.log('get comment list : ', data.data)
       comments.value = data.data
-      instance?.proxy?.$forceUpdate()
       rerender.value++
     },
     (error) => {

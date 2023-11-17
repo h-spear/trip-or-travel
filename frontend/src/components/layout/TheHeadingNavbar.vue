@@ -24,6 +24,9 @@ function moveRegist() {
 function moveMypage() {
   router.push({ name: 'mypage' })
 }
+function moveTrip(){
+  router.push({name: 'trip'})
+}
 
 function test() {
   router.push({ name: 'test' })
@@ -45,7 +48,7 @@ function test() {
             <a class="nav-link" @click="test">테스트용🚗</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">여행계획🎈</a>
+            <a class="nav-link" @click="moveTrip">여행계획🎈</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="moveBoard">게시판✨</a>
