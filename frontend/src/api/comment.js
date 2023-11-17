@@ -26,4 +26,3 @@ function removeComment(data, success, fail) {
 }
 
 export { registComment, listComment, updateComment, removeComment }
-// export { listBoard, detailBoard, registBoard, updateBoard, removeBoard }
