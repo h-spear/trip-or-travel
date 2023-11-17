@@ -8,7 +8,13 @@ function listComment(postId, success, fail) {
 function registComment(postId, comment, success, fail) {
   local.post(`post/${postId}/comment`, JSON.stringify(comment)).then(success).catch(fail)
 }
-function updateComment(postId, commentId, comment, success, fail) {
+function updateComment(data, success, fail) {
+  const postId = data.postId
+  const comment = {
+    comment: data.comment.value
+  }
+  const commentId = data.commentId
+  console.log('inpaip', postId, commentId, comment)
   local
     .put(`post/${postId}/comment/${commentId}`, JSON.stringify(comment))
     .then(success)

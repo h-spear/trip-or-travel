@@ -3,6 +3,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted, reactive, onUpdated } from 'vue'
 import { detailBoard, removeBoard } from '../../api/board'
 import CommentList from './comment/CommentList.vue'
+import { loginStore } from '@/stores/LoginStore.js'
+const loginstore = loginStore()
+const { userId } = loginstore
 
 const route = useRoute()
 const router = useRouter()
@@ -19,12 +22,12 @@ const post = ref({
 })
 
 const getPost = () => {
-  console.log('getPost')
   detailBoard(
     postId,
     ({ data }) => {
       console.log('get detail data : ', data.data)
       post.value = data.data
+      console.log('detail', post.value)
     },
     (error) => {
       console.log('get post error : ', error)
@@ -103,12 +106,18 @@ function onDeleteArticle() {
             <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
               글 목록
             </button>
-            <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
-              글수정
-            </button>
-            <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="onDeleteArticle">
-              글삭제
-            </button>
+            <template v-if="post.writerId == userId">
+              <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
+                글수정
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger mb-3 ms-1"
+                @click="onDeleteArticle"
+              >
+                글삭제
+              </button>
+            </template>
           </div>
         </div>
       </div>

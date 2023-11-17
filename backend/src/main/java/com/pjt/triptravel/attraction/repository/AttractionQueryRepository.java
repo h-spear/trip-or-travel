@@ -85,7 +85,7 @@ public class AttractionQueryRepository {
         return conditionCode != null ? code.eq(conditionCode) : null;
     }
 
-    private BooleanExpression titleContains(String keyword) {
+    private BooleanExpression titleContain  s(String keyword) {
         if (!StringUtils.hasText(keyword)) {
             return null;
         }

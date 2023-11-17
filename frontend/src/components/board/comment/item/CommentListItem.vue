@@ -1,20 +1,55 @@
 <script setup>
-import { ref } from 'vue'
+import CommentWrite from './CommentWrite.vue'
+import { ref, computed } from 'vue'
 import router from '@/router'
-const props = defineProps({ comment: Object })
-const clicked = ref(true)
+import ReplyListItem from './ReplyListItem.vue'
+
+const props = defineProps({
+  comment: Object,
+  commentId: Number
+})
+
+const clickUpdate = ref(true)
+const clickCocoment = ref(false)
 const comment = ref(props.comment)
 const children = ref(props.comment.children)
-console.log(props.comment)
 const content = ref(props.comment.comment)
 
-const emits = defineEmits(['updatingComment', 'deletingComment', 'writingComment'])
+import { loginStore } from '@/stores/LoginStore.js'
+const loginstore = loginStore()
+const { userId } = loginstore
 
-function updateComment() {
-  props.comment.comment = content.value
-  clicked.value = !clicked.value
-  if (clicked.value) {
-    emits('updatingComment', props.comment)
+const emits = defineEmits(['updatingComment', 'deletingComment', 'registingComment'])
+
+function writeCocoment(comment) {
+  const commentForRegister = {
+    comment: comment.comment,
+    parentCommentId: props.commentId
+  }
+  console.log('list item: cocoment', commentForRegister)
+  emits('registingComment', commentForRegister)
+  content.value = ''
+}
+
+function updateComment(data) {
+  console.log('dd', data)
+  console.log(typeof data.commentId)
+  clickUpdate.value = !clickUpdate.value
+  if (clickUpdate.value) {
+    let replyForUpdate = {}
+    if (data.commentId === undefined) {
+      replyForUpdate = {
+        commentId: comment.value.commentId,
+        comment: content.value
+      }
+      console.log('commentid', replyForUpdate)
+    } else {
+      replyForUpdate = {
+        commentId: data.commentId,
+        comment: data.comment
+      }
+    }
+    emits('updatingComment', replyForUpdate)
   }
 }
 
@@ -22,60 +57,45 @@ function deleteComment() {
   // 모달로 삭제할 것인지 물어보면 좋을 듯
   emits('deletingComment', props.comment.commentId)
 }
-
-// children: [],
-//   childrenCount: 0,
-//   comment: '',
-//   commentId: 0,
-//   commenterId: 0,
-//   commenterNickname: '',
-//   commenterProfileImageUrl: ''
 </script>
 
 <template>
   <div class="container list-group-item">
     <div class="row">
       <div class="col">
-        <h4><img :src="comment.commenterProfileImageUrl" />{{ comment.commenterNickname }}</h4>
+        <h4>
+          <img id="profileImg" :src="comment.commenterProfileImageUrl" />{{
+            comment.commenterNickname
+          }}
+        </h4>
       </div>
       <div class="col">
         {{ comment.registerTime }}
       </div>
-      <textarea v-model="content" :readonly="clicked" class="" cols="30" rows="5"></textarea>
+      <textarea v-model="content" :readonly="clickUpdate" class="" cols="30" rows="5"></textarea>
     </div>
     <div class="row">
-      <!-- 해당 유저와 로그인 유저가 일치하는지 체크 필요 -->
-      <button class="col" @click="updateComment">
-        <div v-if="clicked">수정</div>
-        <div v-else>확인</div>
-      </button>
-      <button class="col" @click="deleteComment">삭제</button>
-      <button class="col" @click="writingComment">답글</button>
-    </div>
-    <template v-for="child in children" :key="child.commentId">
-      <div class="container list-group-item">
-        <div class="row">
-          <div class="col">
-            <h4><img :src="child.commenterProfileImageUrl" />{{ child.commenterNickname }}</h4>
-          </div>
-          <textarea
-            :readonly="clicked"
-            class=""
-            cols="30"
-            rows="5"
-            v-model="child.comment"
-          ></textarea>
-        </div>
-        <div class="row">
-          <button class="col">
-            <div v-if="clicked">수정</div>
-            <div v-else>확인</div>
-          </button>
-          <button class="col">삭제</button>
-          <button class="col">답글</button>
-        </div>
+      <div v-if="userId == comment.commenterId">
+        <button class="col" @click="updateComment">
+          <div v-if="clickUpdate">수정</div>
+          <div v-else>확인</div>
+        </button>
+        <button class="col" @click="deleteComment">삭제</button>
       </div>
-    </template>
+      <div></div>
+      <button class="col" @click="clickCocoment = !clickCocoment">
+        <div v-if="!clickCocoment">답글</div>
+        <div v-else>취소</div>
+      </button>
+    </div>
+    <CommentWrite v-if="clickCocoment" @registing-comment="writeCocoment"></CommentWrite>
+    <!-- 답글 부분 -->
+    <ReplyListItem
+      v-for="child in children"
+      :key="child.commentId"
+      :child="child"
+      @updating-reply="updateComment"
+    />
   </div>
 </template>
 

@@ -11,12 +11,17 @@ import { storeToRefs } from 'pinia'
 const loginstore = loginStore()
 const { userId, userProfile, userNickname } = storeToRefs(loginstore)
 
+import { getCurrentInstance } from 'vue'
+const instance = getCurrentInstance()
+const rerender = ref(0)
+
 const route = useRoute()
 const comments = ref([])
 
 const props = defineProps({ postId: Number })
+const postId = props.postId
 
-getCommentList(props.postId, comments)
+getCommentList(postId, comments)
 
 const comment = ref({
   children: [],
@@ -28,10 +33,6 @@ const comment = ref({
   commenterProfileImageUrl: ''
 })
 
-comment.value.userId = userId
-// 토큰이나 provide로 뿌려야 할 듯
-comment.value.postId = route.params.postId
-
 function getCommentList(postId, comments) {
   console.log('curr', postId)
   listComment(
@@ -39,6 +40,8 @@ function getCommentList(postId, comments) {
     ({ data }) => {
       console.log('get comment list : ', data.data)
       comments.value = data.data
+      instance?.proxy?.$forceUpdate()
+      rerender.value++
     },
     (error) => {
       console.log('error : ', error)
@@ -46,18 +49,19 @@ function getCommentList(postId, comments) {
   )
 }
 
-function writeComment(data) {
-  console.log(data.content)
-  comment.value = data
-  if (comment.value.comment == '') {
+function writeComment(comment) {
+  // 여기에 parentCommentId가 있으면 답글 방식
+  console.log('list:write', comment)
+  if (comment.content == '') {
     alert('내용을 적어주세요')
   } else {
     registComment(
-      comment.value,
+      postId,
+      comment,
       (data) => {
         console.log('registed ', data.data)
         //효율적인 업데이트를 위해 다시 디비 조회..
-        getCommentList()
+        getCommentList(postId, comments)
       },
       (error) => {
         console.log('error ', error)
@@ -67,11 +71,15 @@ function writeComment(data) {
 }
 
 function onUpdateComment(data) {
+  data = {
+    ...data,
+    postId:postId
+  }
   updateComment(
     data,
     ({ data }) => {
       console.log('updated comment : ', data)
-      getCommentList()
+      getCommentList(postId, comments)
     },
     (error) => {
       console.log('error : ', error)
@@ -84,7 +92,7 @@ function onDeleteComment(data) {
     data,
     ({ data }) => {
       console.log('deleted comment : ', data)
-      getCommentList()
+      getCommentList(postId, comments)
     },
     (error) => {
       console.log('error : ', error)
@@ -96,17 +104,19 @@ function onDeleteComment(data) {
 <template>
   <div class="container">
     <div>{{ comments.length }}</div>
-    <ol class="list-group list-group-numbered">
+    <ol class="list-group list-group-numbered" :key="rerender">
       <CommentListItem
         class=""
         v-for="comment in comments"
         :key="comment.commentId"
         :comment="comment"
+        :commentId="comment.commentId"
         @updating-comment="onUpdateComment"
         @deleting-comment="onDeleteComment"
+        @registing-comment="writeComment"
       />
     </ol>
-    <CommentWrite :comments="comments" @registing-comment="writeComment"></CommentWrite>
+    <CommentWrite @registing-comment="writeComment"></CommentWrite>
   </div>
 </template>
 
