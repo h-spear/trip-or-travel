@@ -1,4 +1,4 @@
-const boardRouter = [
+const tripRouter = [
   {
     path: '/trip',
     name: 'trip',
@@ -8,4 +8,4 @@ const boardRouter = [
   }
 ]
 
-export default boardRouter
+export default tripRouter
