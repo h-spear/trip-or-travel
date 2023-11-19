@@ -1,11 +1,17 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import markerInfoWindow from '@/components/map/markerInfoWindow.vue'
 import selectedItem from '@/components/map/selectedItem.vue'
 import attractionItem from '@/components/map/attractionItem.vue'
 var map;
 const positions = ref([]);
 const markers = ref([]);
+const selectedItems = ref([])
+// 강남구 : 1, 1
+
+// 들어갈 아이템은 무슨 정보들을 가져야 하는가?
+// 고유 id(디비 기준. if 사용자 고유 있을 시 그걸 고유 id로), 좌표xy, 
+
+// id,title,addr1,addr2,zipcode,tel,imageUrl,imageUrl2,sido.code,gugun.code,latitude,longitude,mlevel,readCount,likeCount,
 
 
 // const props = defineProps({ stations: Array, selectStation: Object });
@@ -54,8 +60,19 @@ const initMap = () => {
 
 
     //testcode
-    let testCoord1 = new kakao.maps.LatLng(33.450701, 126.570667)
-    let testCoord2 = new kakao.maps.LatLng(33.45, 126.57)
+
+    let testCoord1 = {
+      x:33.450701,
+      y:126.570667,
+      id:0,
+      isSelected:false
+    }
+    let testCoord2 = {
+      x:33.45,
+      y:126.57,
+      id:1,
+      isSelected:false
+    }
     positions.value = [testCoord1 , testCoord2 ]
     console.log(positions.value)
 
@@ -84,9 +101,60 @@ const initMap = () => {
 //   { deep: true }
 // );
 
+// 마커에 들어갈 인포윈도우 만드는 함수
+const makeInfoWindow = (place) => {
+  let iwContent = document.createElement('div')
+  let title = document.createElement('h1')
+  let content = document.createElement('div')
+  let btnWishlist = document.createElement('button')
+  let btnSelect= document.createElement('button')
+
+  btnWishlist.innerText = '찜'
+  btnWishlist.onclick = ()=>{
+    console.log('wishlist add')
+  }
+  btnSelect.innerText = '등록'
+  btnSelect.onclick = ()=>{
+    console.log('select add')
+    place.isSelected = !place.isSelected
+    if (place.isSelected){
+      selectedItems.value.push(place.id)
+      btnSelect.innerText = '취소'
+    } else{
+      selectedItems.value=selectedItems.value.filter((item)=>{
+        console.log('is canceling', item)
+        if (item.id != place.id){return item}
+      })
+      console.log('canceled', selectedItems.value)
+      btnSelect.innerText = '등록'
+    }
+  }
+
+  content.innerText = '들어갈 내용 명세 필요 ddsdsds'
+  content.appendChild(btnSelect)
+  content.appendChild(btnWishlist)
+  
+  title.appendChild(document.createTextNode('제목'))
+
+  
+
+  iwContent.appendChild(title)
+  iwContent.appendChild(content)
+
+  const infowindow = new kakao.maps.InfoWindow({
+      content : iwContent,
+      removable : true,
+      disableAutoPan : true
+  });
+  return infowindow
+}
+
+// 개별 마커를 만드는 함수
+const makeMarker = () => {
+
+}
 
 const loadMarkers = () => {
-    // 현재 표시되어있는 marker들이 있다면 map에 등록된 marker를 제거한다.
     deleteMarkers();
 
     // const imgSrc = require("@/assets/map/markerStar.png");
@@ -95,18 +163,16 @@ const loadMarkers = () => {
 
   // 마커를 생성합니다
   markers.value = [];
-  let tmp = 0;
-  positions.value.forEach((position) => {
+  positions.value.forEach((place) => {
     const marker = new kakao.maps.Marker({
       map: map, // 마커를 표시할 지도
       // position: position.latlng, // 마커를 표시할 위치
-      position: position, // 마커를 표시할 위치
+      position: new kakao.maps.LatLng(place.x, place.y), // 마커를 표시할 위치
       title: 'test', // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됨.
       clickable: true, // // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
       // image: markerImage, // 마커의 이미지
 
     });
-    marker.testvar = tmp++
 
     // kakao.maps.event.addListener(marker, 'mouseover', function() {
 		//     console.log('마커에 mouseover 이벤트가 발생했습니다!', marker);
@@ -117,21 +183,8 @@ const loadMarkers = () => {
 		//     console.log('마커에 mouseout 이벤트가 발생했습니다!');
 		// });
 
-    // var iwContent = `<div style="padding:5px;" @click="clickTest(tmp)">${tmp}</div>` // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+    const infowindow = makeInfoWindow(place)
 
-    var iwContent = document.createElement('div')
-    var title = document.createElement('div')
-    title.appendChild(document.createTextNode('testing'))
-    title.onclick = ()=>{
-      console.log(marker.testvar)
-    }
-    iwContent.appendChild(title)
-
-    // 인포윈도우를 생성합니다
-    var infowindow = new kakao.maps.InfoWindow({
-        content : iwContent,
-        removable : true
-    });
     // 마커에 클릭이벤트를 등록합니다
     kakao.maps.event.addListener(marker, 'click', function() {
           infowindow.open(map, marker);  
@@ -162,10 +215,10 @@ const deleteMarkers = () => {
   <div class="container-fluid border border-info">
     <div class="row border border-dark border-2">
       <div id="map" class="col-9"></div>
-      <attractionItem class="col-3 bg-white">dd</attractionItem>
+      <attractionItem class="col-3 bg-white"></attractionItem>
     </div>
     <div class="row border border-white">
-      <selectedItem class="bg-white" :markers="markers"></selectedItem>
+      <selectedItem class="bg-white" :selectedItems="selectedItems"></selectedItem>
     </div>
   </div>
 </template>

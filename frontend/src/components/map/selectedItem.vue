@@ -1,11 +1,11 @@
 <script setup>
 import { onMounted, onUpdated } from "vue";
 const props = defineProps({
-    markers:Array
+    selectedItems:Array
 })
 onUpdated(() => {
-    console.log('after update')
-    props.markers.forEach((data)=>{
+    console.log('updated',props.selectedItems)
+    props.selectedItems.forEach((data)=>{
         console.log('each', data)
     })
 
@@ -14,9 +14,8 @@ onUpdated(() => {
 
 <template>
     <div>
-        <div v-for="marker in markers"
-        >
-        {{ marker.getPosition() }}
+        <div v-for="marker in selectedItems" :key="marker.id">
+        {{ marker }}
         </div>
     </div>
 </template>
