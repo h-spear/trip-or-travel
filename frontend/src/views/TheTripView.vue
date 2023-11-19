@@ -1,6 +1,8 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import markerInfoWindow from '@/components/map/markerInfoWindow.vue'
+import selectedItem from '@/components/map/selectedItem.vue'
+import attractionItem from '@/components/map/attractionItem.vue'
 var map;
 const positions = ref([]);
 const markers = ref([]);
@@ -93,6 +95,7 @@ const loadMarkers = () => {
 
   // 마커를 생성합니다
   markers.value = [];
+  let tmp = 0;
   positions.value.forEach((position) => {
     const marker = new kakao.maps.Marker({
       map: map, // 마커를 표시할 지도
@@ -101,14 +104,9 @@ const loadMarkers = () => {
       title: 'test', // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됨.
       clickable: true, // // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
       // image: markerImage, // 마커의 이미지
+
     });
-
-
-    // var infowindow = new kakao.maps.InfoWindow({
-		//     content : '<div style="padding:5px;">인포윈도우 :D</div>' // 인포윈도우에 표시할 내용
-		// });
-		// // 인포윈도우를 지도에 표시한다
-		// infowindow.open(map, marker);
+    marker.testvar = tmp++
 
     // kakao.maps.event.addListener(marker, 'mouseover', function() {
 		//     console.log('마커에 mouseover 이벤트가 발생했습니다!', marker);
@@ -119,15 +117,15 @@ const loadMarkers = () => {
 		//     console.log('마커에 mouseout 이벤트가 발생했습니다!');
 		// });
 
-    // 		// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
-		// kakao.maps.event.addListener(marker, 'click', function() {
-		//     alert('마커를 클릭했습니다!');
-		// });
+    // var iwContent = `<div style="padding:5px;" @click="clickTest(tmp)">${tmp}</div>` // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
 
-    var iwContent = '<div style="padding:5px;">Hello World!</div>' // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-    iwContent = '<markerInfoWindow/>'
-    console.log('marker',markerInfoWindow)
-    console.log(markerInfoWindow)
+    var iwContent = document.createElement('div')
+    var title = document.createElement('div')
+    title.appendChild(document.createTextNode('testing'))
+    title.onclick = ()=>{
+      console.log(marker.testvar)
+    }
+    iwContent.appendChild(title)
 
     // 인포윈도우를 생성합니다
     var infowindow = new kakao.maps.InfoWindow({
@@ -161,12 +159,20 @@ const deleteMarkers = () => {
 </script>
 
 <template>
-  <div id="map"></div>
+  <div class="container-fluid border border-info">
+    <div class="row border border-dark border-2">
+      <div id="map" class="col-9"></div>
+      <attractionItem class="col-3 bg-white">dd</attractionItem>
+    </div>
+    <div class="row border border-white">
+      <selectedItem class="bg-white" :markers="markers"></selectedItem>
+    </div>
+  </div>
 </template>
 
 <style>
-#map {
-  width: 100%;
-  height: 700px;
+#map{
+  /* width: 500px; */
+  height: 500px
 }
 </style>

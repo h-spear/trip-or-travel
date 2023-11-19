@@ -1,10 +1,10 @@
 <script setup>
-console.log('test')
+
 </script>
 
 <template>
     <div>
-        마크 테스트
+        each attraction
     </div>
 </template>
 
