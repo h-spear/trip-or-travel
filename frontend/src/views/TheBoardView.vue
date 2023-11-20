@@ -1,12 +1,4 @@
 <script setup>
-import { ref, inject, provide, watch } from 'vue'
-
-const boards = ref([])
-let boardSt = localStorage.getItem('boards')
-if (boardSt) {
-  boards.value = JSON.parse(boardSt).boards
-}
-provide('boards', boards)
 </script>
 
 <template>

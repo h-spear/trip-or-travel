@@ -91,9 +91,6 @@ function getFileName(data) {
   }
 }
 
-
-
-
 function onRegister() {
   if (!(dupChecked1.value && dupChecked2.value)) {
     alert('중복 체크를 완료해주십시오')
@@ -114,7 +111,7 @@ function onRegister() {
       user,
       (data) => {
         console.log('register success :', data)
-        alert("회원가입이 완료되었습니다!")
+        alert('회원가입이 완료되었습니다!')
         router.push({ name: 'login' })
       },
       (error) => {
@@ -138,11 +135,21 @@ function selectGugun(selectedGugun) {
 <template>
   <main class="container box">
     <div class="register-page" style="margin-top: 100px">
-      <div class="title">
-        <img src="@/assets/logo.png" class="login-logo" />
-      </div>
       <div class="form">
         <form name="register-form" class="register-form" @submit.prevent="onRegister">
+          <img :src="profileImageUrl" id="profileImg" alt="testing" />
+          <div>
+            <input
+              type="file"
+              id="upload-image"
+              hidden
+              @change="getFileName($event.target.files)"
+            />
+            <label for="upload-image">
+              <a>프로필로 사용할 이미지를 등록하세여(32mb이하)</a>
+            </label>
+          </div>  
+
           <input
             id="email"
             name="email"
@@ -198,19 +205,6 @@ function selectGugun(selectedGugun) {
           <VSelect id="sido" :selectOptions="sidos" @onKeySelect="selectSido"></VSelect>
           <label for="gugun">구군</label>
           <VSelect id="gugun" :selectOptions="guguns" @onKeySelect="selectGugun"></VSelect>
-
-          <img :src="profileImageUrl" id="profileImg" alt="testing" />
-          <div>
-            <input
-              type="file"
-              id="upload-image"
-              hidden
-              @change="getFileName($event.target.files)"
-            />
-            <label for="upload-image">
-              <a>프로필로 사용할 이미지를 등록하세여(32mb이하)</a>
-            </label>
-          </div>
 
           <button type="submit" class="regi-btn" :disabled="isValid">회원 등록</button>
         </form>

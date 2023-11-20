@@ -11,7 +11,7 @@ const boardRouter = [
         component: () => import('@/components/board/BoardList.vue')
       },
       {
-        path: 'detail/:articleNo',
+        path: 'detail/:postId',
         name: 'board-detail',
         component: () => import('@/components/board/BoardDetail.vue')
       },
@@ -24,15 +24,8 @@ const boardRouter = [
         path: 'modify',
         name: 'board-modify',
         component: () => import('@/components/board/BoardModify.vue')
-      },
+      }
     ]
-  },
-  {
-    //
-    path: '/member',
-    name: 'member',
-    component: () => import('@/views/TheTestView.vue'),
-    children: []
   }
 ]
 

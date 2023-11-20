@@ -8,7 +8,6 @@ function uploadImage(url, success, fail) {
   url = url.substring(url.indexOf(',') + 1)
   form.append('key', VITE_IMGBB_API_KEY)
   form.append('image', url)
-  console.log(url)
   local.post(`upload`, form).then(success).catch(fail)
 }
 

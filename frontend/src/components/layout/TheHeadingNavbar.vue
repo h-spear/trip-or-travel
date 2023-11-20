@@ -8,7 +8,6 @@ const router = useRouter()
 const loginstore = loginStore()
 const { userId, userProfile, userNickname } = storeToRefs(loginstore)
 const { Funclogout } = loginstore
-console.log(loginstore.userId)
 
 function moveLogin() {
   router.push({ name: 'login' })
@@ -24,6 +23,9 @@ function moveRegist() {
 }
 function moveMypage() {
   router.push({ name: 'mypage' })
+}
+function moveTrip(){
+  router.push({name: 'trip'})
 }
 
 function test() {
@@ -46,7 +48,7 @@ function test() {
             <a class="nav-link" @click="test">테스트용🚗</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">여행계획🎈</a>
+            <a class="nav-link" @click="moveTrip">여행계획🎈</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="moveBoard">게시판✨</a>
@@ -110,11 +112,5 @@ function test() {
 #logo {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-size: 30px;
-}
-
-#profileImg {
-  margin: 10px;
-  width: 50px;
-  height: 50px;
 }
 </style>
