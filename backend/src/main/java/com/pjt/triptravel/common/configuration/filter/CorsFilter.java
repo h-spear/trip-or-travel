@@ -27,7 +27,7 @@ public class CorsFilter implements Filter {
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
         if("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
             httpResponse.setStatus(HttpServletResponse.SC_OK);
-        }else {
+        } else {
             chain.doFilter(request, response);
         }
     }
