@@ -40,13 +40,8 @@ public class AttractionInfo {
 	@Column(name = "first_image2", length = 200)
 	private String imageUrl2;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sido_code")
-	private Sido sido;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gugun_code")
-	private Gugun gugun;
+	private Long sidoCode;
+	private Long gugunCode;
 
 	@Column(precision = 20, scale = 17)
 	private BigDecimal latitude;
