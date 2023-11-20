@@ -55,6 +55,14 @@ function test() {
           </li>
         </ul>
         <!-- 로그인 전 -->
+        <div class="nav-item dropdown">
+          <img  data-bs-toggle="dropdown" class="dropdown-toggle" src="..\..\assets\person-circle.svg" width="50" height="50"/>
+          <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+  </ul>
+        </div>
         <ul v-if="userId == ''" class="navbar-nav mb-2 me-2 mb-lg-0 beforeLogin">
           <li class="nav-item">
             <a class="nav-link" aria-current="page" @click="moveRegist">회원가입 ✍🏻</a>
@@ -67,8 +75,8 @@ function test() {
           <li class="nav-item btn"><img id="profileImg" :src="userProfile" alt="프로필" /></li>
           <li class="nav-item">{{ userNickname }}님 안녕하세요</li>
 
-          <li class="nav-item after">
-            <a class="nav-link" aria-current="page" @click="Funclogout">로그아웃</a>
+          <li class="nav-item after nav-link" @click="Funclogout">로그아웃
+            <!-- <a class="nav-link" aria-current="page" @click="Funclogout">로그아웃</a> -->
           </li>
           <li class="nav-item after">
             <a class="nav-link" aria-current="page" @click="moveMypage">마이페이지</a>
@@ -112,5 +120,13 @@ function test() {
 #logo {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-size: 30px;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.nav-link:hover {
+  cursor: pointer;
 }
 </style>
