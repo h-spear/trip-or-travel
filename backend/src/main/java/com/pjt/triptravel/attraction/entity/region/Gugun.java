@@ -1,8 +1,8 @@
 package com.pjt.triptravel.attraction.entity.region;
 
-import javax.persistence.*;
-
 import lombok.Getter;
+
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -19,7 +19,7 @@ public class Gugun {
     @Column(name = "gugun_name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sido_code")
     private Sido sido;
 }
