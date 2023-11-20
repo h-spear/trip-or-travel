@@ -1,101 +1,119 @@
 <script setup>
-import { ref } from 'vue'
-import { emailDupCheck, nicknameDupCheck, registUser } from '@/api/user.js'
-import { AddressStore } from '@/stores/AddressStore.js'
-import { useRouter } from 'vue-router'
-import { uploadImage } from '@/api/image.js'
-import VSelect from '@/components/common/VSelect.vue'
+import { ref } from 'vue';
+import { emailDupCheck, nicknameDupCheck, registUser } from '@/api/user.js';
+import { AddressStore } from '@/stores/AddressStore.js';
+import { useRouter } from 'vue-router';
+import { uploadImage } from '@/api/image.js';
+import VSelect from '@/components/common/VSelect.vue';
 
-const router = useRouter()
+// addr1 "서울특별시 강북구 삼양로173길 504"
+// addr2 "(우이동)"
+// contentType "관광지"
+// contentTypeId 12
+// gugunCode 1
+// id 126502
+// imageUrl "http://tong.visitkorea.or.kr/cms/resource/48/632948_image2_1.jpg"
+// imageUrl2 "http://tong.visitkorea.or.kr/cms/resource/48/632948_image3_1.jpg"
+// latitude 37.65522747
+// likeCount 0
+// longitude 126.9897341
+// mlevel "6"
+// readCount 42235
+// sidoCode 1
+// tel ""
+// title "도선사(서울)"
+// zipcode "1002"
 
-const email = ref('test@test.com')
-const password = ref('1234')
-const passwordConfirm = ref('1234')
-const name = ref('test')
-const nickname = ref('test')
-const age = ref(10)
-const gender = ref('MALE')
+const router = useRouter();
+
+const email = ref('test@test.com');
+const password = ref('1234');
+const passwordConfirm = ref('1234');
+const name = ref('test');
+const nickname = ref('test');
+const age = ref(10);
+const gender = ref('MALE');
 // 아래 둘은 합쳐서 address로 만들어야함
-const sido = ref(0)
-const gugun = ref(0)
-const profileImageUrl = ref('https://i.ibb.co/jhrRmpY/anonymous.png')
+const sido = ref(0);
+const gugun = ref(0);
+const profileImageUrl = ref('https://i.ibb.co/jhrRmpY/anonymous.png');
 
-const addressStore = AddressStore()
-const { sidos, gugunBySido } = addressStore
-const guguns = ref([{ text: '', value: '' }])
+const addressStore = AddressStore();
+const { sidos, gugunBySido } = addressStore;
+const guguns = ref([{ text: '', value: '' }]);
 
-const isValid = ref(false)
-const dupChecked1 = ref(false)
-const dupChecked2 = ref(false)
+const isValid = ref(false);
+const dupChecked1 = ref(false);
+const dupChecked2 = ref(false);
 
 function checkDuplicateEmail() {
   if (!email.value) {
-    alert('이메일을 입력해주세요')
+    alert('이메일을 입력해주세요');
   } else {
     emailDupCheck(
       email.value,
       ({ data }) => {
-        console.log('request success', data.data)
+        console.log('request success', data.data);
         if (data.data) {
-          alert('중복된 이메일이 존재합니다.')
-          dupChecked1.value = false
+          alert('중복된 이메일이 존재합니다.');
+          dupChecked1.value = false;
         } else {
-          alert('가능한 이메일입니다.')
-          dupChecked1.value = true
+          alert('가능한 이메일입니다.');
+          dupChecked1.value = true;
         }
       },
       (error) => {
-        console.log('dup check failed', error)
+        console.log('dup check failed', error);
       }
-    )
+    );
   }
 }
 function checkDuplicateNickname() {
   if (!nickname.value) {
-    alert('닉네임을 입력해주세요')
+    alert('닉네임을 입력해주세요');
   } else {
     nicknameDupCheck(
       nickname.value,
       ({ data }) => {
-        console.log('request success', data.data)
+        console.log('request success', data.data);
         if (data.data) {
-          dupChecked2.value = false
-          alert('중복된 닉네임이 존재합니다.')
+          dupChecked2.value = false;
+          alert('중복된 닉네임이 존재합니다.');
         } else {
-          dupChecked2.value = true
-          alert('가능한 닉네임입니다.')
+          dupChecked2.value = true;
+          alert('가능한 닉네임입니다.');
         }
       },
       (error) => {
-        console.log('dup check failed', error)
+        console.log('dup check failed', error);
       }
-    )
+    );
   }
 }
 
 function getFileName(data) {
-  const fileReader = new FileReader()
-  fileReader.readAsDataURL(data[0])
+  const fileReader = new FileReader();
+  fileReader.readAsDataURL(data[0]);
   fileReader.onload = () => {
-    console.log('value', fileReader)
+    console.log('value', fileReader);
     uploadImage(
       fileReader.result,
       ({ data }) => {
-        console.log('success', data)
-        profileImageUrl.value = data.data.url
+        console.log('success', data);
+        profileImageUrl.value = data.data.url;
       },
       (error) => {
-        console.log('error ', error)
+        console.log('error ', error);
       }
-    )
-  }
+    );
+  };
 }
 
 function onRegister() {
   if (!(dupChecked1.value && dupChecked2.value)) {
-    alert('중복 체크를 완료해주십시오')
+    alert('중복 체크를 완료해주십시오');
   } else {
-    const address = { sido: sido.value, gugun: gugun.value }
+    const address = { sido: sido.value, gugun: gugun.value };
     const user = {
       email: email.value,
       password: password.value,
@@ -106,29 +124,29 @@ function onRegister() {
       gender: gender.value,
       address: address,
       profileImageUrl: profileImageUrl.value
-    }
+    };
     registUser(
       user,
       (data) => {
-        console.log('register success :', data)
-        alert('회원가입이 완료되었습니다!')
-        router.push({ name: 'login' })
+        console.log('register success :', data);
+        alert('회원가입이 완료되었습니다!');
+        router.push({ name: 'login' });
       },
       (error) => {
-        console.log('error : ', error)
+        console.log('error : ', error);
       }
-    )
+    );
   }
 }
 
 function selectSido(selectedSido) {
-  console.log('selected sido', gugunBySido[selectedSido])
-  guguns.value = gugunBySido[selectedSido]
-  sido.value = selectedSido
+  console.log('selected sido', gugunBySido[selectedSido]);
+  guguns.value = gugunBySido[selectedSido];
+  sido.value = selectedSido;
 }
 function selectGugun(selectedGugun) {
-  console.log('selected gugun', selectedGugun)
-  gugun.value = selectedGugun
+  console.log('selected gugun', selectedGugun);
+  gugun.value = selectedGugun;
 }
 </script>
 
@@ -148,7 +166,7 @@ function selectGugun(selectedGugun) {
             <label for="upload-image">
               <a>프로필로 사용할 이미지를 등록하세여(32mb이하)</a>
             </label>
-          </div>  
+          </div>
 
           <input
             id="email"

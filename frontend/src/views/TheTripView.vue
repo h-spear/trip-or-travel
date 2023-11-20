@@ -58,7 +58,7 @@ const searchByDb = () => {
 var map;
 const positions = ref([]);
 const markers = ref([]);
-const selectedItems = ref([]);
+const selectedItems = ref(new Map());
 // 강남구 : 1, 1
 
 // 들어갈 아이템은 무슨 정보들을 가져야 하는가?
@@ -144,15 +144,10 @@ const makeInfoWindow = (place) => {
     console.log('select add');
     place.isSelected = !place.isSelected;
     if (place.isSelected) {
-      selectedItems.value.push(place.id);
+      selectedItems.value.set(place.id, place);
       btnSelect.innerText = '취소';
     } else {
-      selectedItems.value = selectedItems.value.filter((item) => {
-        console.log('is canceling', item);
-        if (item.id != place.id) {
-          return item;
-        }
-      });
+      selectedItems.value.delete(place.id);
       console.log('canceled', selectedItems.value);
       btnSelect.innerText = '등록';
     }
@@ -247,7 +242,7 @@ const deleteMarkers = () => {
     </div>
     <div class="row border border-dark border-2">
       <div id="map" class="col-9"></div>
-      <div class="col-3 bg-white">
+      <div id="marker-list" class="col-3 bg-white">
         <attractionItem
           v-for="position in positions"
           :key="position.id"
@@ -255,8 +250,12 @@ const deleteMarkers = () => {
         ></attractionItem>
       </div>
     </div>
-    <div class="row border border-white">
-      <selectedItem class="bg-white" :selectedItems="selectedItems"></selectedItem>
+    <div class="row border border-white bg-white">
+      <selectedItem
+        v-for="(key, value) of selectedItems"
+        :key="key"
+        :selectedItems="value"
+      ></selectedItem>
     </div>
   </div>
 </template>
@@ -265,5 +264,9 @@ const deleteMarkers = () => {
 #map {
   /* width: 500px; */
   height: 500px;
+}
+#marker-list {
+  height: 500px;
+  overflow: scroll;
 }
 </style>

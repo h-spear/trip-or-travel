@@ -1,25 +1,26 @@
 <script setup>
-import { onMounted, onUpdated } from "vue";
+import { onMounted, onUpdated } from 'vue';
 const props = defineProps({
-    selectedItems:Array
-})
+  selectedItem: Object
+});
 onUpdated(() => {
-    console.log('updated',props.selectedItems)
-    props.selectedItems.forEach((data)=>{
-        console.log('each', data)
-    })
-
-})
+  console.log('updated', props.selectedItem);
+  props.selectedItem.forEach((data) => {
+    console.log('each', data);
+  });
+});
+watch(
+  () => {
+    props.selectedItem;
+  },
+  () => {
+    console.log(props.selectedItem);
+  }
+);
 </script>
 
 <template>
-    <div>
-        <div v-for="marker in selectedItems" :key="marker.id">
-        {{ marker }}
-        </div>
-    </div>
+  <div>asdf {{ selectedItem }}</div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
