@@ -1,13 +1,16 @@
 <script setup>
+import { onUpdated } from 'vue';
+const props = defineProps({
+  position: Object
+});
 
+onUpdated(() => {
+  console.log('updated', props.position);
+});
 </script>
 
 <template>
-    <div>
-        each attraction
-    </div>
+  <div>sdf</div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
