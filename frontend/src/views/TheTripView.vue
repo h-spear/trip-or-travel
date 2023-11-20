@@ -252,10 +252,11 @@ const deleteMarkers = () => {
     </div>
     <div class="row border border-white bg-white">
       <selectedItem
-        v-for="(key, value) of selectedItems"
+        v-for="(value, key) of selectedItems"
         :key="key"
-        :selectedItems="value"
+        :selectedItem="value"
       ></selectedItem>
+      <button class="btn btn-primary">저장</button>
     </div>
   </div>
 </template>

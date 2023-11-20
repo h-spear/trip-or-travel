@@ -8,34 +8,23 @@ export const AddressStore = defineStore(
     //state
     const sidos = ref([]);
     const gugunBySido = ref({});
-    let guguns = [];
 
     function funcGetItems() {
+      sidos.value = [];
       getSido(
         ({ data }) => {
-          data.data.map(({ sidoCode, sidoName }) => {
+          data.data.forEach((elem) => {
             sidos.value.push({
-              text: sidoName,
-              value: sidoCode
+              text: elem.sidoName,
+              value: elem.sidoCode
             });
-          });
-          sidos.value.map(({ text, value }) => {
-            getGugun(
-              value,
-              ({ data }) => {
-                guguns = [];
-                data.data.map((gugun) => {
-                  guguns.push({
-                    text: gugun.gugunName,
-                    value: gugun.gugunCode
-                  });
-                });
-                gugunBySido.value[value] = guguns;
-              },
-              (error) => {
-                console.log(error);
-              }
-            );
+            gugunBySido.value[elem.sidoCode] = [];
+            elem.guguns.forEach((subElem) => {
+              gugunBySido.value[elem.sidoCode].push({
+                text: subElem.gugunName,
+                value: subElem.gugunCode
+              });
+            });
           });
         },
         (error) => {

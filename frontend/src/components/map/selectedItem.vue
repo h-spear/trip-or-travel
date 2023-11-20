@@ -1,26 +1,23 @@
 <script setup>
-import { onMounted, onUpdated } from 'vue';
+import { onMounted, onUpdated, watch } from 'vue';
 const props = defineProps({
   selectedItem: Object
 });
-onUpdated(() => {
-  console.log('updated', props.selectedItem);
-  props.selectedItem.forEach((data) => {
-    console.log('each', data);
-  });
+onMounted(() => {
+  console.log('onMounted', props.selectedItem);
 });
-watch(
-  () => {
-    props.selectedItem;
-  },
-  () => {
-    console.log(props.selectedItem);
-  }
-);
+// watch(
+//   () => {
+//     props.selectedItem;
+//   },
+//   () => {
+//     console.log(props.selectedItem);
+//   }
+// );
 </script>
 
 <template>
-  <div>asdf {{ selectedItem }}</div>
+  <div>{{ selectedItem }}</div>
 </template>
 
 <style scoped></style>
