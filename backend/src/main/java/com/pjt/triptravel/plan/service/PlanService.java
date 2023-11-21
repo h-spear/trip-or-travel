@@ -6,7 +6,9 @@ import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
 import com.pjt.triptravel.plan.dto.PlanCreateParam;
+import com.pjt.triptravel.plan.dto.PlanDto;
 import com.pjt.triptravel.plan.dto.PlanItemCreateParam;
+import com.pjt.triptravel.plan.dto.PlanSimpleDto;
 import com.pjt.triptravel.plan.entity.Plan;
 import com.pjt.triptravel.plan.entity.PlanItem;
 import com.pjt.triptravel.plan.repository.PlanItemRepository;
@@ -31,6 +33,18 @@ public class PlanService {
     private final PlanRepository planRepository;
     private final PlanItemRepository planItemRepository;
     private final AttractionRepository attractionRepository;
+
+    public List<PlanSimpleDto> getPlans(Long memberId) {
+        return planRepository.findAllByMemberId(memberId)
+                .stream().map(PlanSimpleDto::of)
+                .collect(Collectors.toList());
+    }
+
+    public PlanDto getDetail(Long planId) {
+        Plan plan = planRepository.findByIdWithDetail(planId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획 번호입니다."));
+        return PlanDto.of(plan);
+    }
 
     @Transactional
     public Long createPlan(Long memberId, PlanCreateParam param) {

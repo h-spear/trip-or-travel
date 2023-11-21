@@ -7,10 +7,7 @@ import com.pjt.triptravel.plan.service.PlanService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -24,8 +21,20 @@ public class PlanController {
     @PostMapping
     public ApiResponse<?> create(@Login Long memberId,
                                  @RequestBody PlanCreateParam param) {
-        log.info("여행계획 생성, name={}", param.getTitle());
+        log.info("여행 계획 생성, name={}", param.getTitle());
         Long planId = planService.createPlan(memberId, param);
         return ApiResponse.ofSuccess(planId);
+    }
+
+    @GetMapping
+    public ApiResponse<?> list(@Login Long memberId) {
+        log.info("여행 계획 조회, memberId={}", memberId);
+        return ApiResponse.ofSuccess(planService.getPlans(memberId));
+    }
+
+    @GetMapping("/{planId}")
+    public ApiResponse<?> detail(@PathVariable Long planId) {
+        log.info("여행 계획 상제 조회, planId={}", planId);
+        return ApiResponse.ofSuccess(planService.getDetail(planId));
     }
 }

@@ -16,7 +16,7 @@ public class AttractionInfo {
 	@Column(name = "content_id")
 	private Long id;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "content_type_id")
 	private ContentType contentType;
 
