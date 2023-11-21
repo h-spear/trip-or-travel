@@ -1,4 +1,4 @@
-const boardRouter = [
+  const boardRouter = [
   {
     path: '/board',
     name: 'board',

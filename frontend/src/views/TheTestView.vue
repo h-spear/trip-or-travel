@@ -1,30 +1,42 @@
 <script setup>
-import { ref } from 'vue'
-import { uploadImage } from '@/api/image.js'
+import { ref } from 'vue';
+import { uploadImage } from '@/api/image.js';
 
-const image = ref(null)
+const image = ref(null);
+
+let tmp = new Map();
+tmp.set(1, 12);
+tmp.set(2, 22);
+tmp.set(3, 32);
+tmp.set(4, 42);
+console.log('gogo');
+for (let [key, value] of tmp) {
+  console.log('key', key);
+  console.log('value', value);
+}
 
 function getFileName(data) {
-  const fileReader = new FileReader()
-  fileReader.readAsDataURL(data[0])
+  const fileReader = new FileReader();
+  fileReader.readAsDataURL(data[0]);
   fileReader.onload = () => {
-    console.log('value', fileReader)
+    console.log('value', fileReader);
     uploadImage(
       fileReader.result,
       ({ data }) => {
-        console.log('success', data)
-        image.value = data.data.url
+        console.log('success', data);
+        image.value = data.data.url;
       },
       (error) => {
-        console.log('error ', error)
+        console.log('error ', error);
       }
-    )
-  }
+    );
+  };
 }
 </script>
 
 <template>
-  <div class="mt-4 p-5 bg-primary text-white rounded">
+  <div class="mt-4 p-5 bg-primary text-white rounded"></div>
+  <!-- <div class="mt-4 p-5 bg-primary text-white rounded">
     <h1>이곳은 테스트페이지입니다</h1>
     <img :src="image" alt="testing" />
     <div>
@@ -33,7 +45,7 @@ function getFileName(data) {
         <img src="@/assets/ssafy_logo.png" />
       </label>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style scoped></style>

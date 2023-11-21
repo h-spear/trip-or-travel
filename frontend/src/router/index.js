@@ -3,6 +3,7 @@ import TheHomeView from '@/views/TheHomeView.vue'
 import TheTestView from '@/views/TheTestView.vue'
 import userRouter from './UserRouter'
 import boardRouter from './BoardRouter'
+import tripRouter from './TripRouter'
 import App from '@/App.vue'
 
 const router = createRouter({
@@ -21,7 +22,8 @@ const router = createRouter({
       component: TheTestView
     },
     ...userRouter,
-    ...boardRouter
+    ...boardRouter,
+    ...tripRouter
   ]
 })
 

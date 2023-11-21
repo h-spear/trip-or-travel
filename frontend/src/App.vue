@@ -1,5 +1,14 @@
 <script setup>
-import TheHeadingNavbar from '@/components/layout/TheHeadingNavbar.vue'
+import { onMounted } from 'vue';
+import TheHeadingNavbar from '@/components/layout/TheHeadingNavbar.vue';
+import { AddressStore } from '@/stores/AddressStore.js';
+const addressStore = AddressStore();
+const { sidos, funcGetItems } = addressStore;
+onMounted(() => {
+  if (!sidos.value) {
+    funcGetItems();
+  }
+});
 </script>
 
 <template>
