@@ -4,10 +4,16 @@ const props = defineProps({
   position: Object
 });
 
-onUpdated(() => {
-  //   item.value = props.position;
-  console.log('updated', props.position);
-});
+const clicked = ref(false)
+const emits = defineEmits(['selectOrNot'])
+
+const select = () => {
+  clicked.value = !clicked.value
+  
+  emits('selectOrNot', clicked.value, props.position)
+}
+
+
 </script>
 
 <template>
@@ -19,7 +25,14 @@ onUpdated(() => {
         <div>{{ position.addr1 }}</div>
         <div>{{ position.addr2 }}</div>
       </p>
-      <button class="btn btn-primary">등록</button>
+      <button class="btn btn-primary" @click="select">
+        <div v-if="!clicked">
+          등록
+          </div>
+          <div v-else>
+            취소
+            </div>
+        </button>
       <button class="btn btn-danger">찜</button>
     </div>
   </div>

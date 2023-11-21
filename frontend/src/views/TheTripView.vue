@@ -1,5 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 import selectedItem from '@/components/map/selectedItem.vue';
 import attractionItem from '@/components/map/attractionItem.vue';
 
@@ -25,13 +27,14 @@ const contentTypes = ref([
   { value: '39', text: '음식점' }
 ]);
 const selectSido = (data) => {
-  console.log('selected sido', gugunBySido[data]);
   guguns.value = gugunBySido[data];
   selectedSido.value = data;
 };
 const selectGugun = (data) => {
-  console.log('selected gugun', data);
   selectedGugun.value = data;
+};
+const selectContentType = (data) => {
+  selectedContentType.value = data;
 };
 const searchByDb = () => {
   const query = {
@@ -105,34 +108,13 @@ const initMap = () => {
 // 마커에 들어갈 인포윈도우 만드는 함수
 const makeInfoWindow = (place) => {
   let iwContent = document.createElement('div');
-  let title = document.createElement('h1');
+  let title = document.createElement('h3');
   let content = document.createElement('div');
-  let btnWishlist = document.createElement('button');
-  let btnSelect = document.createElement('button');
+  // };
 
-  btnWishlist.innerText = '찜';
-  btnWishlist.onclick = () => {
-    console.log('wishlist add');
-  };
-  btnSelect.innerText = '등록';
-  btnSelect.onclick = () => {
-    console.log('select add');
-    place.isSelected = !place.isSelected;
-    if (place.isSelected) {
-      selectedItems.value.set(place.id, place);
-      btnSelect.innerText = '취소';
-    } else {
-      selectedItems.value.delete(place.id);
-      console.log('canceled', selectedItems.value);
-      btnSelect.innerText = '등록';
-    }
-  };
+  content.innerText = place.contentType + '\n tel: ' + place.tel + '\n';
 
-  content.innerText = '들어갈 내용 명세 필요 ddsdsds';
-  content.appendChild(btnSelect);
-  content.appendChild(btnWishlist);
-
-  title.appendChild(document.createTextNode('제목'));
+  title.appendChild(document.createTextNode(place.title));
 
   iwContent.appendChild(title);
   iwContent.appendChild(content);
@@ -189,6 +171,7 @@ const loadMarkers = () => {
       deleteInfoWindows();
       center.value = new kakao.maps.LatLng(place.latitude, place.longitude);
       infowindow.open(map, marker);
+      document.getElementById(place.id).scrollIntoView({ behavior: 'smooth' }, true);
     });
 
     markers.value.push(marker);
@@ -200,7 +183,6 @@ const loadMarkers = () => {
   });
   map.setBounds(bounds);
 };
-
 
 // 마커를 지우는 함수
 const deleteMarkers = () => {
@@ -220,6 +202,39 @@ watch(
   },
   { deep: true }
 );
+
+// 다음 페이지로 넘어가는 함수
+const moveDetail = () => {
+  console.log('before', selectedItems.value);
+  const stateItem = [];
+  selectedItems.value.forEach((item) => {
+    stateItem.push(JSON.parse(JSON.stringify(item)));
+  });
+  console.log('mapped after', stateItem);
+  router.push({
+    name: 'trip-detail',
+    state: {
+      tmp: 1,
+      selectedItems: stateItem
+    }
+  });
+};
+
+// emit from attractionItem
+// 셀렉션에 등록
+const selectOrNot = (clicked, item) => {
+  item.isSelected = !item.isSelected;
+  if (clicked) {
+    selectedItems.value.set(item.id, item);
+  } else {
+    selectedItems.value.delete(item.id);
+  }
+};
+// emit from selectedItem
+// 셀렉션에서 제거
+const closeItem = (id) => {
+  selectedItems.value.delete(id);
+};
 </script>
 
 <template>
@@ -241,17 +256,20 @@ watch(
           v-for="position in positions"
           :key="position.id"
           :position="position"
+          @select-or-not="selectOrNot"
+          :id="position.id"
         ></attractionItem>
       </div>
       <div id="map" class="col-9"></div>
     </div>
     <div class="row border border-white bg-white">
       <selectedItem
-        v-for="(value, key) of selectedItems"
+        v-for="(value, key) in selectedItems"
         :key="key"
         :selectedItem="value"
+        @close-item="closeItem"
       ></selectedItem>
-      <button class="btn btn-primary">저장</button>
+      <button class="btn btn-primary" @click="moveDetail">저장</button>
     </div>
   </div>
 </template>
