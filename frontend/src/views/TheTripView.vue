@@ -264,6 +264,7 @@ const closeItem = (id) => {
     </div>
     <div class="row border border-white bg-white">
       <selectedItem
+        class="col"
         v-for="(value, key) in selectedItems"
         :key="key"
         :selectedItem="value"
