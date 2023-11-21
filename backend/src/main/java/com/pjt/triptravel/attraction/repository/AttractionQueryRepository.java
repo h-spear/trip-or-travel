@@ -5,6 +5,9 @@ import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchOrder;
 import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchResult;
 import com.pjt.triptravel.attraction.dto.attraction.QAttractionSearchResult;
 import com.pjt.triptravel.attraction.entity.QContentType;
+import com.pjt.triptravel.attraction.entity.region.QGugun;
+import com.pjt.triptravel.attraction.entity.region.QSido;
+import com.querydsl.core.alias.Alias;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -23,6 +26,8 @@ import java.util.List;
 import static com.pjt.triptravel.attraction.entity.QAttractionDetail.attractionDetail;
 import static com.pjt.triptravel.attraction.entity.QAttractionInfo.attractionInfo;
 import static com.pjt.triptravel.attraction.entity.QContentType.*;
+import static com.pjt.triptravel.attraction.entity.region.QGugun.*;
+import static com.pjt.triptravel.attraction.entity.region.QSido.sido;
 
 @Slf4j
 @Repository
@@ -47,8 +52,8 @@ public class AttractionQueryRepository {
                     attractionInfo.tel,
                     attractionInfo.imageUrl,
                     attractionInfo.imageUrl2,
-                    attractionInfo.sido.code,
-                    attractionInfo.gugun.code,
+                    attractionInfo.sidoCode,
+                    attractionInfo.gugunCode,
                     attractionInfo.latitude,
                     attractionInfo.longitude,
                     attractionInfo.mlevel,
@@ -57,11 +62,10 @@ public class AttractionQueryRepository {
                     contentType.id,
                     contentType.name))
                 .from(attractionInfo)
-                .join(contentType)
-                .on(attractionInfo.contentType.id.eq(contentType.id))
+                .join(attractionInfo.contentType, contentType)
                 .where(titleContains(condition.getKeyword()),
-                    codeMatch(attractionInfo.sido.code, condition.getSidoCode()),
-                    codeMatch(attractionInfo.gugun.code, condition.getGugunCode()),
+                    codeMatch(attractionInfo.sidoCode, condition.getSidoCode()),
+                    codeMatch(attractionInfo.gugunCode, condition.getGugunCode()),
                     likeCountGe(condition.getLikeCountGe()),
                     contentTypeMatch(condition.getContentTypeId()))
                 .orderBy(getOrderSpecifier(condition.getOrder()), attractionInfo.id.asc())

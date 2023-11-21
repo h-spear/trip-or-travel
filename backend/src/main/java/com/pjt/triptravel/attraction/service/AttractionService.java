@@ -29,6 +29,8 @@ public class AttractionService {
     }
 
     public Slice<AttractionSearchResult> search(AttractionSearchCondition condition, Pageable pageable) {
+        if (condition.getSidoCode() == null && condition.getGugunCode() != null)
+            throw new IllegalArgumentException("구군 번호만으로 조회할 수 없습니다.");
         return attractionQueryRepository.query(condition, pageable);
     }
 

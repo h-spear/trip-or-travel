@@ -55,10 +55,11 @@ public class PostQueryRepository {
 				post.registrationDate,
 				post.lastModifiedDate))
 			.from(post)
-			.join(board).on(boardMatch(board.id, condition.getBoardId()))
+			.join(post.board, board)
 			.join(post.writer, member)
 			.leftJoin(post.comments, comment1)
-			.where(stringContains(post.title, condition.getTitle()),
+			.where(boardMatch(board.id, condition.getBoardId()),
+				stringContains(post.title, condition.getTitle()),
 				stringContains(post.writer.nickname, condition.getWriterNickname()),
 				dateAfter(condition.getStartDate()),
 				dateBefore(condition.getEndDate()))
