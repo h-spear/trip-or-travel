@@ -19,4 +19,9 @@ public class MyControllerAdvice {
 	public ApiResponse<?> userDuplicate(DuplicateException e) {
 		return ApiResponse.ofFail(e.getMessage());
 	}
+
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ApiResponse<?> illegalArgument(DuplicateException e) {
+		return ApiResponse.ofFail(e.getMessage());
+	}
 }
