@@ -25,6 +25,9 @@ public class PlanItem extends BaseEntity {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
 
+    @Column(name = "plan_order")
+    private int order;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id")
     private Plan plan;
@@ -33,11 +36,12 @@ public class PlanItem extends BaseEntity {
     }
 
     @Builder
-    public PlanItem(AttractionInfo attractionInfo, String memo, LocalDateTime startDateTime, LocalDateTime endDateTime, Plan plan) {
+    public PlanItem(AttractionInfo attractionInfo, String memo, LocalDateTime startDateTime, LocalDateTime endDateTime, Plan plan, int order) {
         this.attraction = attractionInfo;
         this.memo = memo;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+        this.order = order;
         setPlan(plan);
     }
 

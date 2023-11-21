@@ -3,12 +3,14 @@ package com.pjt.triptravel.plan.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-public class PlanItemCreateParam {
+public class PlanUpdateParam {
 
-    private Long attractionId;
-    private String memo;
+    private String title;
+    private String description;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+    private List<PlanItemParam> planItems;
 }

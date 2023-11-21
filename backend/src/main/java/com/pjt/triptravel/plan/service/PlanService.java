@@ -5,10 +5,7 @@ import com.pjt.triptravel.attraction.repository.AttractionRepository;
 import com.pjt.triptravel.common.exception.UserNotFoundException;
 import com.pjt.triptravel.member.entity.Member;
 import com.pjt.triptravel.member.repository.MemberRepository;
-import com.pjt.triptravel.plan.dto.PlanCreateParam;
-import com.pjt.triptravel.plan.dto.PlanDto;
-import com.pjt.triptravel.plan.dto.PlanItemCreateParam;
-import com.pjt.triptravel.plan.dto.PlanSimpleDto;
+import com.pjt.triptravel.plan.dto.*;
 import com.pjt.triptravel.plan.entity.Plan;
 import com.pjt.triptravel.plan.entity.PlanItem;
 import com.pjt.triptravel.plan.repository.PlanItemRepository;
@@ -40,25 +37,41 @@ public class PlanService {
                 .collect(Collectors.toList());
     }
 
-    public PlanDto getDetail(Long planId) {
+    public PlanDto getDetail(Long memberId, Long planId) {
         Plan plan = planRepository.findByIdWithDetail(planId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획 번호입니다."));
+        validatePlanWriterAndMember(plan, memberId);
         return PlanDto.of(plan);
+    }
+
+    @Transactional
+    public void modify(Long memberId, Long planId, PlanUpdateParam param) {
+        Plan plan = planRepository.findByIdWithItems(planId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획 번호입니다."));
+        validatePlanWriterAndMember(plan, memberId);
+
+        deleteAllPlanItems(plan);
+        planItemRepository.saveAll(
+                getPlanItems(param.getPlanItems(), plan));
+
+        plan.changePlan(param.getTitle(), param.getDescription(),
+                        param.getStartDateTime(), param.getEndDateTime());
+    }
+
+    @Transactional
+    public void delete(Long memberId, Long planId) {
+        Plan plan = planRepository.findByIdWithItems(planId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 여행 계획 번호입니다."));
+        validatePlanWriterAndMember(plan, memberId);
+
+        deleteAllPlanItems(plan);
+        planRepository.delete(plan);
     }
 
     @Transactional
     public Long createPlan(Long memberId, PlanCreateParam param) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(UserNotFoundException::new);
-        List<Long> attractionIds = param.getPlanItems()
-                .stream().map(PlanItemCreateParam::getAttractionId)
-                .collect(Collectors.toList());
-
-        Map<Long, AttractionInfo> attractionIdMap = attractionRepository.findAllById(attractionIds)
-                .stream()
-                .collect(Collectors.toMap(
-                        AttractionInfo::getId,
-                        attraction -> attraction));
 
         Plan plan = Plan.builder()
                 .title(param.getTitle())
@@ -69,15 +82,43 @@ public class PlanService {
                 .build();
         Plan savedPlan = planRepository.save(plan);
 
-        List<PlanItem> planItems = new ArrayList<>();
-        param.getPlanItems().forEach(itemParam -> planItems.add(PlanItem.builder()
+        planItemRepository.saveAll(
+                getPlanItems(param.getPlanItems(), plan));
+        return savedPlan.getId();
+    }
+
+    private void deleteAllPlanItems(Plan plan) {
+        List<Long> planItemIds = plan.getPlanItems().stream()
+                .map(PlanItem::getId)
+                .collect(Collectors.toList());
+        planItemRepository.deleteAllById(planItemIds);
+    }
+
+    private List<PlanItem> getPlanItems(List<PlanItemParam> itemParams, Plan plan) {
+        List<Long> attractionIds = itemParams
+                .stream().map(PlanItemParam::getAttractionId)
+                .collect(Collectors.toList());
+
+        Map<Long, AttractionInfo> attractionIdMap = attractionRepository.findAllById(attractionIds)
+                .stream()
+                .collect(Collectors.toMap(
+                        AttractionInfo::getId,
+                        attraction -> attraction));
+
+        List<PlanItem> planItems = new ArrayList<>(itemParams.size());
+        itemParams.forEach(itemParam -> planItems.add(PlanItem.builder()
                 .attractionInfo(attractionIdMap.get(itemParam.getAttractionId()))
                 .startDateTime(itemParam.getStartDateTime())
                 .endDateTime(itemParam.getEndDateTime())
                 .memo(itemParam.getMemo())
                 .plan(plan)
+                .order(itemParam.getOrder())
                 .build()));
-        planItemRepository.saveAll(planItems);
-        return savedPlan.getId();
+        return planItems;
+    }
+
+    private void validatePlanWriterAndMember(Plan plan, Long memberId) {
+        if (plan.getMember() == null || !plan.getMember().getId().equals(memberId))
+            throw new IllegalArgumentException("여행 계획에 접근할 수 없습니다.");
     }
 }

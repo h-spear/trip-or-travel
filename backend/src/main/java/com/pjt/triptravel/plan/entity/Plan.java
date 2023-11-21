@@ -43,6 +43,13 @@ public class Plan extends BaseEntity {
         setMember(member);
     }
 
+    public void changePlan(String title, String description, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        this.title = title;
+        this.description = description;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+    }
+
     private void setMember(Member member) {
         this.member = member;
         member.getPlans().add(this);

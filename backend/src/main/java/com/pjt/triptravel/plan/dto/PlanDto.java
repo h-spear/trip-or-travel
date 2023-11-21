@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class PlanDto {
     public static PlanDto of(Plan plan) {
         List<PlanItemDto> planItems = plan.getPlanItems().stream()
                 .map(PlanItemDto::of)
+                .sorted((Comparator.comparingInt(PlanItemDto::getOrder)))
                 .collect(Collectors.toList());
 
         return PlanDto.builder()

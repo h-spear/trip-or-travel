@@ -26,6 +26,7 @@ public class PlanItemDto {
     private String memo;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+    private int order;
 
     public static PlanItemDto of(PlanItem planItem) {
         AttractionInfo attraction = planItem.getAttraction();
@@ -44,6 +45,7 @@ public class PlanItemDto {
                 .memo(planItem.getMemo())
                 .startDateTime(planItem.getStartDateTime())
                 .endDateTime(planItem.getEndDateTime())
+                .order(planItem.getOrder())
                 .build();
     }
 }

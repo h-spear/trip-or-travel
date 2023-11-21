@@ -3,6 +3,7 @@ package com.pjt.triptravel.plan.controller;
 import com.pjt.triptravel.common.configuration.annotation.Login;
 import com.pjt.triptravel.common.response.ApiResponse;
 import com.pjt.triptravel.plan.dto.PlanCreateParam;
+import com.pjt.triptravel.plan.dto.PlanUpdateParam;
 import com.pjt.triptravel.plan.service.PlanService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,26 @@ public class PlanController {
     }
 
     @GetMapping("/{planId}")
-    public ApiResponse<?> detail(@PathVariable Long planId) {
-        log.info("여행 계획 상제 조회, planId={}", planId);
-        return ApiResponse.ofSuccess(planService.getDetail(planId));
+    public ApiResponse<?> detail(@Login Long memberId,
+                                 @PathVariable Long planId) {
+        log.info("여행 계획 상세 조회, planId={}", planId);
+        return ApiResponse.ofSuccess(planService.getDetail(memberId, planId));
+    }
+
+    @PutMapping("/{planId}")
+    public ApiResponse<?> modify(@Login Long memberId,
+                                 @PathVariable Long planId,
+                                 @RequestBody PlanUpdateParam param) {
+        log.info("여행 계획 수정, planId={}", planId);
+        planService.modify(memberId, planId, param);
+        return ApiResponse.ofSuccess();
+    }
+
+    @DeleteMapping("/{planId}")
+    public ApiResponse<?> delete(@Login Long memberId,
+                                 @PathVariable Long planId) {
+        log.info("여행 계획 삭제, planId={}", planId);
+        planService.delete(memberId, planId);
+        return ApiResponse.ofSuccess();
     }
 }
