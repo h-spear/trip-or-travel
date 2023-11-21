@@ -58,7 +58,9 @@ const searchByDb = () => {
 var map;
 const positions = ref([]);
 const markers = ref([]);
+const infowindows = ref(new Map());
 const selectedItems = ref(new Map());
+const center = ref('');
 // 강남구 : 1, 1
 
 // 들어갈 아이템은 무슨 정보들을 가져야 하는가?
@@ -66,18 +68,6 @@ const selectedItems = ref(new Map());
 
 // const props = defineProps({ stations: Array, selectStation: Object });
 
-// watch(
-//   () => props.selectStation.value,
-//   () => {
-//     // 이동할 위도 경도 위치를 생성합니다
-//     var moveLatLon = new kakao.maps.LatLng(props.selectStation.lat, props.selectStation.lng);
-
-//     // 지도 중심을 부드럽게 이동시킵니다
-//     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-//     map.panTo(moveLatLon);
-//   },
-//   { deep: true }
-// );
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
     initMap();
@@ -95,8 +85,9 @@ onMounted(() => {
 const initMap = () => {
   const container = document.getElementById('map');
   // 위치는 나중에 사용자 주소 기반으로 설정하자
+  center.value = new kakao.maps.LatLng(33.450701, 126.570667);
   const options = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667),
+    center: center.value,
     level: 3
   };
   map = new kakao.maps.Map(container, options);
@@ -110,22 +101,6 @@ const initMap = () => {
     console.log('지도에서 클릭한 위치의 좌표는 ' + mouseEvent.latLng.toString() + ' 입니다.');
   });
 };
-
-// watch(
-//   () => props.stations.value,
-//   () => {
-//     positions.value = [];
-//     props.stations.forEach((station) => {
-//       let obj = {};
-//       obj.latlng = new kakao.maps.LatLng(station.lat, station.lng);
-//       obj.title = station.statNm;
-
-//       positions.value.push(obj);
-//     });
-//     loadMarkers();
-//   },
-//   { deep: true }
-// );
 
 // 마커에 들어갈 인포윈도우 만드는 함수
 const makeInfoWindow = (place) => {
@@ -167,9 +142,18 @@ const makeInfoWindow = (place) => {
     removable: true,
     disableAutoPan: true
   });
+  infowindows.value.set(place.id, infowindow);
   return infowindow;
 };
 
+// 한 마커의 인포윈도우가 열렸을 때 다른 마커의 인포윈도우를 지우는 함수
+const deleteInfoWindows = () => {
+  infowindows.value.forEach((window) => {
+    window.close();
+  });
+};
+
+// 마커를 등록하는 함수
 const loadMarkers = () => {
   deleteMarkers();
 
@@ -201,7 +185,9 @@ const loadMarkers = () => {
     const infowindow = makeInfoWindow(place);
 
     // 마커에 클릭이벤트를 등록합니다
-    kakao.maps.event.addListener(marker, 'click', function () {
+    kakao.maps.event.addListener(marker, 'click', () => {
+      deleteInfoWindows();
+      center.value = new kakao.maps.LatLng(place.latitude, place.longitude);
       infowindow.open(map, marker);
     });
 
@@ -215,16 +201,25 @@ const loadMarkers = () => {
   map.setBounds(bounds);
 };
 
-//   // 4. 지도를 이동시켜주기
-// 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
 
-// };
-
+// 마커를 지우는 함수
 const deleteMarkers = () => {
   if (markers.value.length > 0) {
     markers.value.forEach((marker) => marker.setMap(null));
+    deleteInfoWindows();
+    infowindows.value.clear();
   }
 };
+
+// 중심 변화 시 중심으로 이동시켜주는 watch
+// 값을 카카오 latlng로 받기
+watch(
+  () => center.value,
+  () => {
+    map.panTo(center.value);
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -241,7 +236,6 @@ const deleteMarkers = () => {
       </form>
     </div>
     <div class="row border border-dark border-2">
-      <div id="map" class="col-9"></div>
       <div id="marker-list" class="col-3 bg-white">
         <attractionItem
           v-for="position in positions"
@@ -249,6 +243,7 @@ const deleteMarkers = () => {
           :position="position"
         ></attractionItem>
       </div>
+      <div id="map" class="col-9"></div>
     </div>
     <div class="row border border-white bg-white">
       <selectedItem
