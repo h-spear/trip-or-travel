@@ -34,7 +34,7 @@ function test() {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top" style="height: 90px">
     <div class="container">
       <a class="navbar-brand text-black fw-bold" id="logo" @click="moveHome">
         <img src="@/assets/logo.png" alt="" width="60" /> Enjoy Trip

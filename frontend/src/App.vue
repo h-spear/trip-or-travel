@@ -13,10 +13,8 @@ onMounted(() => {
 
 <template>
   <div>
-    <TheHeadingNavbar class="mb-5"></TheHeadingNavbar>
-    <div class="pt-5 m-5"></div>
-    <!-- 네비바와 거리를 두기 위해 만든 태그 -->
-    <router-view class=""></router-view>
+    <TheHeadingNavbar></TheHeadingNavbar>
+    <router-view style="padding-top: 100px"></router-view>
   </div>
 </template>
 
