@@ -4,7 +4,7 @@ const local = localAxios();
 
 // 현재의 api는 오직 자유게시판(3)을 목적으로 보내는 중이다.
 function listBoard(params, success, fail) {
-  let url = `post?board=`;
+  let url = `post?`;
   for (let key in params) {
     url += `&${key}=${params[key]}`;
   }

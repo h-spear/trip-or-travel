@@ -113,7 +113,7 @@ main {
   width: 400px;
   height: 420px;
   padding: 40px;
-  background: transparent;
+  background: #00000040;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 20px;
   backdrop-filter: blur(15px);

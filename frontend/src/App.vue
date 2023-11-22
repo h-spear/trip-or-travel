@@ -20,7 +20,7 @@ onMounted(() => {
 
 <style>
 body {
-  background-image: url(assets/jeju1.jpg);
+  background-image: url(assets/bg.jpg);
   background-size: cover; /* 이미지를 화면에 꽉 채우도록 크기 조정 */
   background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
   background-attachment: fixed; /* 스크롤 시 배경 이미지 고정 */

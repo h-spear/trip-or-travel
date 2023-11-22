@@ -4,11 +4,13 @@ const boardRouter = [
     name: 'board',
     redirect: { name: 'board-list' },
     component: () => import('@/views/TheBoardView.vue'),
+    props: true,
     children: [
       {
-        path: 'list',
+        path: '',
         name: 'board-list',
-        component: () => import('@/components/board/BoardList.vue')
+        component: () => import('@/components/board/BoardList.vue'),
+        props: true
       },
       {
         path: 'detail/:postId',
