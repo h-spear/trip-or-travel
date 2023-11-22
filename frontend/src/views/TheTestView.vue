@@ -9,11 +9,10 @@ tmp.set(1, 12);
 tmp.set(2, 22);
 tmp.set(3, 32);
 tmp.set(4, 42);
-console.log('gogo');
-for (let [key, value] of tmp) {
-  console.log('key', key);
-  console.log('value', value);
-}
+
+tmp.foreach((data) => {
+  console.log(data);
+});
 
 function getFileName(data) {
   const fileReader = new FileReader();

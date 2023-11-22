@@ -34,6 +34,7 @@ const select = () => {
             </div>
         </button>
       <button class="btn btn-danger">찜</button>
+      <button class="btn btn-success">주변 추천</button>
     </div>
   </div>
 </template>
