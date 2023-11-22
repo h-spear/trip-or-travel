@@ -1,25 +1,36 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
-  <div class="container text-center mt-3">
-    <div class="alert alert-info" role="alrt">게시판입니다</div>
-    <!-- router view 설정 -->
-    <!-- <router-link to="/list" class="nav-link">게시판</router-link> -->
-    <div></div>
-    <router-view></router-view>
-  </div>
+  <section>
+    <div class="board-wrapper">
+      <div class="page-header">asdas</div>
+      <router-view></router-view>
+    </div>
+  </section>
 </template>
 
 <style scoped>
-mark.sky {
-  background: linear-gradient(to top, #54fff9 20%, transparent 30%);
+section {
+  display: flex;
+  margin: 0;
+  position: relative;
+  min-width: 800px;
+  width: 100vw;
+  height: 100vh;
+  max-width: 1200px;
+  padding: 130px 50px 30px 50px;
 }
-router-view {
-  background-color: #54fff9;
-}
-.container {
-  background-color: aliceblue;
-  opacity: 90%;
+
+.board-wrapper {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 </style>

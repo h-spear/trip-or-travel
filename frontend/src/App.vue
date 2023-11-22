@@ -12,9 +12,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div style="display: flex; justify-content: center; align-items: center">
     <TheHeadingNavbar></TheHeadingNavbar>
-    <router-view style="padding-top: 100px"></router-view>
+    <router-view></router-view>
   </div>
 </template>
 

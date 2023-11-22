@@ -1,4 +1,4 @@
-  const boardRouter = [
+const boardRouter = [
   {
     path: '/board',
     name: 'board',
@@ -27,6 +27,6 @@
       }
     ]
   }
-]
+];
 
-export default boardRouter
+export default boardRouter;
