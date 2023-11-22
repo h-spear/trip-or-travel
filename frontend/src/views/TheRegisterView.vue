@@ -4,38 +4,19 @@ import { emailDupCheck, nicknameDupCheck, registUser } from '@/api/user.js';
 import { AddressStore } from '@/stores/AddressStore.js';
 import { useRouter } from 'vue-router';
 import { uploadImage } from '@/api/image.js';
-import VSelect from '@/components/common/VSelect.vue';
-
-// addr1 "서울특별시 강북구 삼양로173길 504"
-// addr2 "(우이동)"
-// contentType "관광지"
-// contentTypeId 12
-// gugunCode 1
-// id 126502
-// imageUrl "http://tong.visitkorea.or.kr/cms/resource/48/632948_image2_1.jpg"
-// imageUrl2 "http://tong.visitkorea.or.kr/cms/resource/48/632948_image3_1.jpg"
-// latitude 37.65522747
-// likeCount 0
-// longitude 126.9897341
-// mlevel "6"
-// readCount 42235
-// sidoCode 1
-// tel ""
-// title "도선사(서울)"
-// zipcode "1002"
 
 const router = useRouter();
 
-const email = ref('test@test.com');
-const password = ref('1234');
-const passwordConfirm = ref('1234');
-const name = ref('test');
-const nickname = ref('test');
-const age = ref(10);
+const email = ref('');
+const password = ref('');
+const passwordConfirm = ref('');
+const name = ref('');
+const nickname = ref('');
+const age = ref(null);
 const gender = ref('MALE');
 // 아래 둘은 합쳐서 address로 만들어야함
-const sido = ref(0);
-const gugun = ref(0);
+const sido = ref('시도');
+const gugun = ref('구군');
 const profileImageUrl = ref('https://i.ibb.co/jhrRmpY/anonymous.png');
 
 const addressStore = AddressStore();
@@ -43,8 +24,10 @@ const { sidos, gugunBySido } = addressStore;
 const guguns = ref([{ text: '', value: '' }]);
 
 const isValid = ref(false);
-const dupChecked1 = ref(false);
-const dupChecked2 = ref(false);
+const dupCheckEmail = ref(false);
+const dupCheckNickname = ref(false);
+const dupCheckEmailBtn = ref('중복 체크');
+const dupCheckNicknameBtn = ref('중복 체크');
 
 function checkDuplicateEmail() {
   if (!email.value) {
@@ -55,11 +38,12 @@ function checkDuplicateEmail() {
       ({ data }) => {
         console.log('request success', data.data);
         if (data.data) {
+          resetEmailCheck();
           alert('중복된 이메일이 존재합니다.');
-          dupChecked1.value = false;
         } else {
           alert('가능한 이메일입니다.');
-          dupChecked1.value = true;
+          dupCheckEmail.value = true;
+          dupCheckEmailBtn.value = '체크 완료';
         }
       },
       (error) => {
@@ -77,10 +61,11 @@ function checkDuplicateNickname() {
       ({ data }) => {
         console.log('request success', data.data);
         if (data.data) {
-          dupChecked2.value = false;
+          resetNicknameCheck();
           alert('중복된 닉네임이 존재합니다.');
         } else {
-          dupChecked2.value = true;
+          dupCheckNickname.value = true;
+          dupCheckNicknameBtn.value = '체크 완료';
           alert('가능한 닉네임입니다.');
         }
       },
@@ -109,11 +94,23 @@ function getFileName(data) {
   };
 }
 
+const resetEmailCheck = () => {
+  dupCheckEmail.value = false;
+  dupCheckEmailBtn.value = '중복 체크';
+};
+const resetNicknameCheck = () => {
+  dupCheckNickname.value = false;
+  dupCheckNicknameBtn.value = '중복 체크';
+};
+
 function onRegister() {
-  if (!(dupChecked1.value && dupChecked2.value)) {
+  if (!(dupCheckEmail.value && dupCheckNickname.value)) {
     alert('중복 체크를 완료해주십시오');
   } else {
-    const address = { sido: sido.value, gugun: gugun.value };
+    const address = {
+      sido: sido.value !== '시도' ? sido.value : null,
+      gugun: gugun.value !== '구군' ? gugun.value : null
+    };
     const user = {
       email: email.value,
       password: password.value,
@@ -125,6 +122,7 @@ function onRegister() {
       address: address,
       profileImageUrl: profileImageUrl.value
     };
+    console.log(user);
     registUser(
       user,
       (data) => {
@@ -139,176 +137,400 @@ function onRegister() {
   }
 }
 
-function selectSido(selectedSido) {
-  console.log('selected sido', gugunBySido[selectedSido]);
+const handleSido = (selectedSido) => {
   guguns.value = gugunBySido[selectedSido];
+  gugun.value = '구군';
   sido.value = selectedSido;
-}
-function selectGugun(selectedGugun) {
-  console.log('selected gugun', selectedGugun);
-  gugun.value = selectedGugun;
-}
+  console.log('selected sido', selectedSido, gugunBySido[selectedSido]);
+  console.log('selected gugun', gugun.value);
+};
 </script>
 
 <template>
-  <main class="container box">
-    <div class="register-page" style="margin-top: 100px">
-      <div class="form">
-        <form name="register-form" class="register-form" @submit.prevent="onRegister">
-          <img :src="profileImageUrl" id="profileImg" alt="testing" />
-          <div>
-            <input
-              type="file"
-              id="upload-image"
-              hidden
-              @change="getFileName($event.target.files)"
-            />
-            <label for="upload-image">
-              <a>프로필로 사용할 이미지를 등록하세여(32mb이하)</a>
-            </label>
-          </div>
-
+  <main>
+    <div class="form-box">
+      <form @submit.prevent="onRegister">
+        <h2>회원가입</h2>
+        <div class="input-box">
+          <font-awesome-icon class="icon" icon="fa-solid fa-envelope" />
           <input
             id="email"
             name="email"
             type="email"
-            placeholder="이메일"
-            required
+            placeholder=""
             v-model="email"
+            autocomplete="off"
+            @keydown="resetEmailCheck"
+            required
           />
-          <a class="btn dupcheck" @click="checkDuplicateEmail">중복 체크</a>
+          <label for="" :class="{ 'input-valid': email != null && email.length > 0 }"
+            >이메일
+          </label>
+          <a
+            class="btn dupcheck-btn"
+            @click="checkDuplicateEmail"
+            :class="{ show: email != null && email.length > 0, checked: dupCheckEmail }"
+            >{{ dupCheckEmailBtn }}</a
+          >
+        </div>
+        <div class="input-box">
+          <font-awesome-icon class="icon" icon="fa-solid fa-user" />
           <input
             id="nickname"
             name="nickname"
             type="text"
-            placeholder="닉네임"
-            required
+            placeholder=""
             v-model="nickname"
-          />
-          <a class="btn dupcheck" @click="checkDuplicateNickname">중복 체크</a>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="비밀번호"
+            autocomplete="off"
+            @keydown="resetNicknameCheck"
             required
-            v-model="password"
           />
+          <label
+            for=""
+            :class="{
+              'input-valid': nickname != null && nickname.length > 0
+            }"
+            >닉네임</label
+          >
+          <a
+            class="btn dupcheck-btn"
+            :class="{ show: nickname != null && nickname.length > 0, checked: dupCheckNickname }"
+            @click="checkDuplicateNickname"
+            >{{ dupCheckNicknameBtn }}</a
+          >
+        </div>
+        <div class="input-box">
+          <font-awesome-icon class="icon" icon="fa-solid fa-lock" />
+          <input id="password" name="password" type="password" placeholder="" v-model="password" />
+          <label for="" :class="{ 'input-valid': password != null && password.length > 0 }"
+            >비밀번호</label
+          >
+        </div>
+        <div class="input-box">
+          <font-awesome-icon class="icon" icon="fa-solid fa-lock" />
           <input
             id="passwordConfirm"
-            name="passwordConfirm1"
+            name="passwordConfirm"
             type="password"
-            placeholder="비밀번호 확인"
-            required
+            placeholder=""
             v-model="passwordConfirm"
           />
-          <input id="name" name="name" type="text" placeholder="이름" required v-model="name" />
-          <input id="age" name="age" type="number" placeholder="나이" v-model="age" />
-          <div class="form-check form-check-inline">
-            <input class="" id="male" name="gender" type="radio" value="MALE" v-model="gender" />
-            <label class="form-check-label" for="male">남성</label>
-          </div>
-          <div class="form-check form-check-inline">
+          <label
+            for=""
+            :class="{ 'input-valid': passwordConfirm != null && passwordConfirm.length > 0 }"
+            >비밀번호 확인</label
+          >
+        </div>
+        <div class="two-input-box">
+          <div class="input-box">
             <input
-              class=""
-              id="female"
-              name="gender"
-              type="radio"
-              value="FEMALE"
-              v-model="gender"
+              id="name"
+              name="name"
+              type="text"
+              placeholder=""
+              v-model="name"
+              autocomplete="off"
+              required
             />
-            <label class="form-check-label" for="female">여성</label>
+            <label for="" :class="{ 'input-valid': name != null && name.length > 0 }">이름</label>
           </div>
-          <label for="sido">시도</label>
-          <VSelect id="sido" :selectOptions="sidos" @onKeySelect="selectSido"></VSelect>
-          <label for="gugun">구군</label>
-          <VSelect id="gugun" :selectOptions="guguns" @onKeySelect="selectGugun"></VSelect>
+          <div class="input-box">
+            <input
+              id="age"
+              name="age"
+              type="number"
+              placeholder=""
+              v-model="age"
+              required
+              min="1900"
+              max="2025"
+            />
+            <label for="" :class="{ 'input-valid': age > 0 }">태어난 연도</label>
+          </div>
+        </div>
 
-          <button type="submit" class="regi-btn" :disabled="isValid">회원 등록</button>
-        </form>
-      </div>
+        <div class="gender-input-box">
+          <div for="" class="gender-box-label">성별</div>
+          <a-radio-group v-model:value="gender" size="large">
+            <a-radio-button value="MALE">남자</a-radio-button>
+            <a-radio-button value="FEMALE">여자</a-radio-button>
+          </a-radio-group>
+        </div>
+
+        <div class="region-input-box">
+          <div for="" class="gender-box-label">거주지</div>
+          <div class="two-input-box">
+            <a-select
+              ref="select"
+              v-model:value="sido"
+              @change="handleSido"
+              style="width: 46%"
+              :value="0"
+              placeholder="시도"
+              size="large"
+            >
+              <a-select-option
+                v-for="(sido, index) in sidos"
+                :key="index"
+                :v-model="sido"
+                :value="sido.value"
+                >{{ sido.text }}</a-select-option
+              >
+            </a-select>
+
+            <a-select
+              ref="select"
+              v-model:value="gugun"
+              style="width: 46%"
+              placeholder="구군"
+              size="large"
+            >
+              <a-select-option
+                v-for="(gugun, index) in guguns"
+                :key="index"
+                :v-model="gugun"
+                :value="gugun.value"
+                placeholder="구군"
+                @change="handleSido"
+                >{{ gugun.text }}</a-select-option
+              >
+            </a-select>
+          </div>
+        </div>
+
+        <div class="profile-input-box">
+          <div for="" class="profile-box-label">프로필 사진</div>
+          <input type="file" id="upload-image" hidden @change="getFileName($event.target.files)" />
+          <div class="profile-input">
+            <label for="upload-image" class="profile-image-view">
+              <img
+                :src="profileImageUrl"
+                id="profileImg"
+                alt="profileImg"
+                style="width: 100px; height: 100px"
+              />
+            </label>
+            <p>
+              ● <label for="upload-image" style="cursor: pointer"><b>사진 등록</b></label
+              ><br />● 32MB 이하<br />● 250px X 250px
+            </p>
+          </div>
+        </div>
+
+        <button type="submit" :disabled="isValid">회원가입</button>
+      </form>
     </div>
   </main>
 </template>
 
 <style scoped>
-body {
-  background-color: #e4f1ff;
-  background-size: cover; /* 이미지를 화면에 꽉 채우도록 크기 조정 */
-  background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
-  background-attachment: fixed; /* 스크롤 시 배경 이미지 고정 */
-  padding-top: 50px;
+main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
 }
-.register-page {
+
+.form-box {
+  position: relative;
+  width: 400px;
+  height: 1200px;
+  padding: 40px 0;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 40px 0 80px 0;
+}
+
+.form-box form {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 auto;
-  border-radius: 30px;
-  background-color: white;
-  width: 500px;
-  padding-bottom: 50px;
-  box-shadow: 0 0 10px #adc4ce;
-  margin-bottom: 140px;
+  align-items: center;
 }
-.form {
-  width: 300px;
+
+h2 {
+  font-size: 2em;
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+}
+
+.input-box {
+  position: relative;
+  margin: 30px 0;
+  width: 100%;
+  border-bottom: 2px solid #fff;
+}
+
+.input-box label {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  color: #fff;
+  font-size: 1em;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.input-box input:focus ~ label {
+  top: -5px;
+}
+
+.input-box .input-valid {
+  top: -5px;
+}
+
+.input-box input {
+  width: 100%;
+  height: 50px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0 35px 0 5px;
+  color: #fff;
+}
+
+.input-box .icon {
+  position: absolute;
+  right: 8px;
+  color: #fff;
+  font-size: 1.2em;
+  top: 20px;
+}
+
+.input-box input::placeholder {
+  color: #fff;
+}
+
+.input-box .dupcheck-btn {
+  position: absolute;
+  right: 5px;
+  padding: 0;
+  top: 50%;
+  transition: 0.5s;
+  transform: translateY(-50%);
+  color: rgb(118, 252, 85);
+  font-size: 1em;
+  opacity: 0;
+  border: 0;
+  font-weight: 700;
+}
+.input-box .dupcheck-btn.show {
+  top: -5px;
+  opacity: 1;
+}
+
+.input-box .dupcheck-btn.checked {
+  top: -5px;
+  opacity: 1;
+  color: yellow;
+}
+
+input[type='number']::-webkit-inner-spin-button {
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+.gender-input-box {
+  margin-bottom: 20px;
   display: flex;
-  margin: 0 auto;
-}
-.login-logo {
-  width: 100px;
-  height: 100px;
-  margin-left: 200px;
-  margin-top: 100px;
-  margin-bottom: 70px;
-}
-input {
-  border: 1px solid #a1ccd1;
-  border-radius: 20px;
-  width: 200px;
-  height: 42px;
-  margin-bottom: 20px;
-  padding-left: 15px;
-}
-.dupcheck {
-  border: none;
-  font-size: 15px;
-  border-radius: 20px;
-  width: 90px;
-  height: 38px;
-  margin-bottom: 20px;
-  background-color: #e4f1ff;
-}
-.dupcheck:hover {
-  color: white;
-  box-shadow: 0 0 3px #e4f1ff;
-}
-.regi-btn {
-  border: none;
-  font-size: 15px;
-  border-radius: 20px;
-  width: 90px;
-  height: 38px;
-  margin-bottom: 20px;
-  background-color: #aed2ff;
-  width: 300px;
-  margin-top: 50px;
-}
-.regi-btn:hover {
-  color: white;
-  box-shadow: 0 0 3px #aed2ff;
-}
-#password,
-#passwordConfirm,
-#name,
-#age {
+  flex-direction: column;
   width: 100%;
 }
 
-#profileImg {
-  margin: 10px;
-  width: 50px;
-  height: 50px;
+.gender-input-box label {
+  background-color: #ffffff10;
+  color: #fff;
+  text-align: center;
+  width: 50%;
+}
+.gender-box-label,
+.profile-box-label {
+  background-color: transparent;
+  color: #fff;
+  font-size: 1em;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+
+.region-input-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.two-input-box {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.two-input-box .input-box {
+  width: 45%;
+}
+
+.profile-input-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.profile-input-box .profile-input {
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+}
+.profile-input-box .profile-image-view {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+}
+
+.profile-input-box .profile-input p {
+  color: #fff;
+  line-height: 30px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+button {
+  width: 100%;
+  height: 40px;
+  border-radius: 40px;
+  background: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.register {
+  font-size: 0.9em;
+  color: #fff;
+  text-align: center;
+  margin: 25px 0 10px 0;
+}
+
+.register p a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+}
+
+.register p a:hover {
+  text-decoration: underline;
 }
 </style>

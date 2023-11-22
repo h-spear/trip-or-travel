@@ -31,7 +31,8 @@ export const loginStore = defineStore(
   {
     persist: {
       beforeRestore: (ctx) => console.log(`store 복구 시작: ${ctx.store.$id}`),
-      afterRestore: (ctx) => console.log(`store 복구 완료: ${ctx.store.$id}`)
+      afterRestore: (ctx) => console.log(`store 복구 완료: ${ctx.store.$id}`),
+      storage: sessionStorage
     }
   }
 );
