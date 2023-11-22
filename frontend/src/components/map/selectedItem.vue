@@ -24,12 +24,12 @@ onMounted(() => {
 
 <template>
   <div class="card" style="">
-    <img :src="selectedItem.imageUrl" class="card-img-top" alt="..." />
+    <img :src="selectedItem[1].imageUrl" class="card-img-top" style="height: 50px; width: 50px;" alt="..." />
     <div class="card-body">
-      <h5 class="card-title">{{ selectedItem.title }}</h5>
+      <h5 class="card-title">{{ selectedItem[1].title }}</h5>
       <p class="card-text">
-        <div>{{ selectedItem.addr1 }}</div>
-        <div>{{ selectedItem.addr2 }}</div>
+        <div>{{ selectedItem[1].addr1 }}</div>
+        <div>{{ selectedItem[1].addr2 }}</div>
       </p>
       <button class="btn btn-primary" @click="closeItem" >취소
         </button>

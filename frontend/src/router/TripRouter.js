@@ -14,7 +14,7 @@ const tripRouter = [
       {
         path: 'detail',
         name: 'trip-detail',
-        component: () => import('@/components/map/detail.vue')
+        component: () => import('@/components/map/Detail.vue')
       }
     ]
   }

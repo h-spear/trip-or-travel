@@ -2,8 +2,8 @@
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-import selectedItem from '@/components/map/selectedItem.vue';
-import attractionItem from '@/components/map/attractionItem.vue';
+import SelectedItem from '@/components/map/SelectedItem.vue';
+import AttractionItem from '@/components/map/AttractionItem.vue';
 
 import { getAttraction } from '@/api/attraction.js';
 
@@ -46,9 +46,9 @@ const searchByDb = () => {
   getAttraction(
     query,
     ({ data }) => {
-      positions.value = [];
+      positions.value.clear();
       data.data.content.map((data) => {
-        positions.value.push(data);
+        positions.value.set(data.id, data);
       });
       loadMarkers();
     },
@@ -59,17 +59,13 @@ const searchByDb = () => {
 };
 
 var map;
-const positions = ref([]);
-const markers = ref([]);
+const positions = ref(new Map());
+const markers = ref(new Map());
 const infowindows = ref(new Map());
 const selectedItems = ref(new Map());
 const center = ref('');
-// 강남구 : 1, 1
-
-// 들어갈 아이템은 무슨 정보들을 가져야 하는가?
-// 고유 id(디비 기준. if 사용자 고유 있을 시 그걸 고유 id로), 좌표xy,
-
-// const props = defineProps({ stations: Array, selectStation: Object });
+const numberMarkers = ref([]);
+const polyLine = ref();
 
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
@@ -103,6 +99,16 @@ const initMap = () => {
   kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
     console.log('지도에서 클릭한 위치의 좌표는 ' + mouseEvent.latLng.toString() + ' 입니다.');
   });
+
+  numberMarkers.value = [
+    new kakao.maps.MarkerImage('https://i.ibb.co/6Fc3LTj/one.png', new kakao.maps.Size(31, 35)),
+    new kakao.maps.MarkerImage('https://i.ibb.co/LxHgbJ0/two.png', new kakao.maps.Size(31, 35)),
+    new kakao.maps.MarkerImage('https://i.ibb.co/NyTP3Sy/three.png', new kakao.maps.Size(31, 35)),
+    new kakao.maps.MarkerImage('https://i.ibb.co/YBNhrgF/four.png', new kakao.maps.Size(31, 35)),
+    new kakao.maps.MarkerImage('https://i.ibb.co/xJznY1z/five.png', new kakao.maps.Size(31, 35)),
+    new kakao.maps.MarkerImage('https://i.ibb.co/LgGyhNn/six.png', new kakao.maps.Size(31, 35)),
+    new kakao.maps.MarkerImage('https://i.ibb.co/F6b3Ygz/seven.png', new kakao.maps.Size(31, 35))
+  ];
 };
 
 // 마커에 들어갈 인포윈도우 만드는 함수
@@ -110,7 +116,6 @@ const makeInfoWindow = (place) => {
   let iwContent = document.createElement('div');
   let title = document.createElement('h3');
   let content = document.createElement('div');
-  // };
 
   content.innerText = place.contentType + '\n tel: ' + place.tel + '\n';
 
@@ -124,6 +129,10 @@ const makeInfoWindow = (place) => {
     removable: true,
     disableAutoPan: true
   });
+  //이미 인포윈도우가 있다면 제거
+  if (infowindows.value.get(place.id)) {
+    infowindows.value.get(place.id).setMap(null);
+  }
   infowindows.value.set(place.id, infowindow);
   return infowindow;
 };
@@ -135,59 +144,49 @@ const deleteInfoWindows = () => {
   });
 };
 
-// 마커를 등록하는 함수
+//한 마커를 생성하는 함수
+const createMarker = (place, img) => {
+  const marker = new kakao.maps.Marker({
+    map: map,
+    position: new kakao.maps.LatLng(place.latitude, place.longitude),
+    title: place.title,
+    clickable: true,
+    image: img
+  });
+  const infowindow = makeInfoWindow(place);
+  kakao.maps.event.addListener(marker, 'click', () => {
+    deleteInfoWindows();
+    center.value = new kakao.maps.LatLng(place.latitude, place.longitude);
+    infowindow.open(map, marker);
+    document.getElementById(place.id).scrollIntoView({ behavior: 'smooth' }, true);
+  });
+  return marker;
+};
+
+// 마커들을 등록하는 함수
 const loadMarkers = () => {
   deleteMarkers();
 
-  // const imgSrc = require("@/assets/map/markerStar.png");
-  // const imgSize = new kakao.maps.Size(24, 35);
-  // const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize);
-
-  // 마커를 생성합니다
-  markers.value = [];
-  positions.value.forEach((place) => {
-    const marker = new kakao.maps.Marker({
-      map: map, // 마커를 표시할 지도
-      // position: position.latlng, // 마커를 표시할 위치
-      position: new kakao.maps.LatLng(place.latitude, place.longitude), // 마커를 표시할 위치
-      title: 'test', // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됨.
-      clickable: true // // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-      // image: markerImage, // 마커의 이미지
-    });
-
-    // kakao.maps.event.addListener(marker, 'mouseover', function() {
-    //     console.log('마커에 mouseover 이벤트가 발생했습니다!', marker);
-    // });
-
-    // // 마커에 mouseout 이벤트 등록
-    // kakao.maps.event.addListener(marker, 'mouseout', function() {
-    //     console.log('마커에 mouseout 이벤트가 발생했습니다!');
-    // });
-
-    const infowindow = makeInfoWindow(place);
-
-    // 마커에 클릭이벤트를 등록합니다
-    kakao.maps.event.addListener(marker, 'click', () => {
-      deleteInfoWindows();
-      center.value = new kakao.maps.LatLng(place.latitude, place.longitude);
-      infowindow.open(map, marker);
-      document.getElementById(place.id).scrollIntoView({ behavior: 'smooth' }, true);
-    });
-
-    markers.value.push(marker);
-  });
+  markers.value = new Map();
+  for (const [index, place] of positions.value) {
+    const marker = createMarker(place);
+    markers.value.set(place.id, marker);
+  }
 
   var bounds = new kakao.maps.LatLngBounds();
-  positions.value.map((data) => {
-    bounds.extend(new kakao.maps.LatLng(data.latitude, data.longitude));
-  });
+
+  for (const [index, place] of positions.value) {
+    bounds.extend(new kakao.maps.LatLng(place.latitude, place.longitude));
+  }
   map.setBounds(bounds);
 };
 
 // 마커를 지우는 함수
 const deleteMarkers = () => {
   if (markers.value.length > 0) {
-    markers.value.forEach((marker) => marker.setMap(null));
+    for (const [index, marker] of markers.value) {
+      marker.setMap(null);
+    }
     deleteInfoWindows();
     infowindows.value.clear();
   }
@@ -214,7 +213,6 @@ const moveDetail = () => {
   router.push({
     name: 'trip-detail',
     state: {
-      tmp: 1,
       selectedItems: stateItem
     }
   });
@@ -227,14 +225,43 @@ const selectOrNot = (clicked, item) => {
   if (clicked) {
     selectedItems.value.set(item.id, item);
   } else {
-    selectedItems.value.delete(item.id);
+    closeItem(item.id);
   }
 };
 // emit from selectedItem
 // 셀렉션에서 제거
 const closeItem = (id) => {
+  markers.value.get(id).setMap(null);
+  const marker = createMarker(selectedItems.value.get(id));
+  markers.value.set(id, marker);
   selectedItems.value.delete(id);
 };
+
+// 선택된 아이템들에 대해 번호 부여하기
+// 선택된 아이템들에 대해 선 긋기
+watch(
+  () => {
+    return selectedItems.value;
+  },
+  (newVal) => {
+    let number = 0;
+    let paths = [];
+    for (let [index, val] of newVal) {
+      markers.value.get(index).setMap(null);
+      const marker = createMarker(val, numberMarkers.value[number++]);
+      markers.value.set(index, marker);
+      paths.push(new kakao.maps.LatLng(val.latitude, val.longitude));
+    }
+    if (polyLine.value !== undefined) polyLine.value.setMap(null);
+    polyLine.value = new kakao.maps.Polyline({
+      map: map,
+      endArrow: true,
+      path: paths,
+      strokeColor: '#00CC00'
+    });
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -252,24 +279,25 @@ const closeItem = (id) => {
     </div>
     <div class="row border border-dark border-2">
       <div id="marker-list" class="col-3 bg-white">
-        <attractionItem
-          v-for="position in positions"
+        <AttractionItem
+          v-for="[index, position] of positions"
           :key="position.id"
           :position="position"
           @select-or-not="selectOrNot"
           :id="position.id"
-        ></attractionItem>
+        ></AttractionItem>
       </div>
       <div id="map" class="col-9"></div>
     </div>
     <div class="row border border-white bg-white">
-      <selectedItem
+      <SelectedItem
         class="col"
+        height="50"
         v-for="(value, key) in selectedItems"
         :key="key"
         :selectedItem="value"
         @close-item="closeItem"
-      ></selectedItem>
+      ></SelectedItem>
       <button class="btn btn-primary" @click="moveDetail">저장</button>
     </div>
   </div>
