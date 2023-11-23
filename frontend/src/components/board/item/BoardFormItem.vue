@@ -90,8 +90,12 @@ function moveDetail() {
         class="post-btn"
         type="primary"
         @click="updatePost"
+        v-if="props.type == 'modify'"
         style="background-color: rgb(0, 177, 0)"
         >수정</a-button
+      >
+      <a-button class="post-btn" type="primary" @click="writePost" v-if="props.type == 'regist'"
+        >작성</a-button
       >
       <a-button class="post-btn" type="primary" @click="moveDetail" danger>취소</a-button>
     </div>

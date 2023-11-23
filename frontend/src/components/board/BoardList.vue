@@ -28,10 +28,10 @@ watch(boardId, () => {
 
 onUpdated(() => {
   boardId.value = route.query.boardId;
-}),
-  onMounted(() => {
-    getPosts();
-  });
+});
+onMounted(() => {
+  getPosts();
+});
 
 const getPosts = () => {
   const searchParams = {
@@ -62,6 +62,10 @@ const getPosts = () => {
     }
   );
 };
+
+const moveWrite = () => {
+  router.push({ name: 'board-write', query: { boardId } });
+};
 </script>
 
 <template>
@@ -82,7 +86,7 @@ const getPosts = () => {
       </tbody>
     </table>
     <div class="pagination-box">
-      <div style="width: 80px"></div>
+      <div style="width: 200px"></div>
       <a-pagination
         size="large"
         v-model:current="page"
@@ -90,19 +94,23 @@ const getPosts = () => {
         :total="total"
         class="pagination"
       />
-      <a-select
-        ref="select"
-        v-model:value="size"
-        style="width: 80px"
-        size="large"
-        class="pagination-select"
-      >
-        <a-select-option value="5">5</a-select-option>
-        <a-select-option value="10">10</a-select-option>
-        <a-select-option value="20">20</a-select-option>
-        <a-select-option value="50">50</a-select-option>
-        <a-select-option value="100">100</a-select-option>
-      </a-select>
+      <div style="width: 200px; display: flex; justify-content: end; align-items: center">
+        <a-select ref="select" v-model:value="size" size="large" class="pagination-select">
+          <a-select-option value="5">5</a-select-option>
+          <a-select-option value="10">10</a-select-option>
+          <a-select-option value="20">20</a-select-option>
+          <a-select-option value="50">50</a-select-option>
+          <a-select-option value="100">100</a-select-option>
+        </a-select>
+        <a-button
+          class="post-btn"
+          type="primary"
+          @click="moveWrite"
+          size="large"
+          style="margin-left: 20px"
+          >글쓰기</a-button
+        >
+      </div>
     </div>
   </div>
 </template>
