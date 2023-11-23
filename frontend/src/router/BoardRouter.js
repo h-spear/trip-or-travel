@@ -13,9 +13,10 @@ const boardRouter = [
         props: true
       },
       {
-        path: 'detail/:postId',
+        path: 'detail',
         name: 'board-detail',
-        component: () => import('@/components/board/BoardDetail.vue')
+        component: () => import('@/components/board/BoardDetail.vue'),
+        props: true
       },
       {
         path: 'write',

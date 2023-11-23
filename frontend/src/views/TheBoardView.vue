@@ -41,9 +41,9 @@ const getBoardInfo = () => {
         style="width: 100%"
         :title="title"
         :sub-title="description"
-        @back="() => null"
+        @back="() => $router.go(-1)"
       />
-      <hr style="width: 100%; border-color: black; margin: 10px 0 30px 0" />
+      <hr style="width: 100%; margin: 0px 0 30px 0" />
       <router-view></router-view>
     </div>
   </section>

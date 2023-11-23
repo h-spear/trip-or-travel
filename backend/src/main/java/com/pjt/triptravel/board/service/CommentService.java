@@ -1,6 +1,7 @@
 package com.pjt.triptravel.board.service;
 
 import com.pjt.triptravel.board.dto.comment.CommentDto;
+import com.pjt.triptravel.common.entity.BaseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import com.pjt.triptravel.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,6 +37,7 @@ public class CommentService {
 		return commentRepository.findByPostIdWithCommenter(postId)
 				.stream()
 				.filter(comment -> comment.getParent() == null)
+				.sorted((Comparator.comparing(BaseEntity::getRegistrationDate)))
 				.map(CommentDto::of)
 				.collect(Collectors.toList());
 	}
