@@ -44,7 +44,7 @@ function notPrepare() {
       style="display: flex; justify-content: space-between; align-items: center"
     >
       <a id="logo" @click="moveHome">
-        <img src="@/assets/logo.png" alt="" width="60" /> Trip or Travel
+        <img src="@/assets/image/logo.png" alt="" width="60" /> Trip or Travel
       </a>
       <div
         id="collapsibleNavbar"
