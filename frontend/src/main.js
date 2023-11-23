@@ -3,6 +3,7 @@ import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { VueDraggableNext } from 'vue-draggable-next';
 
 import App from './App.vue';
 import router from './router';
@@ -24,6 +25,7 @@ const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.component('VueDatePicker', VueDatePicker);
+app.component('VueDraggableNext', VueDraggableNext);
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.use(router);
 app.use(Antd);

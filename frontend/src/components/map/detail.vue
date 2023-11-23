@@ -68,27 +68,40 @@ const goBack = () => {
 </script>
 
 <template>
-  <button @click="goBack()">뒤로 가기</button>
-  <div>
-    <form class="bg-white" action="" @submit.prevent="registerPlan">
-      <label for="">제목</label>
-      <input type="text" v-model.lazy="title" required />
-      <VueDatePicker v-model="date" range required />
-      <label for="">설명</label>
-      <input type="text" v-model.lazy="description" required />
-      <div>
-        <DetailItem
-          class="bg-success m-2"
-          v-for="[index, item] of selectedItems.entries()"
-          :key="item.id"
-          :item="item"
-          :index="index"
-          @confirm-each-plan="modifyEachPlan"
-        ></DetailItem>
-      </div>
+  <div class="container">
+    <div class="row">sdfsf</div>
+    <div class="row">sdfsf</div>
+    <div class="row">sdfsf</div>
+    <div class="row">sdfsf</div>
+    <button @click="goBack()">뒤로 가기</button>
+    <div>
+      <form class="bg-white" action="" @submit.prevent="registerPlan">
+        <label for="">제목</label>
+        <input type="text" v-model.lazy="title" required />
+        <VueDatePicker
+          v-model="date"
+          range
+          required
+          :inline="{ input: true }"
+          text-input
+          auto-apply
+        />
+        <label for="">설명</label>
+        <input type="text" v-model.lazy="description" required />
+        <div>
+          <DetailItem
+            class="bg-success m-2"
+            v-for="[index, item] of selectedItems.entries()"
+            :key="item.id"
+            :item="item"
+            :index="index"
+            @confirm-each-plan="modifyEachPlan"
+          ></DetailItem>
+        </div>
 
-      <button type="submit">저장</button>
-    </form>
+        <button type="submit">저장</button>
+      </form>
+    </div>
   </div>
 </template>
 

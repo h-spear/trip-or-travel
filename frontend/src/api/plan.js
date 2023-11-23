@@ -7,9 +7,10 @@ function registPlan(plans, success, fail) {
   local.post(`plan`, JSON.stringify(plans)).then(success).catch(fail);
 }
 
-function listBoard(success, fail) {
-  local.get('post?boardId=3').then(success).catch(fail);
+function getPlans(success, fail) {
+  local.get(`plan`).then(success).catch(fail);
 }
+
 function detailBoard(postId, success, fail) {
   local.get(`post/${postId}`).then(success).catch(fail);
 }
@@ -23,5 +24,4 @@ function removeBoard(postId, success, fail) {
   local.delete(`post/${postId}`).then(success).catch(fail);
 }
 
-// export { listBoard, detailBoard, registBoard, updateBoard, removeBoard };
-export { registPlan };
+export { registPlan, getPlans };

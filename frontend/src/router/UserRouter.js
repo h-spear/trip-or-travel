@@ -18,18 +18,19 @@ const userRouter = [
     //
     path: '/mypage',
     name: 'mypage',
-    component: () => import('@/views/TheTestView.vue'),
+    component: () => import('@/views/TheUserView.vue'),
+    redirect: { name: 'my-info' },
     children: [
       {
         path: 'info',
         name: 'my-info',
-        component: () => import('@/views/TheRegisterView.vue'),
-      },  
+        component: () => import('@/components/member/Info.vue')
+      },
       {
         path: 'plans',
         name: 'my-plans',
-        component: () => import('@/views/TheRegisterView.vue'),
-      },  
+        component: () => import('@/components/member/Plans.vue')
+      }
     ],
     beforeEnter: requireLogin()
   }
