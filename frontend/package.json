@@ -10,11 +10,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@vuepic/vue-datepicker": "^7.2.2",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/vue-fontawesome": "^3.0.5",
+    "@vuepic/vue-datepicker": "^7.2.2",
     "ant-design-vue": "^4.0.7",
     "axios": "^1.6.1",
     "bootstrap": "^5.3.2",
@@ -23,6 +23,7 @@
     "pinia-plugin-persistedstate": "^3.2.0",
     "popper.js": "^1.16.1",
     "vue": "^3.3.4",
+    "vue-draggable-next": "^2.2.1",
     "vue-router": "^4.2.5",
     "vuedraggable": "^2.24.3"
   },

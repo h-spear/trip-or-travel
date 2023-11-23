@@ -4,14 +4,14 @@ import { uploadImage } from '@/api/image.js';
 
 const image = ref(null);
 
-let tmp = new Map();
-tmp.set(1, 12);
-tmp.set(2, 22);
-tmp.set(3, 32);
-tmp.set(4, 42);
-
-tmp.foreach((data) => {
-  console.log(data);
+const tmp = ref([]);
+tmp.value.push({
+  t1: 1,
+  t2: 2
+});
+tmp.value.push({
+  t1: 3,
+  t2: 4
 });
 
 function getFileName(data) {

@@ -62,7 +62,8 @@ var map;
 const positions = ref(new Map());
 const markers = ref(new Map());
 const infowindows = ref(new Map());
-const selectedItems = ref(new Map());
+//배열로 교체하기
+const selectedItems = ref([]);
 const center = ref('');
 const numberMarkers = ref([]);
 const polyLine = ref();
@@ -220,21 +221,19 @@ const moveDetail = () => {
 
 // emit from attractionItem
 // 셀렉션에 등록
-const selectOrNot = (clicked, item) => {
-  item.isSelected = !item.isSelected;
-  if (clicked) {
-    selectedItems.value.set(item.id, item);
-  } else {
-    closeItem(item.id);
-  }
+const selectItem = (item) => {
+  selectedItems.value.push(item);
 };
 // emit from selectedItem
 // 셀렉션에서 제거
-const closeItem = (id) => {
-  markers.value.get(id).setMap(null);
-  const marker = createMarker(selectedItems.value.get(id));
-  markers.value.set(id, marker);
-  selectedItems.value.delete(id);
+const unselectItem = (item) => {
+  markers.value.get(item.id).setMap(null);
+  const marker = createMarker(item);
+  markers.value.set(item.id, marker);
+  selectedItems.value = selectedItems.value.filter((data) => {
+    if (data.id == item.id) return false;
+    return true;
+  });
 };
 
 // 선택된 아이템들에 대해 번호 부여하기
@@ -243,14 +242,16 @@ watch(
   () => {
     return selectedItems.value;
   },
-  (newVal) => {
+  (newVal, oldVal) => {
+    console.log('newVal, oldVal', newVal, oldVal);
     let number = 0;
     let paths = [];
-    for (let [index, val] of newVal) {
-      markers.value.get(index).setMap(null);
-      const marker = createMarker(val, numberMarkers.value[number++]);
-      markers.value.set(index, marker);
-      paths.push(new kakao.maps.LatLng(val.latitude, val.longitude));
+    for (const val in newVal) {
+      console.log('val', val);
+      markers.value.get(newVal[val].id).setMap(null);
+      const marker = createMarker(newVal[val], numberMarkers.value[number++]);
+      markers.value.set(newVal[val].id, marker);
+      paths.push(new kakao.maps.LatLng(newVal[val].latitude, newVal[val].longitude));
     }
     if (polyLine.value !== undefined) polyLine.value.setMap(null);
     polyLine.value = new kakao.maps.Polyline({
@@ -283,7 +284,8 @@ watch(
           v-for="[index, position] of positions"
           :key="position.id"
           :position="position"
-          @select-or-not="selectOrNot"
+          @select-item="selectItem"
+          @unselect-item="unselectItem"
           :id="position.id"
         ></AttractionItem>
       </div>
@@ -293,10 +295,10 @@ watch(
       <SelectedItem
         class="col"
         height="50"
-        v-for="(value, key) in selectedItems"
-        :key="key"
-        :selectedItem="value"
-        @close-item="closeItem"
+        v-for="item in selectedItems"
+        :key="item.id"
+        :selectedItem="item"
+        @unselect-item="unselectItem"
       ></SelectedItem>
       <button class="btn btn-primary" @click="moveDetail">저장</button>
     </div>
