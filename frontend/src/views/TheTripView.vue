@@ -6,6 +6,7 @@ import SelectedItem from '@/components/map/SelectedItem.vue';
 import AttractionItem from '@/components/map/AttractionItem.vue';
 
 import { getAttraction } from '@/api/attraction.js';
+import { VueDraggableNext } from 'vue-draggable-next';
 
 const selectedSido = ref(1);
 const selectedGugun = ref(1);
@@ -62,7 +63,7 @@ var map;
 const positions = ref(new Map());
 const markers = ref(new Map());
 const infowindows = ref(new Map());
-//배열로 교체하기
+
 const selectedItems = ref([]);
 const center = ref('');
 const numberMarkers = ref([]);
@@ -168,10 +169,14 @@ const createMarker = (place, img) => {
 const loadMarkers = () => {
   deleteMarkers();
 
-  markers.value = new Map();
+  markers.value.clear();
   for (const [index, place] of positions.value) {
     const marker = createMarker(place);
     markers.value.set(place.id, marker);
+  }
+  for (const ind in selectedItems.value) {
+    const marker = createMarker(selectedItems.value[ind], numberMarkers.value[ind]);
+    markers.value.set(selectedItems.value[ind].id, marker);
   }
 
   var bounds = new kakao.maps.LatLngBounds();
@@ -184,7 +189,7 @@ const loadMarkers = () => {
 
 // 마커를 지우는 함수
 const deleteMarkers = () => {
-  if (markers.value.length > 0) {
+  if (markers.value.size > 0) {
     for (const [index, marker] of markers.value) {
       marker.setMap(null);
     }
@@ -227,9 +232,12 @@ const selectItem = (item) => {
 // emit from selectedItem
 // 셀렉션에서 제거
 const unselectItem = (item) => {
-  markers.value.get(item.id).setMap(null);
-  const marker = createMarker(item);
-  markers.value.set(item.id, marker);
+  console.log(markers.value.get(item.id));
+  if (markers.value.get(item.id)) {
+    markers.value.get(item.id).setMap(null);
+    const marker = createMarker(item);
+    markers.value.set(item.id, marker);
+  }
   selectedItems.value = selectedItems.value.filter((data) => {
     if (data.id == item.id) return false;
     return true;
@@ -244,14 +252,14 @@ watch(
   },
   (newVal, oldVal) => {
     console.log('newVal, oldVal', newVal, oldVal);
-    let number = 0;
     let paths = [];
-    for (const val in newVal) {
-      console.log('val', val);
-      markers.value.get(newVal[val].id).setMap(null);
-      const marker = createMarker(newVal[val], numberMarkers.value[number++]);
-      markers.value.set(newVal[val].id, marker);
-      paths.push(new kakao.maps.LatLng(newVal[val].latitude, newVal[val].longitude));
+    for (const ind in newVal) {
+      if (markers.value.get(newVal[ind].id)) {
+        markers.value.get(newVal[ind].id).setMap(null);
+        const marker = createMarker(newVal[ind], numberMarkers.value[ind]);
+        markers.value.set(newVal[ind].id, marker);
+      }
+      paths.push(new kakao.maps.LatLng(newVal[ind].latitude, newVal[ind].longitude));
     }
     if (polyLine.value !== undefined) polyLine.value.setMap(null);
     polyLine.value = new kakao.maps.Polyline({
@@ -292,14 +300,16 @@ watch(
       <div id="map" class="col-9"></div>
     </div>
     <div class="row border border-white bg-white">
-      <SelectedItem
-        class="col"
-        height="50"
-        v-for="item in selectedItems"
-        :key="item.id"
-        :selectedItem="item"
-        @unselect-item="unselectItem"
-      ></SelectedItem>
+      <VueDraggableNext :list="selectedItems">
+        <SelectedItem
+          class="col"
+          height="50"
+          v-for="item in selectedItems"
+          :key="item.id"
+          :selectedItem="item"
+          @unselect-item="unselectItem"
+        ></SelectedItem>
+      </VueDraggableNext>
       <button class="btn btn-primary" @click="moveDetail">저장</button>
     </div>
   </div>

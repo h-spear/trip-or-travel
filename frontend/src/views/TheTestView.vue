@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onUpdated } from 'vue';
 import { uploadImage } from '@/api/image.js';
+import { VueDraggableNext } from 'vue-draggable-next';
 
 const image = ref(null);
 
@@ -13,6 +14,10 @@ tmp.value.push({
   t1: 3,
   t2: 4
 });
+
+const test = () => {
+  console.log(tmp.value);
+};
 
 function getFileName(data) {
   const fileReader = new FileReader();
@@ -34,7 +39,13 @@ function getFileName(data) {
 </script>
 
 <template>
-  <div class="mt-4 p-5 bg-primary text-white rounded"></div>
+  <div class="mt-4 p-5 bg-primary text-white rounded">sdfs</div>
+  <VueDraggableNext :list="tmp" class="bg-success">
+    <div v-for="item in tmp" :key="item.t1">
+      {{ item.t2 }}
+    </div>
+  </VueDraggableNext>
+  <button class="btn btn-success" @click="test">테스트</button>
   <!-- <div class="mt-4 p-5 bg-primary text-white rounded">
     <h1>이곳은 테스트페이지입니다</h1>
     <img :src="image" alt="testing" />
