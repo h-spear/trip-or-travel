@@ -5,7 +5,14 @@ const props = defineProps({
 });
 
 const clicked = ref(false)
-const emits = defineEmits(['selectItem', 'unselectItem'])
+const emits = defineEmits(['selectItem', 'unselectItem', 'searchAround'])
+
+
+const searchAround = () => {
+  console.log('searchAround', props.position)
+  // 반경 얼마 추천할지도 여기에서 처리한다. 
+  emits('searchAround', props.position.latitude, props.position.longitude, 1)
+}
 
 const selectItem = () => {
   clicked.value = true
@@ -15,8 +22,6 @@ const unselectItem = () => {
   clicked.value = false
   emits('unselectItem', props.position)
 }
-
-
 </script>
 
 <template>
@@ -35,6 +40,7 @@ const unselectItem = () => {
             취소
             </button>
       <button class="btn btn-danger">찜</button>
+      <button class="btn btn-success" @click="searchAround">주변 추천</button>
     </div>
   </div>
 </template>

@@ -5,7 +5,7 @@ const router = useRouter();
 import SelectedItem from '@/components/map/SelectedItem.vue';
 import AttractionItem from '@/components/map/AttractionItem.vue';
 
-import { getAttraction } from '@/api/attraction.js';
+import { getAttrByType, getAttrByAround } from '@/api/attraction.js';
 import { VueDraggableNext } from 'vue-draggable-next';
 
 const selectedSido = ref(1);
@@ -44,7 +44,7 @@ const searchByDb = () => {
     contentTypeId: selectedContentType.value
   };
 
-  getAttraction(
+  getAttrByType(
     query,
     ({ data }) => {
       positions.value.clear();
@@ -55,6 +55,28 @@ const searchByDb = () => {
     },
     (error) => {
       console.log('query failed', error);
+    }
+  );
+};
+
+const searchByAround = (lat, lng, rad) => {
+  console.log(lat, lng, rad);
+  getAttrByAround(
+    {
+      latitude: lat,
+      longitude: lng,
+      radiusKm: rad
+    },
+    ({ data }) => {
+      console.log('success', data);
+      positions.value.clear();
+      data.data.map((data) => {
+        positions.value.set(data.id, data);
+      });
+      loadMarkers();
+    },
+    ({ error }) => {
+      console.log('error ', error);
     }
   );
 };
@@ -175,6 +197,9 @@ const loadMarkers = () => {
     markers.value.set(place.id, marker);
   }
   for (const ind in selectedItems.value) {
+    // console.log('dd', selectedItems.value[ind].id);
+    // if (marker.value.get(selectedItems.value[ind].id))
+    //   marker.value.get(selectedItems.value[ind].id).setMap(null);
     const marker = createMarker(selectedItems.value[ind], numberMarkers.value[ind]);
     markers.value.set(selectedItems.value[ind].id, marker);
   }
@@ -227,12 +252,14 @@ const moveDetail = () => {
 // emit from attractionItem
 // 셀렉션에 등록
 const selectItem = (item) => {
+  // markers.value.get(item.id).setMap(null);
+  // markers.value.delete(item.id);
   selectedItems.value.push(item);
 };
 // emit from selectedItem
 // 셀렉션에서 제거
 const unselectItem = (item) => {
-  console.log(markers.value.get(item.id));
+  // console.log(markers.value.get(item.id));
   if (markers.value.get(item.id)) {
     markers.value.get(item.id).setMap(null);
     const marker = createMarker(item);
@@ -294,6 +321,7 @@ watch(
           :position="position"
           @select-item="selectItem"
           @unselect-item="unselectItem"
+          @search-around="searchByAround"
           :id="position.id"
         ></AttractionItem>
       </div>
