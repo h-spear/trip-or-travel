@@ -58,7 +58,7 @@ section {
   min-width: 800px;
   max-width: 1400px;
   height: 100%;
-  padding: 130px 50px 30px 50px;
+  padding: 100px 50px 30px 50px;
 }
 .board-wrapper {
   background: #ffffff;

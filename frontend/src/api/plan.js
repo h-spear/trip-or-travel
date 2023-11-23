@@ -11,7 +11,7 @@ function getPlans(success, fail) {
   local.get(`plan`).then(success).catch(fail);
 }
 function getPlanDetail(id, success, fail) {
-  local.get(`plan${id}`).then(success).catch(fail);
+  local.get(`plan/${id}`).then(success).catch(fail);
 }
 
 function detailBoard(postId, success, fail) {

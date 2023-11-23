@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import TheHomeView from '@/views/TheHomeView.vue';
-import TheTestView from '@/views/TheTestView.vue';
 import userRouter from './UserRouter';
 import boardRouter from './BoardRouter';
 import tripRouter from './TripRouter';

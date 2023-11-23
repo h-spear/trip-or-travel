@@ -1,6 +1,7 @@
 package com.pjt.triptravel.plan.dto;
 
 import com.pjt.triptravel.attraction.entity.AttractionInfo;
+import com.pjt.triptravel.common.utils.TimeFormatUtil;
 import com.pjt.triptravel.plan.entity.PlanItem;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class PlanItemDto {
 
     private Long id;
     private Long attractionId;
+    private String attractionTitle;
     private String attractionImageUrl;
     private String attractionImageUrl2;
     private String attractionAddr1;
@@ -24,8 +26,8 @@ public class PlanItemDto {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String memo;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private String startDateTime;
+    private String endDateTime;
     private int order;
 
     public static PlanItemDto of(PlanItem planItem) {
@@ -33,6 +35,7 @@ public class PlanItemDto {
         return PlanItemDto.builder()
                 .id(planItem.getId())
                 .attractionId(attraction.getId())
+                .attractionTitle(attraction.getTitle())
                 .attractionImageUrl(attraction.getImageUrl())
                 .attractionImageUrl2(attraction.getImageUrl2())
                 .attractionAddr1(attraction.getAddr1())
@@ -43,8 +46,8 @@ public class PlanItemDto {
                 .latitude(attraction.getLatitude())
                 .longitude(attraction.getLongitude())
                 .memo(planItem.getMemo())
-                .startDateTime(planItem.getStartDateTime())
-                .endDateTime(planItem.getEndDateTime())
+                .startDateTime(TimeFormatUtil.convertDateTime(planItem.getStartDateTime()))
+                .endDateTime(TimeFormatUtil.convertDateTime(planItem.getEndDateTime()))
                 .order(planItem.getOrder())
                 .build();
     }

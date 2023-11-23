@@ -1,5 +1,6 @@
 package com.pjt.triptravel.plan.dto;
 
+import com.pjt.triptravel.common.utils.TimeFormatUtil;
 import com.pjt.triptravel.plan.entity.Plan;
 import lombok.Builder;
 import lombok.Data;
@@ -16,10 +17,10 @@ public class PlanDto {
     private Long id;
     private String title;
     private String description;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private String startDateTime;
+    private String endDateTime;
     private List<PlanItemDto> planItems;
-    private LocalDateTime registrationDate;
+    private String registrationDate;
 
     public static PlanDto of(Plan plan) {
         List<PlanItemDto> planItems = plan.getPlanItems().stream()
@@ -31,10 +32,10 @@ public class PlanDto {
                 .id(plan.getId())
                 .title(plan.getTitle())
                 .description(plan.getDescription())
-                .startDateTime(plan.getStartDateTime())
-                .endDateTime(plan.getEndDateTime())
+                .startDateTime(TimeFormatUtil.convertDateTime(plan.getStartDateTime()))
+                .endDateTime(TimeFormatUtil.convertDateTime(plan.getEndDateTime()))
                 .planItems(planItems)
-                .registrationDate(plan.getRegistrationDate())
+                .registrationDate(TimeFormatUtil.convertDateTime(plan.getRegistrationDate()))
                 .build();
     }
 }

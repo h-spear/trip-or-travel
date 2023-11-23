@@ -21,6 +21,8 @@ public class PlanItem extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attraction_id")
     private AttractionInfo attraction;
+
+    @Column(length = 500)
     private String memo;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;

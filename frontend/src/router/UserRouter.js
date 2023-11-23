@@ -33,6 +33,11 @@ const userRouter = [
     path: '/detail/:id',
     name: 'my-plans-detail',
     component: () => import('@/components/member/Detail.vue')
+  },
+  {
+    path: '/plans',
+    name: 'plans',
+    component: () => import('@/components/member/Plans.vue')
   }
 ];
 

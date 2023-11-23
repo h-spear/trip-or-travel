@@ -31,13 +31,70 @@ const moveDetail = (id) => {
 </script>
 
 <template>
-  <div v-for="plan in plans" :key="plan.id">
-    <div class="container border bg-success" @click="moveDetail(plan.planId)">
-      <div>제목 : {{ plan.title }}</div>
-      <div>기간 : {{ plan.startDateTime }} ~ {{ plan.endDateTime }}</div>
-      <div>등록 시간 : {{ plan.registrationTime }}</div>
+  <section>
+    <div class="trip-wrapper">
+      <template v-for="plan in plans" :key="plan.id">
+        <div class="plan-item" @click="() => moveDetail(plan.planId)">
+          <h2>
+            <b>{{ plan.title }}</b>
+          </h2>
+          <p class="plan-item-content">
+            여행기간 : {{ plan.startDateTime }} ~ {{ plan.endDateTime }}
+          </p>
+          <p class="plan-item-content">작성일 : {{ plan.registrationDate }}</p>
+          <p class="plan-item-content memo">메모 : {{ plan.description }}</p>
+        </div>
+      </template>
     </div>
-  </div>
+  </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+section {
+  display: flex;
+  margin: 0;
+  position: relative;
+  width: 100vw;
+  min-width: 800px;
+  max-width: 1400px;
+  height: 100%;
+  padding: 100px 50px 30px 50px;
+}
+.trip-wrapper {
+  background: #ffffff;
+  border-radius: 20px;
+  -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.54);
+  box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.54);
+  min-width: 800px;
+  max-width: 1400px;
+  padding: 20px 30px;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.plan-item {
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  margin: 20px 0 40px 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+  height: 200px;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.plan-item-content {
+  margin: 0;
+  width: 100%;
+  overflow-wrap: break-word;
+}
+.plan-item-content.memo {
+  margin: 0;
+  width: 100%;
+  overflow-wrap: break-word;
+}
+</style>

@@ -25,8 +25,15 @@ function moveRegist() {
 function moveMypage() {
   router.push({ name: 'mypage' });
 }
+function moveMylist() {
+  router.push({ name: 'plans' });
+}
 function moveTrip() {
   router.push({ name: 'trip' });
+}
+
+function notPrepare() {
+  alert('준비중입니다.');
 }
 </script>
 
@@ -66,14 +73,14 @@ function moveTrip() {
             data-bs-toggle="dropdown"
             class="dropdown-toggle"
             :src="userProfile"
-            v-if="userProfile != null"
+            v-if="userProfile != null && userProfile != ''"
           />
           <img
             id="profileImg"
             data-bs-toggle="dropdown"
             class="dropdown-toggle"
             src="@/assets/image/anonymous.png"
-            v-if="userProfile == null"
+            v-if="userProfile == null || userProfile == ''"
           />
           <div style="margin-left: 10px" v-if="userId !== ''">{{ userNickname }}</div>
           <div style="margin-left: 10px" v-if="userId === ''">anonymous</div>
@@ -84,7 +91,8 @@ function moveTrip() {
         </ul>
         <div v-else>
           <ul class="dropdown-menu">
-            <li class="dropdown-item" @click="moveMypage">마이페이지</li>
+            <!-- <li class="dropdown-item" @click="moveMypage">마이페이지</li> -->
+            <li class="dropdown-item" @click="notPrepare">마이페이지</li>
             <li class="dropdown-item" @click="moveMylist">여행 계획</li>
             <li class="dropdown-item" @click="Funclogout">로그아웃</li>
           </ul>

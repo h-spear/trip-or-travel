@@ -66,6 +66,7 @@ body {
   background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
   background-attachment: fixed; /* 스크롤 시 배경 이미지 고정 */
 }
+
 a {
   cursor: pointer;
 }

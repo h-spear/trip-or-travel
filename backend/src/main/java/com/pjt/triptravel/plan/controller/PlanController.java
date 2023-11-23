@@ -22,6 +22,8 @@ public class PlanController {
     @PostMapping
     public ApiResponse<?> create(@Login Long memberId,
                                  @RequestBody PlanCreateParam param) {
+        log.info("plan create. memberId={}", memberId);
+        log.info("plan create. param={}", param);
         log.info("여행 계획 생성, name={}", param.getTitle());
         Long planId = planService.createPlan(memberId, param);
         return ApiResponse.ofSuccess(planId);
