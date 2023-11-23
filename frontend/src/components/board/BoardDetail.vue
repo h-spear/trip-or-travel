@@ -1,15 +1,15 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
-import { ref, onMounted, reactive, onUpdated } from 'vue'
-import { detailBoard, removeBoard } from '../../api/board'
-import CommentList from './comment/CommentList.vue'
-import { loginStore } from '@/stores/LoginStore.js'
-const loginstore = loginStore()
-const { userId } = loginstore
+import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted, reactive, onUpdated } from 'vue';
+import { detailBoard, removeBoard } from '../../api/board';
+import CommentList from './comment/CommentList.vue';
+import { loginStore } from '@/stores/LoginStore.js';
+const loginstore = loginStore();
+const { userId } = loginstore;
 
-const route = useRoute()
-const router = useRouter()
-const postId = Number(route.params.postId)
+const route = useRoute();
+const router = useRouter();
+const postId = Number(route.params.postId);
 
 const post = ref({
   postId: 0,
@@ -19,28 +19,28 @@ const post = ref({
   content: 0,
   commentCount: 0,
   likes: 0
-})
+});
 
 const getPost = () => {
   detailBoard(
     postId,
     ({ data }) => {
-      console.log('get detail data : ', data.data)
-      post.value = data.data
-      console.log('detail', post.value)
+      console.log('get detail data : ', data.data);
+      post.value = data.data;
+      console.log('detail', post.value);
     },
     (error) => {
-      console.log('get post error : ', error)
+      console.log('get post error : ', error);
     }
-  )
-}
+  );
+};
 
-getPost()
+getPost();
 
 function moveList() {
   router.push({
     name: 'board-list'
-  })
+  });
 }
 
 function moveModify() {
@@ -49,33 +49,28 @@ function moveModify() {
     state: {
       post: { ...post.value }
     }
-  })
+  });
 }
 
 function onDeleteArticle() {
   removeBoard(
     postId,
     (data) => {
-      console.log('delete complete', data)
-      moveList()
+      console.log('delete complete', data);
+      moveList();
       // 댓글도 전부 지우는 작업이 함께 들어가야만 한다.
       // deleteCommentAll 필요
     },
     (error) => {
-      console.log('error : ', error)
+      console.log('error : ', error);
     }
-  )
+  );
 }
 </script>
 
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="sky">글보기</mark>
-        </h2>
-      </div>
       <div class="col-lg-10 text-start">
         <div class="row my-2">
           <h2 class="text-secondary px-5">{{ post.postId }}. {{ post.title }}</h2>

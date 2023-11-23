@@ -15,8 +15,9 @@ function moveLogin() {
 function moveHome() {
   router.push({ name: 'main' });
 }
-function moveBoard() {
-  router.push({ name: 'board' });
+function moveBoard(boardId) {
+  console.log('moveBoard boardId=', boardId);
+  router.push({ name: 'board', query: { boardId } });
 }
 function moveRegist() {
   router.push({ name: 'regist' });
@@ -44,7 +45,9 @@ function test() {
           <li class="nav-item nav-link">공지사항</li>
           <li class="nav-item nav-link" @click="test">테스트용🚗</li>
           <li class="nav-item nav-link" @click="moveTrip">여행계획🎈</li>
-          <li class="nav-item nav-link" @click="moveBoard">게시판✨</li>
+          <li class="nav-item nav-link" @click="moveBoard(1)">공지사항</li>
+          <li class="nav-item nav-link" @click="moveBoard(2)">질문게시판</li>
+          <li class="nav-item nav-link" @click="moveBoard(3)">자유게시판</li>
         </ul>
         <!-- 로그인 전 -->
         <div class="nav-item dropdown">

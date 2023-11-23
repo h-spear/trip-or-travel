@@ -325,6 +325,7 @@ const handleSido = (selectedSido) => {
 
 <style scoped>
 main {
+  padding-top: 100px;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -337,7 +338,7 @@ main {
   width: 400px;
   height: 1200px;
   padding: 40px 0;
-  background: transparent;
+  background: #00000040;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 20px;
   backdrop-filter: blur(15px);
@@ -419,11 +420,13 @@ h2 {
   transform: translateY(-50%);
   color: rgb(118, 252, 85);
   font-size: 1em;
+  visibility: hidden;
   opacity: 0;
   border: 0;
   font-weight: 700;
 }
 .input-box .dupcheck-btn.show {
+  visibility: visible;
   top: -5px;
   opacity: 1;
 }

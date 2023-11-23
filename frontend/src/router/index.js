@@ -1,10 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import TheHomeView from '@/views/TheHomeView.vue'
-import TheTestView from '@/views/TheTestView.vue'
-import userRouter from './UserRouter'
-import boardRouter from './BoardRouter'
-import tripRouter from './TripRouter'
-import App from '@/App.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import TheHomeView from '@/views/TheHomeView.vue';
+import TheTestView from '@/views/TheTestView.vue';
+import userRouter from './UserRouter';
+import boardRouter from './BoardRouter';
+import tripRouter from './TripRouter';
+import App from '@/App.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -25,6 +25,6 @@ const router = createRouter({
     ...boardRouter,
     ...tripRouter
   ]
-})
+});
 
-export default router
+export default router;

@@ -28,6 +28,12 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+    public BoardDto findOne(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 번호입니다."));
+        return BoardDto.of(board);
+    }
+
     @Transactional
     public Long create(BoardCreateParam param) {
         Board board = boardRepository.save(Board.builder()

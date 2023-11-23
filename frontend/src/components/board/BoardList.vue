@@ -1,104 +1,132 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue'
-import VSelect from '@/components/common/VSelect.vue'
-import BoardListItem from '@/components/board/item/BoardListItem.vue'
-import PageNavigation from '@/components/common/PageNavigation.vue'
-import router from '@/router'
-import { listBoard } from '@/api/board.js'
+import { useRoute } from 'vue-router';
+import { ref, onMounted, onUpdated, watch, computed } from 'vue';
+import BoardListItem from '@/components/board/item/BoardListItem.vue';
+import router from '@/router';
+import { listBoard } from '@/api/board.js';
 
-const selectOption = ref([
-  { text: '검색조건', value: '' },
-  { text: '글번호', value: 'article_no' },
-  { text: '제목', value: 'subject' },
-  { text: '작성자아이디', value: 'user_id' }
-])
-const posts = ref([])
+const route = useRoute();
+const posts = ref([]);
 
-const currentPage = ref(7)
-const totalPage = ref(35)
-const param = ref({
-  pgno: currentPage.value,
-  spp: import.meta.env.VITE_ARTICLE_LIST_SIZE,
-  key: '',
-  word: ''
-})
+const boardId = ref(route.query.boardId);
+const size = ref(5);
+const page = ref(1);
+const total = ref(0);
+const title = ref('');
+const writerNickname = ref('');
+const startDate = ref('');
+const endDate = ref('');
+const order = ref('');
 
-onMounted(() => {
-  getArticleList()
-})
+watch([size, page], () => {
+  getPosts();
+});
 
-const changeKey = (val) => {
-  console.log('BoarList에서 선택한 조건 : ' + val)
-  param.value.key = val
-}
+watch(boardId, () => {
+  getPosts();
+});
 
-const getArticleList = () => {
+onUpdated(() => {
+  boardId.value = route.query.boardId;
+}),
+  onMounted(() => {
+    getPosts();
+  });
+
+const getPosts = () => {
+  const searchParams = {
+    boardId: boardId.value,
+    size: size.value,
+    page: page.value - 1,
+    title: title.value,
+    writerNickname: writerNickname.value,
+    startDate: startDate.value,
+    endDate: endDate.value,
+    order: order.value
+  };
+  console.log('searchParams=', searchParams);
   listBoard(
+    searchParams,
     ({ data }) => {
-      console.log('get article list : ', data.data)
-      posts.value = data.data.content
-      currentPage.value = 1
-      totalPage.value = 5
+      if (data.status === 'success') {
+        // const pageable = data.data.pageable;
+        // console.log('content', data.data);
+        // console.log('pageable=', pageable);
+        // console.log('total=', data.data.totalElements);
+        total.value = data.data.totalElements;
+        posts.value = data.data.content;
+      }
     },
     (error) => {
-      console.log('error : ', error)
+      console.log('error : ', error);
     }
-  )
-}
-
-const moveWrite = () => {
-  router.push('write')
-}
+  );
+};
 </script>
 
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="sky">글목록</mark>
-        </h2>
-      </div>
-      <div class="col-lg-10">
-        <div class="row align-self-center mb-2">
-          <div class="col-md-2 text-start">
-            <button type="button" class="btn btn-outline-primary btn-sm" @click="moveWrite">
-              글쓰기
-            </button>
-          </div>
-          <div class="col-md-5 offset-5">
-            <form class="d-flex">
-              <VSelect :selectOption="selectOption" @onKeySelect="changeKey" />
-              <div class="input-group input-group-sm">
-                <input
-                  type="text"
-                  class="form-control"
-                  v-model="param.word"
-                  placeholder="검색어..."
-                />
-                <button class="btn btn-dark" type="button" @click="getArticleList">검색</button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <table class="table table-hover">
-          <thead>
-            <tr class="text-center">
-              <th scope="col">글번호</th>
-              <th scope="col">좋아요</th>
-              <th scope="col">제목(댓글)</th>
-              <th scope="col">작성자</th>
-              <th scope="col">조회수</th>
-              <th scope="col">작성일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <BoardListItem v-for="post in posts" :key="post.postId" :post="post"></BoardListItem>
-          </tbody>
-        </table>
-      </div>
+  <div class="wrapper">
+    <table class="table table-hover">
+      <thead>
+        <tr class="text-center" style="font-weight: 700">
+          <th scope="col" style="width: 10%">번호</th>
+          <th scope="col" style="width: 50%">제목</th>
+          <th scope="col" style="width: 10%">작성자</th>
+          <th scope="col" style="width: 10%">추천</th>
+          <th scope="col" style="width: 10%">조회</th>
+          <th scope="col" style="width: 10%">작성일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <BoardListItem v-for="post in posts" :key="post.postId" :post="post"> </BoardListItem>
+      </tbody>
+    </table>
+    <div class="pagination-box">
+      <div style="width: 140px"></div>
+      <a-pagination
+        size="large"
+        v-model:current="page"
+        v-model:pageSize="size"
+        :total="total"
+        class="pagination"
+      />
+      <a-select
+        ref="select"
+        v-model:value="size"
+        style="width: 140px"
+        size="large"
+        class="pagination-select"
+      >
+        <a-select-option value="5">5 / 페이지</a-select-option>
+        <a-select-option value="10">10 / 페이지</a-select-option>
+        <a-select-option value="20">20 / 페이지</a-select-option>
+        <a-select-option value="50">50 / 페이지</a-select-option>
+        <a-select-option value="100">100 / 페이지</a-select-option>
+      </a-select>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.pagination-box {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  transition: 0.5s;
+}
+</style>

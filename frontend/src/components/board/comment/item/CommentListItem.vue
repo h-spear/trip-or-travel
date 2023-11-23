@@ -1,105 +1,120 @@
 <script setup>
-import CommentWrite from './CommentWrite.vue'
-import { ref, computed } from 'vue'
-import router from '@/router'
-import ReplyListItem from './ReplyListItem.vue'
+import CommentWrite from './CommentWrite.vue';
+import { ref, computed } from 'vue';
+import router from '@/router';
+import ReplyListItem from './ReplyListItem.vue';
 
 const props = defineProps({
   comment: Object,
   commentId: Number
-})
+});
 
-const clickUpdate = ref(true)
-const clickCocoment = ref(false)
-const comment = ref(props.comment)
-const children = ref(props.comment.children)
-const content = ref(props.comment.comment)
+const clickUpdate = ref(true);
+const clickCocoment = ref(false);
+const comment = ref(props.comment);
+const children = ref(props.comment.children);
+const content = ref(props.comment.comment);
 
-import { loginStore } from '@/stores/LoginStore.js'
-const loginstore = loginStore()
-const { userId } = loginstore
+import { loginStore } from '@/stores/LoginStore.js';
+const loginstore = loginStore();
+const { userId } = loginstore;
 
-const emits = defineEmits(['updatingComment', 'deletingComment', 'registingComment'])
+const emits = defineEmits(['updatingComment', 'deletingComment', 'registingComment']);
 
 function writeCocoment(comment) {
   const commentForRegister = {
     comment: comment.comment,
     parentCommentId: props.commentId
-  }
-  console.log('list item: cocoment', commentForRegister)
-  emits('registingComment', commentForRegister)
-  content.value = ''
+  };
+  console.log('list item: cocoment', commentForRegister);
+  emits('registingComment', commentForRegister);
+  content.value = '';
 }
 
 function updateComment(data) {
   // if문에 들어오면 댓글, 아니면 답글
-  let replyForUpdate = {}
-  if (data.commentId === undefined){
-    clickUpdate.value = !clickUpdate.value
+  let replyForUpdate = {};
+  if (data.commentId === undefined) {
+    clickUpdate.value = !clickUpdate.value;
     if (clickUpdate.value) {
       replyForUpdate = {
-          commentId: comment.value.commentId,
-          comment: content.value
-        }
-      emits('updatingComment', replyForUpdate)
+        commentId: comment.value.commentId,
+        comment: content.value
+      };
+      emits('updatingComment', replyForUpdate);
     }
-  } else{
+  } else {
     replyForUpdate = {
       commentId: data.commentId,
       comment: data.comment
-    }
-    emits('updatingComment', replyForUpdate)
+    };
+    emits('updatingComment', replyForUpdate);
   }
 }
 
 function deleteComment(data) {
   // if문에 들어오면 댓글, 아니면 답글
-  let replyForDelete = {}
-  if (data.commentId === undefined){
-      replyForDelete = {
-          commentId: comment.value.commentId,
-      }
-      emits('deletingComment', replyForDelete)
-  } else{
+  let replyForDelete = {};
+  if (data.commentId === undefined) {
     replyForDelete = {
-      commentId: data.commentId,
-    }
-    emits('deletingComment', replyForDelete)
+      commentId: comment.value.commentId
+    };
+    emits('deletingComment', replyForDelete);
+  } else {
+    replyForDelete = {
+      commentId: data.commentId
+    };
+    emits('deletingComment', replyForDelete);
   }
 }
-</script>
 
+const openReplyForm = () => {
+  toggleComment();
+  console.log(document.querySelector('.comment-write'));
+  document
+    .getElementById(comment.value.commentId)
+    .scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+function toggleComment() {
+  clickCocoment.value = !clickCocoment.value;
+}
+</script>
 <template>
-  <div class="container list-group-item">
-    <div class="row">
-      <div class="col">
-        <h4>
-          <img id="profileImg" :src="comment.commenterProfileImageUrl" />{{
-            comment.commenterNickname
-          }}
-        </h4>
+  <a-comment>
+    <template #actions>
+      <span key="comment-nested-reply-to" @click="openReplyForm">답글</span>
+      <div
+        v-if="userId == comment.commenterId"
+        @click="updateComment"
+        style="font-size: 12px; cursor: pointer"
+      >
+        <span v-if="clickUpdate">수정</span>
+        <span v-else>확인</span>
       </div>
-      <div class="col">
-        {{ comment.registerTime }}
+      <div v-if="userId == comment.commenterId" style="margin-left: 10px">
+        <span class="col" @click="deleteComment" style="font-size: 12px; cursor: pointer"
+          >삭제</span
+        >
       </div>
-      <textarea v-model="content" :readonly="clickUpdate" class="" cols="30" rows="5"></textarea>
-    </div>
-    <div class="row">
-      <div v-if="userId == comment.commenterId">
-        <button class="col" @click="updateComment">
-          <div v-if="clickUpdate">수정</div>
-          <div v-else>확인</div>
-        </button>
-        <button class="col" @click="deleteComment">삭제</button>
-      </div>
-      <div></div>
-      <button class="col" @click="clickCocoment = !clickCocoment">
-        <div v-if="!clickCocoment">답글</div>
-        <div v-else>취소</div>
-      </button>
-    </div>
-    <CommentWrite v-if="clickCocoment" @registing-comment="writeCocoment"></CommentWrite>
-    <!-- 답글 부분 -->
+    </template>
+    <template #author>
+      <a style="font-size: 16px">{{ comment.commenterNickname }}</a>
+      /
+      {{
+        comment.registrationDate
+          .replace('T', ' ')
+          .substring(0, comment.registrationDate.indexOf('.'))
+      }}
+    </template>
+    <template #avatar>
+      <a-avatar :src="comment.commenterProfileImageUrl" alt="ProfileImage" />
+    </template>
+    <template #content>
+      <p v-show="clickUpdate">{{ comment.comment }}</p>
+      <a-textarea v-show="!clickUpdate" v-model:value="content" placeholder="" :rows="5" />
+    </template>
+
     <ReplyListItem
       v-for="child in children"
       :key="child.commentId"
@@ -107,6 +122,15 @@ function deleteComment(data) {
       @updating-reply="updateComment"
       @deleting-reply="deleteComment"
     />
+  </a-comment>
+
+  <div :id="comment.commentId">
+    <CommentWrite
+      class="comment-write"
+      v-if="clickCocoment"
+      @registing-comment="writeCocoment"
+      @toggle-comment="toggleComment"
+    ></CommentWrite>
   </div>
 </template>
 

@@ -8,8 +8,6 @@ import { useRouter } from 'vue-router';
 const userEmail = ref('');
 const password = ref('');
 const router = useRouter();
-// userEmail.value = 'test@test.com'
-// password.value = 'pass'
 
 function login() {
   if (!userEmail.value) {
@@ -86,12 +84,13 @@ function login() {
           </div>
           <div class="forget">
             <label for=""><input type="checkbox" />아이디 기억</label>
-            <a href="#">Forget Password</a>
+            <a href="#">비밀번호 찾기</a>
           </div>
           <button>Login</button>
+          <!-- <hr style="border-color: #fff; margin-top: 30px" />
           <div class="register">
-            <p>Don't have a account <a href="#">Sign Up</a></p>
-          </div>
+            <p><a href="#">회원가입</a></p>
+          </div> -->
         </form>
       </div>
     </div>
@@ -100,6 +99,7 @@ function login() {
 
 <style scoped>
 main {
+  padding-top: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,9 +111,9 @@ main {
 .form-box {
   position: relative;
   width: 400px;
-  height: 450px;
-  padding: 40px 0;
-  background: transparent;
+  height: 420px;
+  padding: 40px;
+  background: #00000040;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 20px;
   backdrop-filter: blur(15px);
