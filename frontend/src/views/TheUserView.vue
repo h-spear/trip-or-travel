@@ -17,7 +17,7 @@ const view = ref(true);
     </div>
     <div class="row">
       <button>내 정보</button>
-      <button>내 여행 리스트</button>
+      <button>네비바 때메 안보여서 복붙때림</button>
     </div>
     <div class="row">
       <button class="btn btn-success" @click="view = true">내 정보</button>
