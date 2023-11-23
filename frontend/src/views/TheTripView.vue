@@ -298,36 +298,49 @@ watch(
   },
   { deep: true }
 );
+
+const mouseDown = ref(false);
+const prevMousePosX = ref(0);
+const prevMousePosY = ref(0);
+let target = null;
+onMounted(() => {
+  target = document.querySelector('.draggable-box');
+});
+
+const draggableMouseDown = (e) => {
+  console.log('draggable mouse down');
+  prevMousePosX.value = e.clientX;
+  prevMousePosY.value = e.clientY;
+  mouseDown.value = true;
+};
+const draggableMouseMove = (e) => {
+  if (mouseDown.value === true) {
+    const posX = prevMousePosX.value - e.clientX;
+    const posY = prevMousePosY.value - e.clientY;
+    prevMousePosX.value = e.clientX;
+    prevMousePosY.value = e.clientY;
+    target.style.left = target.offsetLeft - posX + 'px';
+    target.style.top = target.offsetTop - posY + 'px';
+  }
+};
+
+const draggableMouseUp = () => {
+  console.log('draggable mouse up');
+  mouseDown.value = false;
+};
 </script>
 
 <template>
-  <div class="container border border-info">
-    <div class="row border border-white border-3 bg-black">
-      <form class="col-6" action="" @submit.prevent="searchByDb">
-        <VSelect :selectOptions="sidos" @onKeySelect="selectSido"></VSelect>
-        <VSelect :selectOptions="guguns" @onKeySelect="selectGugun"></VSelect>
-        <VSelect :selectOptions="contentTypes" @onKeySelect="selectContentType"></VSelect>
-        <button type="submit">검색</button>
-      </form>
-      <form class="col-6" action="" @submit.prevent="searchByKakao">
-        <button type="button">검색</button>
-      </form>
-    </div>
-    <div class="row border border-dark border-2">
-      <div id="marker-list" class="col-3 bg-white">
-        <AttractionItem
-          v-for="[index, position] of positions"
-          :key="position.id"
-          :position="position"
-          @select-item="selectItem"
-          @unselect-item="unselectItem"
-          @search-around="searchByAround"
-          :id="position.id"
-        ></AttractionItem>
-      </div>
-      <div id="map" class="col-9"></div>
-    </div>
-    <div class="row border border-white bg-white">
+  <div class="draggable-box">
+    <p
+      class="draggable-icon"
+      @mousedown="draggableMouseDown"
+      @mouseup="draggableMouseUp"
+      @mousemove="draggableMouseMove"
+    >
+      <font-awesome-icon icon="fa-solid fa-up-down-left-right" />
+    </p>
+    <div style="overflow: scroll; height: 440px">
       <VueDraggableNext :list="selectedItems">
         <SelectedItem
           class="col"
@@ -338,11 +351,162 @@ watch(
           @unselect-item="unselectItem"
         ></SelectedItem>
       </VueDraggableNext>
-      <button class="btn btn-primary" @click="moveDetail">저장</button>
+    </div>
+    <div style="text-align: center; margin-top: 15px">
+      <a-button
+        type="primary"
+        style="width: 100%; font-size: 18px; background-color: rgb(24, 24, 24)"
+        size="large"
+        @click="moveDetail"
+        >여행 계획 만들기</a-button
+      >
     </div>
   </div>
-</template>
 
+  <section>
+    <div class="trip-wrapper">
+      <div class="search-box">
+        <div class="search-elements">
+          <div class="search-element">
+            <span>시·도</span>
+            <VSelect
+              :selectOptions="sidos"
+              width="200"
+              defaultKey="전체"
+              @onKeySelect="selectSido"
+            ></VSelect>
+          </div>
+
+          <div class="search-element">
+            <span>구·군</span>
+            <VSelect
+              :selectOptions="guguns"
+              width="200"
+              defaultKey="전체"
+              @onKeySelect="selectGugun"
+            ></VSelect>
+          </div>
+
+          <div class="search-element">
+            <span>종류</span>
+            <VSelect
+              :selectOptions="contentTypes"
+              width="200"
+              defaultKey="전체"
+              @onKeySelect="selectContentType"
+            ></VSelect>
+          </div>
+        </div>
+        <div>
+          <!-- <a-button
+            type="primary"
+            size="large"
+            style="width: 150px; margin: 0 10px"
+            @click="filterInit"
+            danger
+            >필터 초기화</a-button
+          > -->
+          <a-button
+            type="primary"
+            size="large"
+            style="width: 150px; margin: 0 10px"
+            @click="searchByDb"
+            >검색</a-button
+          >
+        </div>
+      </div>
+
+      <div class="map-box">
+        <div id="marker-list">
+          <AttractionItem
+            v-for="[index, position] of positions"
+            :key="position.id"
+            :position="position"
+            @select-item="selectItem"
+            @unselect-item="unselectItem"
+            @search-around="searchByAround"
+            :id="position.id"
+          ></AttractionItem>
+        </div>
+        <div id="map" style="width: 100%"></div>
+      </div>
+    </div>
+  </section>
+</template>
+<style scoped>
+section {
+  display: flex;
+  margin: 0;
+  position: relative;
+  width: 100vw;
+  min-width: 800px;
+  max-width: 1400px;
+  height: 100%;
+  padding: 100px 50px 30px 50px;
+}
+.trip-wrapper {
+  background: #ffffff;
+  border-radius: 20px;
+  -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.54);
+  box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.54);
+  min-width: 800px;
+  max-width: 1400px;
+  padding: 20px 30px;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.search-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.search-elements,
+.search-box > div {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+}
+
+.search-element {
+  margin: 20px;
+}
+
+.search-element > span {
+  margin-right: 15px;
+  font-weight: 700;
+  font-size: 18px;
+}
+.draggable-box {
+  position: absolute;
+  width: 500px;
+  height: 600px;
+  z-index: 10;
+  background: #00000060;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  padding: 0 30px;
+  right: 20px;
+}
+
+.draggable-icon {
+  text-align: right;
+  padding-top: 10px;
+  text-align: center;
+  color: #fff;
+  font-size: 40px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.map-box {
+  display: flex;
+}
+</style>
 <style>
 #map {
   /* width: 500px; */
@@ -350,6 +514,11 @@ watch(
 }
 #marker-list {
   height: 500px;
+  width: 400px;
   overflow: scroll;
+  padding: 0 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.4);
+  margin-right: 10px;
 }
 </style>

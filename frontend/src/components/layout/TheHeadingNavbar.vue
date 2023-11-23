@@ -31,38 +31,63 @@ function moveTrip() {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top" style="height: 90px">
-    <div class="container">
-      <a class="navbar-brand text-black fw-bold" id="logo" @click="moveHome">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top">
+    <div
+      class="container"
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <a id="logo" @click="moveHome">
         <img src="@/assets/logo.png" alt="" width="60" /> Enjoy Trip
       </a>
-      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <div
+        id="collapsibleNavbar"
+        style="display: flex; align-items: center; justify-content: center"
+      >
         <ul class="navbar-nav me-auto">
-          <li class="nav-item nav-link" @click="moveTrip">여행계획🎈</li>
-          <li class="nav-item nav-link" @click="moveBoard(1)">공지사항</li>
-          <li class="nav-item nav-link" @click="moveBoard(2)">질문게시판</li>
-          <li class="nav-item nav-link" @click="moveBoard(3)">자유게시판</li>
+          <li class="nav-item nav-link mx-2" @click="moveTrip">여행계획🎈</li>
+          <li class="nav-item nav-link mx-2" @click="moveBoard(1)">공지사항</li>
+          <li class="nav-item nav-link mx-2" @click="moveBoard(2)">질문게시판</li>
+          <li class="nav-item nav-link mx-2" @click="moveBoard(3)">자유게시판</li>
         </ul>
-        <!-- 로그인 전 -->
-        <div class="nav-item dropdown">
+      </div>
+      <!-- 로그인 전 -->
+      <div class="nav-item dropdown">
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            cursor: pointer;
+          "
+        >
           <img
             id="profileImg"
             data-bs-toggle="dropdown"
             class="dropdown-toggle"
             :src="userProfile"
+            v-if="userProfile != null"
           />
-          <ul v-if="userId == ''" class="dropdown-menu">
-            <li class="dropdown-item" @click="moveRegist">회원가입 ✍🏻</li>
-            <li class="dropdown-item" @click="moveLogin">로그인</li>
+          <img
+            id="profileImg"
+            data-bs-toggle="dropdown"
+            class="dropdown-toggle"
+            src="@/assets/image/anonymous.png"
+            v-if="userProfile == null"
+          />
+          <div style="margin-left: 10px" v-if="userId !== ''">{{ userNickname }}</div>
+          <div style="margin-left: 10px" v-if="userId === ''">anonymous</div>
+        </div>
+        <ul v-if="userId == ''" class="dropdown-menu">
+          <li class="dropdown-item" @click="moveRegist">회원가입</li>
+          <li class="dropdown-item" @click="moveLogin">로그인</li>
+        </ul>
+        <div v-else>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item" @click="moveMypage">마이페이지</li>
+            <li class="dropdown-item" @click="moveMylist">여행 계획</li>
+            <li class="dropdown-item" @click="Funclogout">로그아웃</li>
           </ul>
-          <div v-else>
-            <ul class="dropdown-menu">
-              <li class="dropdown-item" @click="moveMypage">마이페이지</li>
-              <li class="dropdown-item" @click="moveMylist">저장된 리스트</li>
-              <li class="dropdown-item" @click="Funclogout">로그아웃</li>
-            </ul>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;{{ userNickname }}</div>
-          </div>
         </div>
       </div>
     </div>

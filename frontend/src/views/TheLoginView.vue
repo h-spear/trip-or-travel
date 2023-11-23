@@ -99,12 +99,11 @@ function login() {
 
 <style scoped>
 main {
-  padding-top: 100px;
+  padding-top: 170px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: 100vh;
   height: 100%;
 }
 

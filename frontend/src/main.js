@@ -10,7 +10,16 @@ import router from './router';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faEnvelope, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEnvelope,
+  faLock,
+  faUser,
+  faUpDownLeftRight,
+  faXmark,
+  faHeart,
+  faPlus
+} from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 
 import 'ant-design-vue/dist/reset.css';
 import Antd from 'ant-design-vue';
@@ -19,7 +28,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const app = createApp(App);
 
-library.add(faEnvelope, faLock, faUser);
+library.add(faEnvelope, faLock, faUser, faUpDownLeftRight, faXmark, faHeart, faPlus, regularHeart);
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
