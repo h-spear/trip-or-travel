@@ -9,7 +9,7 @@ const route = useRoute();
 const posts = ref([]);
 
 const boardId = ref(route.query.boardId);
-const size = ref(5);
+const size = ref(10);
 const page = ref(1);
 const total = ref(0);
 const title = ref('');
@@ -82,7 +82,7 @@ const getPosts = () => {
       </tbody>
     </table>
     <div class="pagination-box">
-      <div style="width: 140px"></div>
+      <div style="width: 80px"></div>
       <a-pagination
         size="large"
         v-model:current="page"
@@ -93,15 +93,15 @@ const getPosts = () => {
       <a-select
         ref="select"
         v-model:value="size"
-        style="width: 140px"
+        style="width: 80px"
         size="large"
         class="pagination-select"
       >
-        <a-select-option value="5">5 / 페이지</a-select-option>
-        <a-select-option value="10">10 / 페이지</a-select-option>
-        <a-select-option value="20">20 / 페이지</a-select-option>
-        <a-select-option value="50">50 / 페이지</a-select-option>
-        <a-select-option value="100">100 / 페이지</a-select-option>
+        <a-select-option value="5">5</a-select-option>
+        <a-select-option value="10">10</a-select-option>
+        <a-select-option value="20">20</a-select-option>
+        <a-select-option value="50">50</a-select-option>
+        <a-select-option value="100">100</a-select-option>
       </a-select>
     </div>
   </div>

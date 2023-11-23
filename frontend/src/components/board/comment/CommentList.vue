@@ -26,16 +26,6 @@ const commentCount = computed(() => {
 
 getCommentList(postId, comments);
 
-const comment = ref({
-  children: [],
-  childrenCount: 0,
-  comment: '',
-  commentId: 0,
-  commenterId: 0,
-  commenterNickname: '',
-  commenterProfileImageUrl: ''
-});
-
 function getCommentList(postId, comments) {
   listComment(
     postId,

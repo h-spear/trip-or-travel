@@ -28,10 +28,6 @@ function moveMypage() {
 function moveTrip() {
   router.push({ name: 'trip' });
 }
-
-function test() {
-  router.push({ name: 'test' });
-}
 </script>
 
 <template>
@@ -42,8 +38,6 @@ function test() {
       </a>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item nav-link">공지사항</li>
-          <li class="nav-item nav-link" @click="test">테스트용🚗</li>
           <li class="nav-item nav-link" @click="moveTrip">여행계획🎈</li>
           <li class="nav-item nav-link" @click="moveBoard(1)">공지사항</li>
           <li class="nav-item nav-link" @click="moveBoard(2)">질문게시판</li>

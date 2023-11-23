@@ -18,10 +18,9 @@ async function moveDetail() {
 }
 
 const convertDate = (dateTime) => {
-  const splited = dateTime.split('T');
+  const splited = dateTime.split(' ');
   const date = splited[0];
-  const dotIndex = splited[1].indexOf('.');
-  const time = splited[1].substring(0, dotIndex == -1 ? splited[1].length : dotIndex);
+  const time = splited[1];
   const dateArr = date.split('-').map((x) => x * 1);
   const todayDateTime = new Date();
   const todayArr = [

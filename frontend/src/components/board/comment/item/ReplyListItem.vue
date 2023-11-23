@@ -65,11 +65,7 @@ const handleDeleteOk = () => {
     <template #author>
       <a style="font-size: 16px">{{ comment.commenterNickname }}</a>
       /
-      {{
-        comment.registrationDate
-          .replace('T', ' ')
-          .substring(0, comment.registrationDate.indexOf('.'))
-      }}
+      {{ comment.registrationDate }}
     </template>
     <template #avatar>
       <a-avatar :src="comment.commenterProfileImageUrl" alt="ProfileImage" />

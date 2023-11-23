@@ -87,9 +87,7 @@ const handleDeleteOk = (e) => {
         </h3>
         <span>
           작성일 :
-          {{
-            post.registrationDate.replace('T', ' ').substring(0, post.registrationDate.indexOf('.'))
-          }}
+          {{ post.registrationDate }}
           / 조회 : {{ post.views }}
         </span>
       </div>
