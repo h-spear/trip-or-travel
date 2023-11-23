@@ -301,7 +301,7 @@ watch(
 </script>
 
 <template>
-  <div class="container-fluid border border-info">
+  <div class="container border border-info">
     <div class="row border border-white border-3 bg-black">
       <form class="col-6" action="" @submit.prevent="searchByDb">
         <VSelect :selectOptions="sidos" @onKeySelect="selectSido"></VSelect>

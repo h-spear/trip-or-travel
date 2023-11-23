@@ -39,6 +39,13 @@ function getFileName(data) {
 </script>
 
 <template>
+  <div class="container">
+    <div class="row ">asdf</div>
+    <div class="row">asdf</div>
+    <div class="row">asdf</div>
+    <div class="row">asdf</div>
+    <div class="row wrapper">asdf</div>
+  </div>
   <div class="mt-4 p-5 bg-primary text-white rounded">sdfs</div>
   <VueDraggableNext :list="tmp" class="bg-success">
     <div v-for="item in tmp" :key="item.t1">
