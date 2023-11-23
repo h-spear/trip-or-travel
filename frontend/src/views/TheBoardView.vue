@@ -1,12 +1,46 @@
-<script setup></script>
+<script setup>
+import { useRoute } from 'vue-router';
+import { ref, onMounted, watch, computed, onUpdated } from 'vue';
+import { localAxios } from '../utils/http-commons';
+
+const local = localAxios();
+const route = useRoute();
+
+const boardId = ref(route.query.boardId);
+const title = ref('');
+const description = ref('');
+
+onUpdated(() => {
+  getBoardInfo();
+});
+onMounted(() => {
+  getBoardInfo();
+});
+
+const getBoardInfo = () => {
+  boardId.value = route.query.boardId;
+  local
+    .get(`board/${boardId.value}`)
+    .then((data) => {
+      data = data.data;
+      if (data.status === 'success') {
+        title.value = data.data.name;
+        description.value = data.data.description;
+      }
+    })
+    .catch((error) => {
+      console.log('error : ', error);
+    });
+};
+</script>
 
 <template>
   <section>
     <div class="board-wrapper">
       <a-page-header
         style="width: 100%"
-        title="Title"
-        sub-title="This is a subtitle"
+        :title="title"
+        :sub-title="description"
         @back="() => null"
       />
       <hr style="width: 100%; border-color: black; margin: 10px 0 30px 0" />
@@ -40,5 +74,22 @@ section {
   height: 100%;
   width: 100%;
   padding: 30px 40px;
+}
+
+::v-deep .ant-page-header-heading {
+  display: flex;
+  height: 80px;
+  align-items: center;
+}
+::v-deep .ant-page-header-heading-title {
+  font-size: 40px;
+  height: 50px;
+  line-height: 50px;
+}
+
+::v-deep .ant-page-header-heading-sub-title {
+  font-size: 14px;
+  height: 50px;
+  line-height: 80px;
 }
 </style>

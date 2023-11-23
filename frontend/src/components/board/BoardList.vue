@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router';
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, onUpdated, watch, computed } from 'vue';
 import BoardListItem from '@/components/board/item/BoardListItem.vue';
 import router from '@/router';
 import { listBoard } from '@/api/board.js';
@@ -22,9 +22,16 @@ watch([size, page], () => {
   getPosts();
 });
 
-onMounted(() => {
+watch(boardId, () => {
   getPosts();
 });
+
+onUpdated(() => {
+  boardId.value = route.query.boardId;
+}),
+  onMounted(() => {
+    getPosts();
+  });
 
 const getPosts = () => {
   const searchParams = {
@@ -37,7 +44,7 @@ const getPosts = () => {
     endDate: endDate.value,
     order: order.value
   };
-  //   console.log('searchParams=', searchParams);
+  console.log('searchParams=', searchParams);
   listBoard(
     searchParams,
     ({ data }) => {
