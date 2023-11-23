@@ -63,6 +63,7 @@ function writeComment(comment) {
         console.log('registed ', data.data);
         //효율적인 업데이트를 위해 다시 디비 조회..
         getCommentList(postId, comments);
+        alert('댓글이 등록되었습니다.');
       },
       (error) => {
         console.log('error ', error);
@@ -107,28 +108,9 @@ function onDeleteComment(data) {
   );
 }
 </script>
-
-<!-- 
-<div class="container">
-  <div>{{ comments.length }}</div>
-  <ol class="list-group list-group-numbered" :key="rerender">
-    <CommentListItem
-      class=""
-      v-for="comment in comments"
-      :key="comment.commentId"
-      :comment="comment"
-      :commentId="comment.commentId"
-      @updating-comment="onUpdateComment"
-      @deleting-comment="onDeleteComment"
-      @registing-comment="writeComment"
-    />
-  </ol>
-  <CommentWrite @registing-comment="writeComment"></CommentWrite>
-</div> -->
-
 <template>
   <div class="container">
-    <p style="font-size: 16px">댓글 수 : {{ commentCount }}</p>
+    <p style="font-size: 1x">댓글 수 : {{ commentCount }}</p>
     <hr />
     <ol class="list-group list-group-numbered" :key="rerender">
       <CommentListItem
@@ -142,7 +124,7 @@ function onDeleteComment(data) {
         @registing-comment="writeComment"
       />
     </ol>
-    <!-- <CommentWrite @registing-comment="writeComment"></CommentWrite> -->
+    <CommentWrite @registing-comment="writeComment" :is-main="true"></CommentWrite>
   </div>
 </template>
 

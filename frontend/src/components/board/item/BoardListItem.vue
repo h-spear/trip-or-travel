@@ -10,7 +10,8 @@ async function moveDetail() {
   // await FuncgetCommentList()
   router.push({
     name: 'board-detail',
-    params: {
+    query: {
+      boardId: props.post.boardId,
       postId: props.post.postId
     }
   });
@@ -19,7 +20,8 @@ async function moveDetail() {
 const convertDate = (dateTime) => {
   const splited = dateTime.split('T');
   const date = splited[0];
-  const time = splited[1];
+  const dotIndex = splited[1].indexOf('.');
+  const time = splited[1].substring(0, dotIndex == -1 ? splited[1].length : dotIndex);
   const dateArr = date.split('-').map((x) => x * 1);
   const todayDateTime = new Date();
   const todayArr = [
