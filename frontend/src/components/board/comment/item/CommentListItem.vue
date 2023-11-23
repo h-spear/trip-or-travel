@@ -14,6 +14,10 @@ const clickCocoment = ref(false);
 const comment = ref(props.comment);
 const children = ref(props.comment.children);
 const content = ref(props.comment.comment);
+const modalOpen = ref(false);
+const showModal = () => {
+  modalOpen.value = true;
+};
 
 import { loginStore } from '@/stores/LoginStore.js';
 const loginstore = loginStore();
@@ -79,6 +83,11 @@ const openReplyForm = () => {
 function toggleComment() {
   clickCocoment.value = !clickCocoment.value;
 }
+
+const handleDeleteOk = (data) => {
+  deleteComment(data);
+  modalOpen.value = false;
+};
 </script>
 <template>
   <a-comment>
@@ -93,9 +102,7 @@ function toggleComment() {
         <span v-else>확인</span>
       </div>
       <div v-if="userId == comment.commenterId" style="margin-left: 10px">
-        <span class="col" @click="deleteComment" style="font-size: 12px; cursor: pointer"
-          >삭제</span
-        >
+        <span class="col" @click="showModal" style="font-size: 12px; cursor: pointer">삭제</span>
       </div>
     </template>
     <template #author>
@@ -132,6 +139,18 @@ function toggleComment() {
       @toggle-comment="toggleComment"
     ></CommentWrite>
   </div>
+
+  <a-modal
+    v-model:open="modalOpen"
+    title="댓글을 삭제하시겠습니까?"
+    @ok="handleDeleteOk"
+    okText="삭제"
+    cancelText="취소"
+    width="400px"
+    style="margin-top: 200px"
+  >
+    <p style="margin-top: 20px; margin-bottom: 40px">댓글을 삭제하면 복구할 수 없습니다.</p>
+  </a-modal>
 </template>
 
 <style scoped></style>

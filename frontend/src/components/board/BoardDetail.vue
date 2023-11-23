@@ -9,12 +9,19 @@ const { userId } = loginstore;
 
 const route = useRoute();
 const router = useRouter();
-const postId = Number(route.params.postId);
+const boardId = Number(route.query.boardId);
+const postId = Number(route.query.postId);
+const modalOpen = ref(false);
+const showModal = () => {
+  modalOpen.value = true;
+};
+
+console.log(boardId, postId);
 
 const post = ref({
   postId: 0,
   title: 0,
-  registrationDate: 0,
+  registrationDate: '',
   views: 0,
   content: 0,
   commentCount: 0,
@@ -38,9 +45,7 @@ const getPost = () => {
 getPost();
 
 function moveList() {
-  router.push({
-    name: 'board-list'
-  });
+  router.push({ name: 'board', query: { boardId } });
 }
 
 function moveModify() {
@@ -52,7 +57,7 @@ function moveModify() {
   });
 }
 
-function onDeleteArticle() {
+const onDeleteArticle = () => {
   removeBoard(
     postId,
     (data) => {
@@ -65,61 +70,92 @@ function onDeleteArticle() {
       console.log('error : ', error);
     }
   );
-}
+};
+
+const handleDeleteOk = (e) => {
+  onDeleteArticle();
+  modalOpen.value = false;
+};
 </script>
 
 <template>
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10 text-start">
-        <div class="row my-2">
-          <h2 class="text-secondary px-5">{{ post.postId }}. {{ post.title }}</h2>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="clearfix align-content-center">
-              <img
-                id="profileImg"
-                class="avatar me-2 float-md-start bg-light p-2"
-                :src="post.writerProfileImageUrl"
-              />
-              <p>
-                <span class="fw-bold">{{ post.writerNickname }}</span> <br />
-                <span class="text-secondary fw-light">
-                  {{ post.registrationDate }} 조회 : {{ post.views }}
-                </span>
-              </p>
-            </div>
-          </div>
-          <!-- <div class="col-md-4 align-self-center text-end">댓글 : {{ post.commentCount }}</div> -->
-          <div class="divider mb-3"></div>
-          <div class="text-secondary">
-            {{ post.content }}
-          </div>
-          <div class="divider mt-3 mb-3"></div>
-          <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
-              글 목록
-            </button>
-            <template v-if="post.writerId == userId">
-              <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
-                글수정
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger mb-3 ms-1"
-                @click="onDeleteArticle"
-              >
-                글삭제
-              </button>
-            </template>
-          </div>
-        </div>
+    <div class="content">
+      <div class="info-box">
+        <h3>
+          <b>{{ post.postId }}. {{ post.title }}</b>
+        </h3>
+        <span>
+          작성일 :
+          {{
+            post.registrationDate.replace('T', ' ').substring(0, post.registrationDate.indexOf('.'))
+          }}
+          / 조회 : {{ post.views }}
+        </span>
+      </div>
+      <div class="avatar-box">
+        <a-avatar :size="48" :src="post.writerProfileImageUrl" alt="ProfileImage">
+          <template #icon><UserOutlined /></template>
+        </a-avatar>
+        <span style="margin-left: 10px; font-size: 18px">{{ post.writerNickname }}</span>
       </div>
     </div>
+    <p style="margin: 40px 0 70px 0">
+      {{ post.content }}
+    </p>
   </div>
-  <div class="m-2 bg-white">중간선</div>
+  <div class="button-box">
+    <a-button class="post-btn" type="primary" @click="moveList">목록</a-button>
+    <template v-if="post.writerId == userId">
+      <a-button
+        class="post-btn"
+        type="primary"
+        @click="moveModify"
+        style="background-color: rgb(0, 177, 0)"
+        >수정</a-button
+      >
+      <a-button class="post-btn" type="primary" @click="showModal" danger>삭제</a-button>
+    </template>
+  </div>
   <CommentList :postId="postId"></CommentList>
+  <a-modal
+    v-model:open="modalOpen"
+    title="게시글을 삭제하시겠습니까?"
+    @ok="handleDeleteOk"
+    okText="삭제"
+    cancelText="취소"
+    width="400px"
+    style="margin-top: 200px"
+  >
+    <p style="margin-top: 20px; margin-bottom: 40px">게시글을 삭제하면 복구할 수 없습니다.</p>
+  </a-modal>
 </template>
 
-<style scoped></style>
+<style scoped>
+.button-box {
+  width: 100%;
+  margin-right: 100px;
+  transform: translateY(40px);
+  text-align: right;
+  margin-bottom: 10px;
+}
+.container {
+  padding: 0 20px;
+}
+.post-wrapper {
+  padding: 0 10px;
+}
+
+.post-btn {
+  margin-left: 10px;
+}
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info-box {
+  font-size: 14px;
+}
+</style>
