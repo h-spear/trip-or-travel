@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.pjt.triptravel.board.entity.Comment;
+import com.pjt.triptravel.common.utils.TimeFormatUtil;
 
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,8 @@ public class CommentDto {
 	private Long commenterId;
 	private String commenterNickname;
 	private String commenterProfileImageUrl;
-	private LocalDateTime registrationDate;
+	private String registrationDate;
+	private String lastModifiedDate;
 	private List<CommentDto> children;
 
 	public static CommentDto of(Comment comment) {
@@ -28,7 +30,8 @@ public class CommentDto {
 			.commenterNickname(comment.getCommenter().getNickname())
 			.commenterProfileImageUrl(comment.getCommenter().getProfileImageUrl())
 			.children(comment.getChildren().stream().map(CommentDto::of).collect(Collectors.toList()))
-			.registrationDate(comment.getRegistrationDate())
+			.registrationDate(TimeFormatUtil.convertDateTime(comment.getRegistrationDate()))
+			.lastModifiedDate(TimeFormatUtil.convertDateTime(comment.getLastModifiedDate()))
 			.build();
 	}
 

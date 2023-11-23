@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import com.pjt.triptravel.common.utils.TimeFormatUtil;
 import com.querydsl.core.annotations.QueryProjection;
 
 @Data
@@ -18,8 +19,8 @@ public class PostSearchResult {
     private Long writerId;
     private String writerNickname;
     private String writerProfileImageUrl;
-    private LocalDateTime registrationDate;
-    private LocalDateTime lastModifiedDate;
+    private String registrationDate;
+    private String lastModifiedDate;
 
     @QueryProjection
     public PostSearchResult(Long boardId, Long postId, String title, int commentCount, int views, int likes, Long writerId, String writerNickname, String writerProfileImageUrl, LocalDateTime registrationDate, LocalDateTime lastModifiedDate) {
@@ -32,7 +33,7 @@ public class PostSearchResult {
         this.writerId = writerId;
         this.writerNickname = writerNickname;
         this.writerProfileImageUrl = writerProfileImageUrl;
-        this.registrationDate = registrationDate;
-        this.lastModifiedDate = lastModifiedDate;
+        this.registrationDate = TimeFormatUtil.convertDateTime(registrationDate);
+        this.lastModifiedDate = TimeFormatUtil.convertDateTime(lastModifiedDate);
     }
 }

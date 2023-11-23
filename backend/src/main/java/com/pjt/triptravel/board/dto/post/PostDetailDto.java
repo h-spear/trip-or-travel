@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.pjt.triptravel.board.dto.comment.CommentDto;
 import com.pjt.triptravel.board.entity.Comment;
 import com.pjt.triptravel.board.entity.Post;
+import com.pjt.triptravel.common.utils.TimeFormatUtil;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class PostDetailDto {
 	private Long writerId;
 	private String writerNickname;
 	private String writerProfileImageUrl;
-	private LocalDateTime registrationDate;
-	private LocalDateTime lastModifiedDate;
+	private String registrationDate;
+	private String lastModifiedDate;
 
 	public static PostDetailDto of(Post post) {
 		return PostDetailDto.builder()
@@ -40,8 +41,8 @@ public class PostDetailDto {
 			.writerId(post.getWriter().getId())
 			.writerNickname(post.getWriter().getNickname())
 			.writerProfileImageUrl(post.getWriter().getProfileImageUrl())
-			.registrationDate(post.getRegistrationDate())
-			.lastModifiedDate(post.getLastModifiedDate())
+			.registrationDate(TimeFormatUtil.convertDateTime(post.getRegistrationDate()))
+			.lastModifiedDate(TimeFormatUtil.convertDateTime(post.getLastModifiedDate()))
 			.build();
 	}
 }
