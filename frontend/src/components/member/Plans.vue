@@ -33,6 +33,12 @@ const moveDetail = (id) => {
 <template>
   <section>
     <div class="trip-wrapper">
+      <div
+        v-if="plans == null || plans.length == 0"
+        style="height: 300px; display: flex; justify-content: center; align-items: center"
+      >
+        <h1>저장된 여행 계획이 없습니다.</h1>
+      </div>
       <template v-for="plan in plans" :key="plan.id">
         <div class="plan-item" @click="() => moveDetail(plan.planId)">
           <h2>
@@ -77,7 +83,7 @@ section {
   border: 1px solid #d9d9d9;
   border-radius: 6px;
   margin: 20px 0 40px 0;
-  padding: 15px;
+  padding: 15px 50px;
   display: flex;
   justify-content: center;
   align-content: center;

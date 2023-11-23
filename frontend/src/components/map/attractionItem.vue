@@ -47,7 +47,7 @@ const notPrepare = () => {
       <a-button class="my-btn" v-if="!clicked" type="primary" @click="selectItem">등록</a-button>
       <a-button class="my-btn" v-else type="primary" @click="unselectItem" danger>삭제</a-button>
       <a-button class="my-btn a-button-custom" type="primary" @click="searchAround"
-        >주변 정보</a-button
+        >주변 볼거리</a-button
       >
       <a-button class="my-btn a-button-custom2" type="primary" @click="notPrepare">찜</a-button>
     </div>

@@ -52,7 +52,6 @@ onMounted(() => {
 </script>
 
 <template>
-  z``
   <div style="display: flex; justify-content: center; align-items: center">
     <TheHeadingNavbar></TheHeadingNavbar>
     <router-view></router-view>

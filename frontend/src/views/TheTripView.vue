@@ -1,13 +1,18 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-const router = useRouter();
+import { localAxios } from '../utils/http-commons';
+import { Modal } from 'ant-design-vue';
+import { h } from 'vue';
+
 import SelectedItem from '@/components/map/SelectedItem.vue';
 import AttractionItem from '@/components/map/AttractionItem.vue';
 
 import { getAttrByType, getAttrByAround } from '@/api/attraction.js';
 import { VueDraggableNext } from 'vue-draggable-next';
 
+const local = localAxios();
+const router = useRouter();
 const selectedSido = ref(1);
 const selectedGugun = ref(1);
 const selectedContentType = ref(12);
@@ -135,30 +140,30 @@ const initMap = () => {
   ];
 };
 
-// 마커에 들어갈 인포윈도우 만드는 함수
 const makeInfoWindow = (place) => {
-  let iwContent = document.createElement('div');
-  let title = document.createElement('h3');
-  let content = document.createElement('div');
+  console.log(place);
+};
 
-  content.innerText = place.contentType + '\n tel: ' + place.tel + '\n';
-
-  title.appendChild(document.createTextNode(place.title));
-
-  iwContent.appendChild(title);
-  iwContent.appendChild(content);
-
-  const infowindow = new kakao.maps.InfoWindow({
-    content: iwContent,
-    removable: true,
-    disableAutoPan: true
-  });
-  //이미 인포윈도우가 있다면 제거
-  if (infowindows.value.get(place.id)) {
-    infowindows.value.get(place.id).setMap(null);
-  }
-  infowindows.value.set(place.id, infowindow);
-  return infowindow;
+const info = (contentId) => {
+  local
+    .get(`attraction/${contentId}`)
+    .then(({ data }) => {
+      data = data.data;
+      console.log(data);
+      Modal.info({
+        title: `${data.title}`,
+        content: h('div', {}, [
+          h('p', `${data.addr1} ${data.addr2}`),
+          h('p', `${data.overview != null ? data.overview : '설명이 준비되지 않았습니다.'}`)
+        ]),
+        onOk() {
+          console.log('ok');
+        }
+      });
+    })
+    .catch((error) => {
+      console.log('error : ', error);
+    });
 };
 
 // 한 마커의 인포윈도우가 열렸을 때 다른 마커의 인포윈도우를 지우는 함수
@@ -177,12 +182,11 @@ const createMarker = (place, img) => {
     clickable: true,
     image: img
   });
-  const infowindow = makeInfoWindow(place);
   kakao.maps.event.addListener(marker, 'click', () => {
     deleteInfoWindows();
     center.value = new kakao.maps.LatLng(place.latitude, place.longitude);
-    infowindow.open(map, marker);
     document.getElementById(place.id).scrollIntoView({ behavior: 'smooth' }, true);
+    info(place.id);
   });
   return marker;
 };

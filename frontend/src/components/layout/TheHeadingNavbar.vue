@@ -38,23 +38,23 @@ function notPrepare() {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top" style="height: 80px">
     <div
       class="container"
       style="display: flex; justify-content: space-between; align-items: center"
     >
       <a id="logo" @click="moveHome">
-        <img src="@/assets/logo.png" alt="" width="60" /> Enjoy Trip
+        <img src="@/assets/logo.png" alt="" width="60" /> Trip or Travel
       </a>
       <div
         id="collapsibleNavbar"
         style="display: flex; align-items: center; justify-content: center"
       >
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item nav-link mx-2" @click="moveTrip">여행계획🎈</li>
-          <li class="nav-item nav-link mx-2" @click="moveBoard(1)">공지사항</li>
-          <li class="nav-item nav-link mx-2" @click="moveBoard(2)">질문게시판</li>
-          <li class="nav-item nav-link mx-2" @click="moveBoard(3)">자유게시판</li>
+        <ul class="navbar-nav me-auto" v-show="userId != null && userId != ''">
+          <li class="nav-item nav-link mx-2" @click="moveTrip">여행 계획 🎈</li>
+          <li class="nav-item nav-link mx-2" @click="moveBoard(1)">공지사항 📢</li>
+          <li class="nav-item nav-link mx-2" @click="moveBoard(2)">질문게시판 ❓</li>
+          <li class="nav-item nav-link mx-2" @click="moveBoard(3)">자유게시판 🗽</li>
         </ul>
       </div>
       <!-- 로그인 전 -->

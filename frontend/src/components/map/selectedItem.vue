@@ -37,9 +37,9 @@ onMounted(() => {
         {{ selectedItem.addr1 }} {{ selectedItem.addr2 }}
       </p>
     </div>
-    <p @click="unselectItem" class="card-btn">
+    <!-- <p @click="unselectItem" class="card-btn" emit="change">
       <font-awesome-icon icon="fa-solid fa-xmark" />
-    </p>
+    </p> -->
   </div>
 </template>
 
