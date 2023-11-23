@@ -45,4 +45,10 @@ public class AttractionController {
     public ApiResponse<?> findOne(@PathVariable Long contentId) {
         return ApiResponse.ofSuccess(attractionService.findOne(contentId));
     }
+
+    @Operation(summary = "타입별 상위 top개 관광지 조회", description = "타입별로 상위 top개의 관광지를 조회합니다.")
+    @GetMapping("/top")
+    public ApiResponse<?> findTopRatingByContentType(int top) {
+        return ApiResponse.ofSuccess(attractionService.findTopRatingByContentType(top));
+    }
 }

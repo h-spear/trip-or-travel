@@ -45,8 +45,8 @@ public class AttractionDto {
                 .mlevel(attractionInfo.getMlevel())
                 .readCount(attractionInfo.getReadCount())
                 .likeCount(attractionInfo.getLikeCount())
-                .homepage(attractionInfo.getDescription().getHomepage())
-                .overview(attractionInfo.getDescription().getOverview())
+                .homepage(attractionInfo.getDescription() != null ? attractionInfo.getDescription().getHomepage() : null)
+                .overview(attractionInfo.getDescription() != null ? attractionInfo.getDescription().getOverview() : null)
                 .build();
     }
 }

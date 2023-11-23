@@ -11,7 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,8 +27,20 @@ public class AttractionService {
 
     public List<ContentTypeDto> getContentTypes() {
         return contentTypeRepository.findAll()
-                .stream().map(contentType -> new ContentTypeDto(contentType.getId(), contentType.getName()))
-                .collect(Collectors.toList());
+            .stream().map(contentType -> new ContentTypeDto(contentType.getId(), contentType.getName()))
+            .collect(Collectors.toList());
+    }
+
+    public Map<Long, List<AttractionSearchResult>> findTopRatingByContentType(int top) {
+        Map<Long, List<AttractionSearchResult>> result = new HashMap<>();
+        List<AttractionSearchResult> attractions = attractionRepository.findTopRatingByContentType(top);
+        for (AttractionSearchResult attraction: attractions) {
+            Long contentTypeId = attraction.getContentTypeId();
+            if (!result.containsKey(contentTypeId))
+                result.put(contentTypeId, new ArrayList<>());
+            result.get(contentTypeId).add(attraction);
+        }
+        return result;
     }
 
     public Slice<AttractionSearchResult> search(AttractionSearchCondition condition, Pageable pageable) {

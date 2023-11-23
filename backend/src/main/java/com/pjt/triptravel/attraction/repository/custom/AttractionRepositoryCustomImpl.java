@@ -1,15 +1,19 @@
 package com.pjt.triptravel.attraction.repository.custom;
 
-import com.pjt.triptravel.attraction.dto.attraction.AttractionAroundResult;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.util.List;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionAroundResult;
+import com.pjt.triptravel.attraction.dto.attraction.AttractionSearchResult;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AttractionRepositoryCustomImpl implements AttractionRepositoryCustom {
@@ -45,26 +49,64 @@ public class AttractionRepositoryCustomImpl implements AttractionRepositoryCusto
         return template.query(sql, param, attractionAroundResultRowMapper());
     }
 
+    @Override
+    public List<AttractionSearchResult> findTopRatingByContentType(int top) {
+        String sql = " SELECT * " +
+                    "    FROM (SELECT *, RANK() OVER (PARTITION BY A.content_type_id ORDER BY A.like_count DESC, A.readcount DESC, A.content_id) AS p_rank " +
+                    "            FROM attraction_info A " +
+                    "            JOIN content_type C " +
+                    "           USING (content_type_id)) sub " +
+                    "   WHERE p_rank <= :top ";
+
+        SqlParameterSource param = new MapSqlParameterSource()
+            .addValue("top", top);
+
+        log.info("sql={}", sql);
+        return template.query(sql, param, attractionSearchResult());
+    }
+
+    private RowMapper<AttractionSearchResult> attractionSearchResult() {
+        return (rs, rowNum) -> AttractionSearchResult.builder()
+            .id(rs.getLong("content_id"))
+            .title(rs.getString("title"))
+            .addr1(rs.getString("addr1"))
+            .addr2(rs.getString("addr2"))
+            .zipcode(rs.getString("zipcode"))
+            .tel(rs.getString("tel"))
+            .imageUrl(rs.getString("first_image"))
+            .imageUrl2(rs.getString("first_image2"))
+            .latitude(rs.getBigDecimal("latitude"))
+            .longitude(rs.getBigDecimal("longitude"))
+            .sidoCode(rs.getLong("sido_code"))
+            .gugunCode(rs.getLong("gugun_code"))
+            .mlevel(rs.getString("mlevel"))
+            .readCount(rs.getInt("readcount"))
+            .likeCount(rs.getInt("like_count"))
+            .contentTypeId(rs.getLong("content_type_id"))
+            .contentType(rs.getString("name"))
+            .build();
+    }
+
     private RowMapper<AttractionAroundResult> attractionAroundResultRowMapper() {
         return (rs, rowNum) -> AttractionAroundResult.builder()
-                .id(rs.getLong("content_id"))
-                .title(rs.getString("title"))
-                .addr1(rs.getString("addr1"))
-                .addr2(rs.getString("addr2"))
-                .zipcode(rs.getString("zipcode"))
-                .tel(rs.getString("tel"))
-                .imageUrl(rs.getString("first_image"))
-                .imageUrl2(rs.getString("first_image2"))
-                .latitude(rs.getBigDecimal("latitude"))
-                .longitude(rs.getBigDecimal("longitude"))
-                .sidoCode(rs.getLong("sido_code"))
-                .gugunCode(rs.getLong("gugun_code"))
-                .mlevel(rs.getString("mlevel"))
-                .readCount(rs.getInt("readcount"))
-                .likeCount(rs.getInt("like_count"))
-                .distance(rs.getDouble("distance"))
-                .contentTypeId(rs.getLong("content_type_id"))
-                .contentTypeName(rs.getString("content_type_name"))
-                .build();
+            .id(rs.getLong("content_id"))
+            .title(rs.getString("title"))
+            .addr1(rs.getString("addr1"))
+            .addr2(rs.getString("addr2"))
+            .zipcode(rs.getString("zipcode"))
+            .tel(rs.getString("tel"))
+            .imageUrl(rs.getString("first_image"))
+            .imageUrl2(rs.getString("first_image2"))
+            .latitude(rs.getBigDecimal("latitude"))
+            .longitude(rs.getBigDecimal("longitude"))
+            .sidoCode(rs.getLong("sido_code"))
+            .gugunCode(rs.getLong("gugun_code"))
+            .mlevel(rs.getString("mlevel"))
+            .readCount(rs.getInt("readcount"))
+            .likeCount(rs.getInt("like_count"))
+            .distance(rs.getDouble("distance"))
+            .contentTypeId(rs.getLong("content_type_id"))
+            .contentTypeName(rs.getString("content_type_name"))
+            .build();
     }
 }
