@@ -35,6 +35,13 @@ public class BoardController {
         return ApiResponse.ofSuccess(boardService.findAll());
     }
 
+    @Operation(summary = "게시판 조회", description = "게시판 제목, 설명을 조회합니다.")
+    @GetMapping("/{boardId}")
+    public ApiResponse<?> searchOne(@PathVariable Long boardId) {
+        log.info("게시판 조회");
+        return ApiResponse.ofSuccess(boardService.findOne(boardId));
+    }
+
     @Operation(summary = "게시판 생성", description = "게시판을 생성합니다.")
     @PostMapping
     public ApiResponse<?> create(@RequestBody BoardCreateParam param) {
