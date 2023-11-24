@@ -74,11 +74,13 @@ public class PostQueryRepository {
 			.select(post)
 			.from(post)
 			.join(post.writer, member)
+			.join(post.board, board)
 			.leftJoin(post.comments, comment1)
-			.where(stringContains(post.title, condition.getTitle()),
-				stringContains(post.writer.nickname, condition.getWriterNickname()),
-				dateAfter(condition.getStartDate()),
-				dateBefore(condition.getEndDate()))
+			.where(boardMatch(board.id, condition.getBoardId()),
+					stringContains(post.title, condition.getTitle()),
+					stringContains(post.writer.nickname, condition.getWriterNickname()),
+					dateAfter(condition.getStartDate()),
+					dateBefore(condition.getEndDate()))
 			.groupBy(post);
 
 		return PageableExecutionUtils.getPage(result, pageable, countQuery::fetchCount);
