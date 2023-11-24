@@ -2,15 +2,18 @@
 import router from '@/router';
 import { ref, watch } from 'vue';
 import { registBoard, updateBoard } from '@/api/board';
+import { useRoute } from 'vue-router';
 
 const props = defineProps({ type: String });
 const isUseId = ref(false);
 
+const route = useRoute();
 const post = ref({
-  boardId: 3,
+  boardId: Number(route.query.boardId),
   title: '',
   content: ''
 });
+console.log(route.query.boardId, '11111111S');
 
 if (props.type === 'modify') {
   post.value = history.state.post;

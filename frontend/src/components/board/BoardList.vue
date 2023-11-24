@@ -64,7 +64,7 @@ const getPosts = () => {
 };
 
 const moveWrite = () => {
-  router.push({ name: 'board-write', query: { boardId } });
+  router.push({ name: 'board-write', query: { boardId: boardId.value } });
 };
 </script>
 

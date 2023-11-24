@@ -35,6 +35,8 @@ public class AttractionService {
         Map<Long, List<AttractionSearchResult>> result = new HashMap<>();
         List<AttractionSearchResult> attractions = attractionRepository.findTopRatingByContentType(top);
         for (AttractionSearchResult attraction: attractions) {
+            if (attraction.getContentTypeId().equals(25L))
+                continue;
             Long contentTypeId = attraction.getContentTypeId();
             if (!result.containsKey(contentTypeId))
                 result.put(contentTypeId, new ArrayList<>());
