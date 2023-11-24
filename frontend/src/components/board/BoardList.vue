@@ -92,6 +92,7 @@ const moveWrite = () => {
         v-model:current="page"
         v-model:pageSize="size"
         :total="total"
+        :show-size-changer="false"
         class="pagination"
       />
       <div style="width: 200px; display: flex; justify-content: end; align-items: center">
