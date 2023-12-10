@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -25,6 +26,9 @@ class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private MemberService memberService;
@@ -48,6 +52,7 @@ class MemberServiceTest {
         // mock
         when(memberRepository.findByEmail(EMAIL)).thenReturn(Optional.empty());
         when(memberRepository.save(any(Member.class))).thenReturn(member);
+        when(passwordEncoder.encode(PASSWORD)).thenReturn("encodedPassword");
 
         // when
         Long savedId = memberService.join(param);
